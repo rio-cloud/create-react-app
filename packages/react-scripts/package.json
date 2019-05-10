@@ -4,7 +4,7 @@
   "description": "RIO Configuration and scripts for Create React App.",
   "repository": {
     "type": "git",
-    "url": "https://collaboration.msi.audi.com/stash/scm/assets/create-react-app.git",
+    "url": "https://github.com/rio-cloud/create-react-app.git",
     "directory": "packages/react-scripts"
   },
   "license": "Apache-2.0",
