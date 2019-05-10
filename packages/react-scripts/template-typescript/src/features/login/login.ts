@@ -1,6 +1,7 @@
 import { User, UserManager } from 'oidc-client';
 import join from 'lodash/fp/join';
 import getOr from 'lodash/fp/getOr';
+import get from 'lodash/fp/get';
 
 import { configureStorage } from './storage';
 import { mapUserProfile } from './userProfile';
@@ -91,7 +92,7 @@ export const configureSetupOAuth = (auth: UserManager, storage: AuthStorage, win
                     return Promise.reject(error);
                 });
 
-        if (window && window.document && window.document.addEventListener) {
+        if (get('document.addEventListener', window)) {
             window.document.addEventListener(SIGNIN_REQUESTED, () => {
                 trace('[features/login/signinrequested] Trying to sign in silently...');
                 trySignin()
