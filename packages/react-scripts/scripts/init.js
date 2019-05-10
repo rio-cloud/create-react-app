@@ -88,10 +88,14 @@ module.exports = function(
   const appPackage = require(path.join(appPath, 'package.json'));
   const useYarn = fs.existsSync(path.join(appPath, 'yarn.lock'));
 
-  // Copy over some of the devDependencies
+    // Copy over some of the devDependencies
   appPackage.dependencies = appPackage.dependencies || {};
 
   const useTypeScript = appPackage.dependencies['typescript'] != null;
+
+  const templatePath = template
+    ? path.resolve(originalDirectory, template)
+    : path.join(ownPath, useTypeScript ? 'template-typescript' : 'template');
 
   // Setup the script rules
   appPackage.scripts = {
@@ -107,11 +111,13 @@ module.exports = function(
   };
 
   // Setup the browsers list
-  appPackage.browserslist = defaultBrowsers;
+  appPackage.browserslist = getRioBrowserList();
+
+  const finalAppPackage = extendAppPackageWithRioStuff(appPackage, templatePath);
 
   fs.writeFileSync(
     path.join(appPath, 'package.json'),
-    JSON.stringify(appPackage, null, 2) + os.EOL
+    JSON.stringify(finalAppPackage, null, 2) + os.EOL
   );
 
   const readmeExists = fs.existsSync(path.join(appPath, 'README.md'));
@@ -123,9 +129,6 @@ module.exports = function(
   }
 
   // Copy the files for the user
-  const templatePath = template
-    ? path.resolve(originalDirectory, template)
-    : path.join(ownPath, useTypeScript ? 'template-typescript' : 'template');
   if (fs.existsSync(templatePath)) {
     fs.copySync(templatePath, appPath);
   } else {
@@ -195,6 +198,12 @@ module.exports = function(
     }
   }
 
+  // Final npm install for all additional dependencies
+  const procStatus = installRioDependencies(useYarn, verbose);
+  if (procStatus !== 0) {
+    return;
+  }
+
   if (useTypeScript) {
     verifyTypeScriptSetup();
   }
@@ -219,6 +228,10 @@ module.exports = function(
 
   console.log();
   console.log(`Success! Created ${appName} at ${appPath}`);
+  console.log();
+  console.log(chalk.red('RIO starter template'));
+  console.log('You are using the RIO starter template which is a fork of the original create-react-app templates');
+  console.log();
   console.log('Inside that directory, you can run several commands:');
   console.log();
   console.log(chalk.cyan(`  ${displayedCommand} start`));
@@ -265,4 +278,83 @@ function isReactInstalled(appPackage) {
     typeof dependencies.react !== 'undefined' &&
     typeof dependencies['react-dom'] !== 'undefined'
   );
+}
+
+function getRioDependencies(templatePath) {
+  const templateDependenciesPath = path.join(
+    templatePath,
+    '.template.package.json'
+  );
+
+  if (fs.existsSync(templateDependenciesPath)) {
+    const templateDependencies = require(templateDependenciesPath);
+    fs.unlinkSync(templateDependenciesPath);
+
+    return templateDependencies;
+  } else {
+    console.log('No additional dependencies found...');
+
+    return { dependencies: {}, devDependencies: {}};
+  }
+}
+
+function extendAppPackageWithRioStuff(appPackage, templatePath) {
+  const extendedAppPackage = {...appPackage};
+  const rioDependencies = getRioDependencies(templatePath);
+
+  extendedAppPackage.devDependencies = extendedAppPackage.devDependencies || {};
+  rioDependencies.dependencies = rioDependencies.dependencies || {};
+  rioDependencies.devDependencies = rioDependencies.devDependencies || {};
+
+  Object.entries(rioDependencies.dependencies).forEach(entry => {
+    extendedAppPackage.dependencies[entry[0]] = entry[1];
+  });
+
+  Object.entries(rioDependencies.devDependencies).forEach(entry => {
+    if (extendedAppPackage.dependencies.hasOwnProperty(entry[0])) {
+      //some types are declared as dependencies instead of dev dependencies
+      delete extendedAppPackage.dependencies[entry[0]];
+    }
+    extendedAppPackage.devDependencies[entry[0]] = entry[1];
+  });
+
+  Object.entries(rioDependencies).forEach(entry => {
+    if (entry[0] !== "dependencies") {
+      extendedAppPackage[entry[0]] = entry[1];
+    }
+  });
+
+  return extendedAppPackage;
+}
+
+function installRioDependencies(useYarn, verbose) {
+  let command;
+  let args;
+
+  if (useYarn) {
+    command = 'yarnpkg';
+    args = [];
+  } else {
+    command = 'npm';
+    args = ['install', verbose && '--verbose'].filter(e => e);
+  }
+
+  console.log(`Installing additional RIO dependencies using ${command}...`);
+  console.log();
+
+  const proc = spawn.sync(command, args, { stdio: 'inherit' });
+  if (proc.status !== 0) {
+    console.error(`\`${command} ${args.join(' ')}\` failed`);
+  }
+
+  return proc.status;
+}
+
+function getRioBrowserList() {
+  return [
+    'last 2 versions',
+    'Firefox 52',
+    'safari >= 7',
+    'IE >= 11'
+  ];
 }

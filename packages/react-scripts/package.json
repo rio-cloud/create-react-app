@@ -1,18 +1,15 @@
 {
-  "name": "react-scripts",
-  "version": "3.0.1",
-  "description": "Configuration and scripts for Create React App.",
+  "name": "rio-react-scripts",
+  "version": "3.0.1-alpha.1",
+  "description": "RIO Configuration and scripts for Create React App.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/facebook/create-react-app.git",
+    "url": "https://collaboration.msi.audi.com/stash/scm/assets/create-react-app.git",
     "directory": "packages/react-scripts"
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
   "engines": {
     "node": ">=8.10"
-  },
-  "bugs": {
-    "url": "https://github.com/facebook/create-react-app/issues"
   },
   "files": [
     "bin",
