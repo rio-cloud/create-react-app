@@ -20,7 +20,7 @@ module.exports = [
         module: 'rio-accountmenu',
     },
     {
-        entry: 'https://appnavigator.developers.rio.cloud/1.0.2/rio-appnavigator.js',
+        entry: 'https://appnavigator.developers.rio.cloud/1.0.3/rio-appnavigator.js',
         global: 'RioAppNavigator',
         module: 'rio-appnavigator',
     },
