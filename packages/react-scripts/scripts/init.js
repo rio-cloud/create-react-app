@@ -138,6 +138,17 @@ module.exports = function(
     return;
   }
 
+  const templateCommonPath = path.join(ownPath, 'template-common');
+  // Copy the files for the user
+  if (fs.existsSync(templateCommonPath)) {
+    fs.copySync(templateCommonPath, path.join(appPath, 'src'),);
+  } else {
+    console.error(
+      `Could not locate supplied common template: ${chalk.green(templateCommonPath)}`
+    );
+    return;
+  }
+
   // Rename gitignore after the fact to prevent npm from renaming it to .npmignore
   // See: https://github.com/npm/npm/issues/1862
   try {

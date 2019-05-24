@@ -1,5 +1,4 @@
-import { LanguageDataInterface } from '../../lang/types';
-import { IdToken } from '../../tokenHandling/types';
+import { IdToken, LanguageDataInterface } from '../../../configuration';
 
 export interface AppPropertiesFromDispatch {
     hideSessionDialog: () => void;

@@ -17,6 +17,7 @@
     "lib",
     "scripts",
     "template",
+    "template-common",
     "template-typescript",
     "utils"
   ],

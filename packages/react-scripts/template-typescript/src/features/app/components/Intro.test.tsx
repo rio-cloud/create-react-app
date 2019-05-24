@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { IntlProvider } from 'react-intl';
 import Intro from './Intro';
-import messagesEN from '../../lang/translations/en-GB.json';
+import messagesEN from '../../translations/en-GB.json';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');

@@ -7,12 +7,12 @@ import { DefaultAppNavigator } from 'rio-appnavigator';
 import { SessionExpiredDialog } from 'rio-session-expired-info';
 import { ApplicationHeader, NotificationsContainer, ApplicationLayout, ActionBarItem } from 'rio-uikit';
 
-import { DEFAULT_LOCALE } from '../../lang/lang';
+import { DEFAULT_LOCALE } from '../../../configuration';
 import Intro from './Intro';
 import More from './More';
 
 import './App.css';
-import { Config } from '../../../setup/config';
+import { Config } from '../../../config';
 import { AppProperties } from './types';
 
 class ServiceInfo extends React.Component<{}, {}> {

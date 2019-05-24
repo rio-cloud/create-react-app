@@ -1,14 +1,12 @@
-import App from '../components/App';
 import { connect } from 'react-redux';
-import { getAccessToken, getIdToken } from '../../tokenHandling/selectors';
-import { Config } from '../../../setup/config';
-import { isUserSessionExpired } from '../../login/selectors';
-import { getLanguageData, getLocale } from '../../lang/selectors';
-import { hideSessionExpiredDialog } from '../actions/App.actions';
 import { Dispatch } from 'redux';
-import { AppPropertiesFromDispatch, AppPropertiesFromState } from './types';
+import { getAccessToken, getIdToken, getLanguageData, getLocale, isUserSessionExpired } from '../../../configuration';
+import { Config } from '../../../config';
 import { State } from '../../../types';
+import App from '../components/App';
+import { hideSessionExpiredDialog } from '../actions/App.actions';
 import { getSessionExpiredAcknowledged } from '../selectors/App.selector';
+import { AppPropertiesFromDispatch, AppPropertiesFromState } from './types';
 
 function mapDispatchToProps(dispatch: Dispatch): AppPropertiesFromDispatch {
     return {
