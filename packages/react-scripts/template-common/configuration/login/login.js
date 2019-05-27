@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { Log, UserManager } from 'oidc-client/lib/oidc-client';
+import { UserManager } from 'oidc-client/lib/oidc-client';
 import join from 'lodash/fp/join';
 import getOr from 'lodash/fp/getOr';
 import get from 'lodash/fp/get';
