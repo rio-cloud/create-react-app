@@ -10,7 +10,7 @@ module.exports = [
         module: 'react-dom',
     },
     {
-        entry: 'https://uikit.developers.rio.cloud/0.13.1/rio-uikit.js',
+        entry: 'https://uikit.developers.rio.cloud/0.13.2/rio-uikit.js',
         global: 'RioUikit',
         module: 'rio-uikit',
     },
