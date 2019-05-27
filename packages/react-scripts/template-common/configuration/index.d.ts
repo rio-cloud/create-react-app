@@ -75,11 +75,11 @@ declare function tokenHandlingReducer(state: any, action: GenericActionInterface
 
 declare function handleLoginRedirect(): void
 declare function main(renderFn: () => void): void
-declare function getAccessToken(a: any): AccessToken
-declare function getIdToken(a: any): IdToken
-declare function isUserSessionExpired(a: any): boolean
-declare function getLanguageData(a: any): LanguageDataInterface
-declare function getLocale(a: any): string
+declare function getAccessToken(state: any): AccessToken
+declare function getIdToken(state: any): IdToken
+declare function isUserSessionExpired(state: any): boolean
+declare function getLanguageData(state: any): LanguageDataInterface
+declare function getLocale(state: any): string
 
 declare const store: Store;
 declare const history: History<any>;
