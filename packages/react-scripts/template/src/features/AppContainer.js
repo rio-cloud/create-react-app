@@ -8,7 +8,7 @@ import { SessionExpiredDialog } from 'rio-session-expired-info';
 import { ApplicationHeader, NotificationsContainer, ApplicationLayout, ActionBarItem } from 'rio-uikit';
 
 // Import language configuration
-import { DEFAULT_LOCALE, getLanguageData, getLocale, getAccessToken, getIdToken, isUserSessionExpired } from '../../../configuration';
+import { DEFAULT_LOCALE, getLanguageData, getLocale, getAccessToken, getIdToken, isUserSessionExpired } from '../configuration';
 import { hideSessionExpiredDialog } from './app/actions';
 import { getSessionExpiredAcknowledged } from './app/selectors';
 

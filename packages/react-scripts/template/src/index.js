@@ -11,7 +11,7 @@ import { NoMatch } from './features/app/NoMatch';
 import './index.css';
 
 import { Config } from './config';
-import { main, handleLoginRedirect, history, store } from '../../configuration';
+import { main, handleLoginRedirect, history, store } from './configuration';
 
 function renderApplication() {
   const root = document.getElementById('root');
