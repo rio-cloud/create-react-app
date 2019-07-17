@@ -1,14 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico"/>
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta name="theme-color" content="#000000"/>
+    <link rel="shortcut icon" type="image/x-icon" href="https://start.rio.cloud/favicon.ico">
+    <meta name="viewport" content="initial-scale=1.0, width=device-width shrink-to-fit=no"/>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta http-equiv="content-encoding" content="gzip">
     <meta charset="UTF-8">
     <!--
       manifest.json provides metadata used when your web app is installed on a
@@ -26,57 +22,62 @@
     -->
     <title>RIO Starter Template</title>
     <link rel="stylesheet" type="text/css" href="https://uikit.developers.rio.cloud/0.13.3/rio-uikit.css">
+
+    <style>
+        html, body, #root { background-color: #E5EBF0; }
+        .messageWrapper { font-family: Helvetica,Arial,sans-serif; color: #2a3740; text-align: center; padding: 1em 3em; }
+        .messageBox { margin: 1.5em 1em; background-color: white; border: 1px solid #D0D8DE; }
+        .messageDivider { border-top: 1px solid #A7AFBB; margin: 2em 0; }
+        .loadingMessage:after { content: ' .'; animation: dots 1s steps(5, end) infinite; }
+        @keyframes dots {
+          0%, 20% { text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); color: rgba(0,0,0,0); }
+          40% { text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); color: #2a3740; }
+          60% { text-shadow: .25em 0 0 #2a3740, .5em 0 0 rgba(0,0,0,0); }
+          80%, 100% { text-shadow: .25em 0 0 #2a3740, .5em 0 0 #2a3740; }
+        }
+    </style>
 </head>
 <body>
-<noscript>You need to enable JavaScript to run this app.</noscript>
-<div id="root"></div>
-<!--
-  This HTML file is a template.
-  If you open it directly in the browser, you will see an empty page.
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
 
-  You can add webfonts, meta tags, or analytics to this file.
-  The build step will place the bundled scripts into the <body> tag.
+    <script type="text/javascript">
+        (function () {
+            var root = document.getElementById('root');
 
-  To begin the development, run `npm start` or `yarn start`.
-  To create a production bundle, use `npm run build` or `yarn build`.
--->
-<script type="text/javascript">
-    (function () {
-        var root = document.getElementById('root');
+            var LOADER_ID = 'loading';
 
-        var LOADER_ID = 'loading';
+            root.innerHTML = '<div id="' + LOADER_ID + '" class="messageWrapper">' +
+                '<p class="loadingMessage">Loading</p></div>';
 
-        root.innerHTML = '<div id="' + LOADER_ID + '" class="messageWrapper">' +
-            '<p class="loadingMessage">Loading</p></div>';
+            // Timeouts in millisec
+            var INITIAL_WAITING_TIME = 60000;
+            var INTERVAL_TIME = 5000;
 
-        // Timeouts in millisec
-        var INITIAL_WAITING_TIME = 60000;
-        var INTERVAL_TIME = 5000;
+            var headlineEN = 'Sorry, something seems to be wrong.';
+            var messageEN = 'Please try again later. If the problem persists, ' +
+                'please contact the RIO Support Hotline 00800/22550746.'
 
-        var headlineEN = 'Sorry, something seems to be wrong.';
-        var messageEN = 'Please try again later. If the problem persists, ' +
-            'please contact the RIO Support Hotline 00800/22550746.'
+            var headlineDE = 'Entschuldigung, etwas scheint nicht zu klappen.';
+            var messageDE = 'Bitte versuchen Sie es später nochmal. ' +
+                'Wenn das Problem weiterhin besteht, kontaktieren Sie bitte die RIO Support Hotline 00800/22550746.';
 
-        var headlineDE = 'Entschuldigung, etwas scheint nicht zu klappen.';
-        var messageDE = 'Bitte versuchen Sie es später nochmal. ' +
-            'Wenn das Problem weiterhin besteht, kontaktieren Sie bitte die RIO Support Hotline 00800/22550746.';
+            // Initially wait some time in order to have bundle.js loaded etc.
+            setTimeout(function () {
+                // Check periodically wheather the app is rendered into the root element.
+                // If nothing is rendered, the error message will be shown
+                setInterval(function () {
+                    if (!root.children.length || root.firstChild.id === LOADER_ID) {
+                        root.innerHTML = '<div class="messageWrapper messageBox">' +
+                            '<h1>' + headlineEN + '</h1><h4>' + messageEN + '</h4>' +
+                            '<hr class="messageDivider"/>' +
+                            '<h1>' + headlineDE + '</h1><h4>' + messageDE + '</h4>' +
+                            '</div>';
+                    }
+                }, INTERVAL_TIME);
+            }, INITIAL_WAITING_TIME);
 
-        // Initially wait some time in order to have bundle.js loaded etc.
-        setTimeout(function () {
-            // Check periodically wheather the app is rendered into the root element.
-            // If nothing is rendered, the error message will be shown
-            setInterval(function () {
-                if (!root.children.length || root.firstChild.id === LOADER_ID) {
-                    root.innerHTML = '<div class="messageWrapper messageBox">' +
-                        '<h1>' + headlineEN + '</h1><h4>' + messageEN + '</h4>' +
-                        '<hr class="messageDivider"/>' +
-                        '<h1>' + headlineDE + '</h1><h4>' + messageDE + '</h4>' +
-                        '</div>';
-                }
-            }, INTERVAL_TIME);
-        }, INITIAL_WAITING_TIME);
-
-    }());
-</script>
+        }());
+    </script>
 </body>
 </html>

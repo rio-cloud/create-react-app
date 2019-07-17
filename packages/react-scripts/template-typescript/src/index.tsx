@@ -8,8 +8,6 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Route, Router, Switch } from 'react-router-dom';
 
-import './index.css';
-
 import { main, handleLoginRedirect, history, store } from './configuration';
 
 import { config } from './config';

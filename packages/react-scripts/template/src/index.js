@@ -8,8 +8,6 @@ import { Provider } from 'react-redux';
 import AppContainer from './features/AppContainer';
 import { NoMatch } from './features/app/NoMatch';
 
-import './index.css';
-
 import { config } from './config';
 import { main, handleLoginRedirect, history, store } from './configuration';
 
