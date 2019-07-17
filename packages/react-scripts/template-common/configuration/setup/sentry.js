@@ -1,7 +1,6 @@
 /* eslint-disable no-undef */
 import * as Sentry from '@sentry/browser';
-
-const SENTRY_DNS = '<sntry-dns-token>';
+import { config } from '../../config';
 
 // version and environment are defined in the webpack.define plugin
 const release = VERSION;
@@ -10,7 +9,7 @@ const environment = ENVIRONMENT;
 // should have been called before using it here
 // ideally before even rendering your react app
 Sentry.init({
-    dsn: SENTRY_DNS,
+    dsn: config.sentryToken,
     environment,
     release,
 });
