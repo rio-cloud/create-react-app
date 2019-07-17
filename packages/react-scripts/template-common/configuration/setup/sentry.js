@@ -3,8 +3,8 @@ import * as Sentry from '@sentry/browser';
 import { config } from '../../config';
 
 // version and environment are defined in the webpack.define plugin
-const release = VERSION;
-const environment = ENVIRONMENT;
+const release = SERVICE_VERSION;
+const environment = SERVICE_ENVIRONMENT;
 
 // should have been called before using it here
 // ideally before even rendering your react app
