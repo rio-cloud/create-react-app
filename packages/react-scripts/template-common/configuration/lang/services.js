@@ -1,18 +1,16 @@
 import getOr from 'lodash/fp/getOr';
 
-import { configureReporting } from '../setup/errorReporting';
+import { reportErrorToSentry } from '../setup/sentry';
 import { authorizeFetch } from '../fetch';
 
 import { changeLocale, languageDataFetched } from './actions';
 import { getSupportedLocale as defaultGetSupportedLocale } from './selectors';
 
-const { captureException } = configureReporting(window, process.env);
-
 // TODO: change the module ID
 const MODULE_NAME = `web-starter-template`;
 
 const sendError = (exception) => {
-    captureException(exception, {
+    reportErrorToSentry(exception, {
         tags: {
             module: MODULE_NAME,
         },
@@ -66,4 +64,3 @@ export const configureFetchLanguageData =
             return error;
         });
     };
-

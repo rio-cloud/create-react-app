@@ -1,6 +1,6 @@
 import { ConfigState } from './types';
 
-export const Config: ConfigState = {
+export const config: ConfigState = {
     backend: {
         APP_REGISTRY: process.env.REACT_APP_APP_REGISTRY,
         AUTHENTICATION_SERVICE: process.env.REACT_APP_AUTHENTICATION_SERVICE,

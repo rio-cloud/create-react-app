@@ -1,5 +1,5 @@
 import { EVENT_USER_LANGUAGE_CHANGED, EVENT_USER_LOGGED_OUT, EVENT_USER_PROFILE_CHANGED } from 'rio-accountmenu';
-import { Config } from '../template/src/config';
+import { config } from '../template/src/config';
 import { extractLanguage, DEFAULT_LOCALE } from './lang/lang';
 import langReducer from './lang/reducer';
 import { getLanguageData, getLocale } from './lang/selectors';
@@ -12,21 +12,18 @@ import loginReducer from './login/reducer';
 import { isUserSessionExpired } from './login/selectors';
 import sessionReducer from './login/sessionReducer';
 import configReducer from './setup/configReducer';
-import { configureReporting } from './setup/errorReporting';
 import { history, store } from './setup/store';
 import { accessToken } from './tokenHandling/accessToken';
 import { accessTokenStored, idTokenStored } from './tokenHandling/actions';
 import tokenHandlingReducer from './tokenHandling/reducer';
 import { getAccessToken, getIdToken } from './tokenHandling/selectors';
-
-
-const { captureException } = configureReporting(window, process.env);
+import { reportErrorToSentry } from './setup/sentry';
 
 const trace = process.env.NODE_ENV !== 'production' ? (...args) => console.log('[src/index]', ...args) : () => {};
 
 const oauthBehavior = (settings) => {
     const isAllowedToMockAuth = process.env.NODE_ENV !== 'production';
-    const promise = isAllowedToMockAuth && Config.login.mockAuthorization ? mockOAuth(settings) : setupOAuth(settings);
+    const promise = isAllowedToMockAuth && config.login.mockAuthorization ? mockOAuth(settings) : setupOAuth(settings);
 
     return promise.then(() => {
         const { initialRoute } = retrieveInitialState();
@@ -79,7 +76,7 @@ function main(renderFn) {
     const oauthConfig = {
         onSessionError: (error) => {
             trace('index.onSessionError', error);
-            captureException(error);
+            reportErrorToSentry(error);
         },
         onTokenExpired: () => {
             trace('index.onTokenExpired');
@@ -107,7 +104,7 @@ function main(renderFn) {
             }).catch((error) => {
                 // eslint-disable-next-line no-console, max-len
                 console.error(`Language data for "${result.locale}" could not be fetched.`, error);
-                captureException(error);
+                reportErrorToSentry(error);
             });
         },
     };

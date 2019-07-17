@@ -19,12 +19,12 @@ import { More } from './app/More';
 // Import application style
 import './app/styles.css';
 
-import { Config } from '../config';
+import { config } from '../config';
 
 const {
     APP_REGISTRY,
     USER_SETTINGS_SERVICE,
-} = Config.backend;
+} = config.backend;
 
 // Define the navigation items of the current application
 const navItems = [
@@ -135,7 +135,7 @@ export const mapDispatchToProps = (dispatch) => ({
 export const mapStateToProps = (state) => {
     return {
         accessToken: getAccessToken(state),
-        homeRoute: Config.homeRoute,
+        homeRoute: config.homeRoute,
         idToken: getIdToken(state),
         languageData: getLanguageData(state),
         showSessionExpired: isUserSessionExpired(state) && !getSessionExpiredAcknowledged(state),

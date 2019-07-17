@@ -10,7 +10,7 @@ import { NoMatch } from './features/app/NoMatch';
 
 import './index.css';
 
-import { Config } from './config';
+import { config } from './config';
 import { main, handleLoginRedirect, history, store } from './configuration';
 
 function renderApplication() {
@@ -35,12 +35,12 @@ function renderApplication() {
 }
 
 
-if (window.location.href.startsWith(Config.login.redirectUri)) {
+if (window.location.href.startsWith(config.login.redirectUri)) {
   handleLoginRedirect();
 } else {
   if (window.Raven) {
       if (process.env.NODE_ENV === 'production') {
-          window.Raven.config(Config.sentryToken, {
+          window.Raven.config(config.sentryToken, {
             // release: ...
             environment: 'production',
           }).install();

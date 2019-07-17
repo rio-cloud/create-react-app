@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash/fp/cloneDeep';
-import { Config } from '../../template/src/config';
+import { config } from '../../template/src/config';
 
-const initial = cloneDeep(Config);
+const initial = cloneDeep(config);
 
 const configReducer = (state = initial, action = {}) => {
     switch (action.type) {

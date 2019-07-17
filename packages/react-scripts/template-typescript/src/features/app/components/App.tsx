@@ -12,7 +12,7 @@ import Intro from './Intro';
 import More from './More';
 
 import './App.css';
-import { Config } from '../../../config';
+import { config } from '../../../config';
 import { AppProperties } from './types';
 
 class ServiceInfo extends React.Component<{}, {}> {
@@ -38,7 +38,7 @@ export default class App extends React.Component<AppProperties, {}> {
     render() {
         const { accessToken, hideSessionDialog, homeRoute, idToken, languageData, showSessionExpired, userLocale: locale } = this.props;
 
-        const { APP_REGISTRY, USER_SETTINGS_SERVICE } = Config.backend;
+        const { APP_REGISTRY, USER_SETTINGS_SERVICE } = config.backend;
 
         const title = (
             <div>

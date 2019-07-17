@@ -6,7 +6,7 @@ import get from 'lodash/fp/get';
 
 import { configureStorage } from './storage';
 import { mapUserProfile } from './userProfile';
-import { Config } from '../../config';
+import { config } from '../../config';
 
 export const SIGNIN_REQUESTED = 'rio.core.login.signinrequested';
 
@@ -34,16 +34,16 @@ export const adaptPublishedInfo = (result = {}) => ({
 });
 
 export const configureAuth = (window, processEnv) => {
-    const redirectUri = Config.login.redirectUri;
-    const silentRedirectUri = Config.login.silentRedirectUri;
+    const redirectUri = config.login.redirectUri;
+    const silentRedirectUri = config.login.silentRedirectUri;
 
     const settings = {
-        authority: `${Config.login.authority}`,
-        client_id: `${Config.login.clientId}`,
+        authority: `${config.login.authority}`,
+        client_id: `${config.login.clientId}`,
         loadUserInfo: false,
         redirect_uri: `${redirectUri}`,
         response_type: `id_token token`,
-        scope: join(' ', Config.login.oauthScope),
+        scope: join(' ', config.login.oauthScope),
         silent_redirect_uri: `${silentRedirectUri || redirectUri}`,
     };
 
@@ -135,7 +135,7 @@ export const configureSetupOAuth = (auth, storage, window, processEnv) => {
 
             const mightBeSuspicious = isFreshRedirect;
 
-            if (Config.login.preventRedirect) {
+            if (config.login.preventRedirect) {
                 // eslint-disable-next-line no-console
                 console.warn('[feature/login] redirect prevented due to config. Error was', error);
             } else if (mightBeSuspicious) {
@@ -190,4 +190,3 @@ export const configureRetrieveInitialState = (storage) => () => ({
 
 export const retrieveInitialState =
     configureRetrieveInitialState(configureStorage(getWindow()));
-

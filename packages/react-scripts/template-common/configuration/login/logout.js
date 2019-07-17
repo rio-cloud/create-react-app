@@ -1,7 +1,7 @@
-import { Config } from '../../config';
+import { config } from '../../config';
 
 export const configureRedirectToLogout = (window, processEnv) => {
-    const { logoutUri } = Config;
+    const { logoutUri } = config;
 
     return () => {
         // eslint-disable-next-line immutable/no-mutation
@@ -10,4 +10,3 @@ export const configureRedirectToLogout = (window, processEnv) => {
 };
 
 export const redirectToLogout = configureRedirectToLogout(window, process.env);
-

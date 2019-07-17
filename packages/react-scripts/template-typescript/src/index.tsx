@@ -12,7 +12,7 @@ import './index.css';
 
 import { main, handleLoginRedirect, history, store } from './configuration';
 
-import { Config } from './config';
+import { config } from './config';
 import AppContainer from './features/app/containers/App.container';
 import { NoMatch } from './features/app/components/NoMatch';
 
@@ -37,7 +37,7 @@ function renderApplication() {
     );
 }
 
-if (window.location.href.startsWith(Config.login.redirectUri as string)) {
+if (window.location.href.startsWith(config.login.redirectUri as string)) {
     handleLoginRedirect();
 } else {
     main(renderApplication);
