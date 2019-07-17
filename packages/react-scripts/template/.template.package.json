@@ -45,9 +45,9 @@
         "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": ["prettier --write", "git add"]
     },
     "scripts": {
-        "start": "concurrently --kill-others 'npm run-script dev-mock-server' 'react-app-rewired start --scripts-version rio-react-scripts'",
-        "build": "react-app-rewired --max_old_space_size=4096 build --scripts-version rio-react-scripts",
-        "test": "react-app-rewired test --scripts-version rio-react-scripts",
+        "start": "concurrently --kill-others 'npm run-script dev-mock-server' 'react-app-rewired start --scripts-version @rio-cloud/react-scripts'",
+        "build": "react-app-rewired --max_old_space_size=4096 build --scripts-version @rio-cloud/react-scripts",
+        "test": "react-app-rewired test --scripts-version @rio-cloud/react-scripts",
         "pretest": "npm run download-externals",
         "eject": "react-scripts eject",
         "check-licenses": "bash ./check_licenses.sh",
