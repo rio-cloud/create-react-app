@@ -19,7 +19,6 @@ module.exports = {
     "extends": "eslint:recommended",
     "plugins": [
         "react",
-        "getsentry",
         "compat"
     ],
     "settings": {
@@ -31,7 +30,6 @@ module.exports = {
     "rules": {
         "compat/compat": 2,
         "brace-style": 1,
-        "getsentry/jsx-needs-i18n": 1,
         "comma-dangle": [
             1,
             "always-multiline"
