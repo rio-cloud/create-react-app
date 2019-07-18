@@ -1,6 +1,8 @@
 import { createHashHistory } from 'history';
+import thunkMiddleware from 'redux-thunk';
 import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import { routerMiddleware } from 'connected-react-router';
 
 import { rootReducer } from '../../template/src/reducers';
 
