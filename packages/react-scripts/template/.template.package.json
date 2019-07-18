@@ -2,6 +2,7 @@
     "dependencies": {
         "@sentry/browser": "^5.5.0",
         "classlist-polyfill": "^1.2.0",
+        "connected-react-router": "^6.5.2",
         "core-js": "^3.0.1",
         "custom-event-polyfill": "^1.0.6",
         "history": "^4.9.0",
