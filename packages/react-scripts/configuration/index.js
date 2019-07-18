@@ -1,11 +1,10 @@
 import { EVENT_USER_LANGUAGE_CHANGED, EVENT_USER_LOGGED_OUT, EVENT_USER_PROFILE_CHANGED } from 'rio-accountmenu';
-import { config } from '../template/src/config';
 import { extractLanguage, DEFAULT_LOCALE } from './lang/lang';
 import langReducer from './lang/reducer';
 import { getLanguageData, getLocale } from './lang/selectors';
 import { configureFetchLanguageData } from './lang/services';
 import { userProfileObtained, userSessionExpired, userSessionRenewed } from './login/actions';
-import { mockOAuth, retrieveInitialState, setupOAuth, SIGNIN_REQUESTED } from './login/login';
+import { SIGNIN_REQUESTED } from './login/login';
 import { redirectToLogout } from './login/logout';
 import handleLoginRedirect from './login/redirect';
 import loginReducer from './login/reducer';
@@ -18,25 +17,8 @@ import { accessTokenStored, idTokenStored } from './tokenHandling/actions';
 import tokenHandlingReducer from './tokenHandling/reducer';
 import { getAccessToken, getIdToken } from './tokenHandling/selectors';
 import { reportErrorToSentry } from './setup/sentry';
-
-const trace = process.env.NODE_ENV !== 'production' ? (...args) => console.log('[src/index]', ...args) : () => {};
-
-const oauthBehavior = (settings) => {
-    const isAllowedToMockAuth = process.env.NODE_ENV !== 'production';
-    const promise = isAllowedToMockAuth && config.login.mockAuthorization ? mockOAuth(settings) : setupOAuth(settings);
-
-    return promise.then(() => {
-        const { initialRoute } = retrieveInitialState();
-
-        trace('initialRoute lookup', initialRoute);
-        if (initialRoute) {
-            trace(`history.replace("/${initialRoute}")`);
-            history.replace(`/${initialRoute}`);
-        }
-
-        return Promise.resolve();
-    });
-};
+import { trace } from './setup/trace';
+import { oauthBehavior } from './setup/oauth';
 
 function main(renderFn) {
     const fetchLanguageData = configureFetchLanguageData(store);
