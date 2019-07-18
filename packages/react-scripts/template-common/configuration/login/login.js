@@ -175,7 +175,7 @@ export const mockOAuth = ({ onTokenRenewed }) => {
             email: 'test@example.com',
             family_name: 'Client',
             given_name: 'Test',
-            locale: Config.login.mockLocale,
+            locale: config.login.mockLocale,
             name: 'Test Client',
             sub: 'prod-rio-users:mock-user',
         },

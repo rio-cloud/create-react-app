@@ -17,8 +17,8 @@ module.exports = {
                 enabled: true,
             }),
             new webpack.DefinePlugin({
-                SERVICE_VERSION: packageJson.version,
-                SERVICE_ENVIRONMENT: webpackMode,
+                SERVICE_VERSION: JSON.stringify(packageJson.version),
+                SERVICE_ENVIRONMENT: JSON.stringify(webpackMode),
             }),
         ];
         return config;
