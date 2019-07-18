@@ -2,6 +2,7 @@
     "dependencies": {
         "@sentry/browser": "^5.5.0",
         "core-js": "^3.0.1",
+        "custom-event-polyfill": "^1.0.6",
         "history": "^4.9.0",
         "less": "^3.9.0",
         "lodash": "^4.17.11",
