@@ -4,24 +4,21 @@ const packageJson = require('./package.json');
 
 const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin');
 
-const NODE_ENV = process.env['NODE_ENV'] || 'development';
-const webpackMode = NODE_ENV === 'production' ? 'production' : 'development';
-
 module.exports = {
     // The Webpack config to use when compiling your react app for development or production.
     webpack: function(config, env) {
-        if (!config.plugins) {
-            config.plugins = [];
-        }
-        config.plugins = [...config.plugins,
+        const webpackMode = env['NODE_ENV'] === 'production' ? 'production' : 'development';
+        const plugins = config.plugins || [];
+
+        config.plugins = [...plugins,
             new HtmlWebpackExternalsPlugin({
                 externals,
                 //enabled: env === 'production',
                 enabled: true,
             }),
             new webpack.DefinePlugin({
-                SERVICE_VERSION: JSON.stringify(packageJson.version),
-                SERVICE_ENVIRONMENT: JSON.stringify(webpackMode),
+                SERVICE_VERSION: packageJson.version,
+                SERVICE_ENVIRONMENT: webpackMode,
             }),
         ];
         return config;
