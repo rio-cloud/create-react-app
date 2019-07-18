@@ -1,7 +1,7 @@
 import getOr from 'lodash/fp/getOr';
 
 import { reportErrorToSentry } from '../setup/sentry';
-import { authorizeFetch } from '../fetch';
+import { authorizeFetch } from '../setup/fetch';
 
 import { changeLocale, languageDataFetched } from './actions';
 import { getSupportedLocale as defaultGetSupportedLocale } from './selectors';
