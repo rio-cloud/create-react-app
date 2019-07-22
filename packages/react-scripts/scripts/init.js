@@ -142,7 +142,7 @@ module.exports = function(
   const templateCommonPath = path.join(ownPath, 'template-common');
   // Copy the files for the user
   if (fs.existsSync(templateCommonPath)) {
-    fs.copySync(templateCommonPath, path.join(appPath, 'src'),);
+    fs.copySync(templateCommonPath, appPath);
   } else {
     console.error(
       `Could not locate supplied common template: ${chalk.green(templateCommonPath)}`

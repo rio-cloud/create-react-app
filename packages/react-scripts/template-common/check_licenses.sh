@@ -2,7 +2,7 @@
 function join_by () { local IFS="$1"; shift; echo "$*"; }
 
 packagesToIgnore=()
-packagesToIgnore+=("test-app@0.1.0")
+packagesToIgnore+=("rio-test-app@3.0.1")
 
 whitelistedLicenses=()
 whitelistedLicenses+=("Apache-2.0")
