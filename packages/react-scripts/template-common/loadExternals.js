@@ -20,7 +20,8 @@ externals.forEach(external => {
     }
 
     const file = fs.createWriteStream(path);
-    const request = https.get(external.entry, function(response) {
+    const source = typeof external.entry === "string" ? external.entry : external.entry.filter(src => src.endsWith(".js"))[0];
+    const request = https.get(source, function(response) {
         response.pipe(file);
         file.on('finish', function() {
             file.close();  // close() is async
