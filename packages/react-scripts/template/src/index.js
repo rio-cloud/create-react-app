@@ -36,18 +36,5 @@ function renderApplication() {
 if (window.location.href.startsWith(config.login.redirectUri)) {
   handleLoginRedirect();
 } else {
-  if (window.Raven) {
-      if (process.env.NODE_ENV === 'production') {
-          window.Raven.config(config.sentryToken, {
-            // release: ...
-            environment: 'production',
-          }).install();
-      }
-
-      window.Raven.context(() => {main(renderApplication);});
-  } else {
-      // eslint-disable-next-line no-console
-      console.warn('No Sentry found, you should tread lightly...');
-      main(renderApplication);
-  }
+  main(renderApplication);
 }
