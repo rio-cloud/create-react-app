@@ -19,8 +19,6 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const safePostCssParser = require('postcss-safe-parser');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
@@ -36,7 +34,6 @@ const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 // @remove-on-eject-begin
 const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
-const postcssNormalize = require('postcss-normalize');
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -89,31 +86,6 @@ module.exports = function(webpackEnv) {
       {
         loader: require.resolve('css-loader'),
         options: cssOptions,
-      },
-      {
-        // Options for PostCSS as we reference these options twice
-        // Adds vendor prefixing based on your specified browser support in
-        // package.json
-        loader: require.resolve('postcss-loader'),
-        options: {
-          // Necessary for external CSS imports to work
-          // https://github.com/facebook/create-react-app/issues/2677
-          ident: 'postcss',
-          plugins: () => [
-            require('postcss-flexbugs-fixes'),
-            require('postcss-preset-env')({
-              autoprefixer: {
-                flexbox: 'no-2009',
-              },
-              stage: 3,
-            }),
-            // Adds PostCSS Normalize as the reset css with default options,
-            // so that it honors browserslist config in package.json
-            // which in turn let's users customize the target behavior as per their needs.
-            postcssNormalize(),
-          ],
-          sourceMap: isEnvProduction && shouldUseSourceMap,
-        },
       },
     ].filter(Boolean);
     if (preProcessor) {
@@ -232,22 +204,6 @@ module.exports = function(webpackEnv) {
           // Enable file caching
           cache: true,
           sourceMap: shouldUseSourceMap,
-        }),
-        // This is only used in production mode
-        new OptimizeCSSAssetsPlugin({
-          cssProcessorOptions: {
-            parser: safePostCssParser,
-            map: shouldUseSourceMap
-              ? {
-                  // `inline: false` forces the sourcemap to be output into a
-                  // separate file
-                  inline: false,
-                  // `annotation: true` appends the sourceMappingURL to the end of
-                  // the css file, helping the browser find the sourcemap
-                  annotation: true,
-                }
-              : false,
-          },
         }),
       ],
       // Automatically split vendor and commons
@@ -435,26 +391,6 @@ module.exports = function(webpackEnv) {
                 // being evaluated would be much more helpful.
                 sourceMaps: false,
               },
-            },
-            // "postcss" loader applies autoprefixer to our CSS.
-            // "css" loader resolves paths in CSS and adds assets as dependencies.
-            // "style" loader turns CSS into JS modules that inject <style> tags.
-            // In production, we use MiniCSSExtractPlugin to extract that CSS
-            // to a file, but in development "style" loader enables hot editing
-            // of CSS.
-            // By default we support CSS Modules with the extension .module.css
-            {
-              test: cssRegex,
-              exclude: cssModuleRegex,
-              use: getStyleLoaders({
-                importLoaders: 1,
-                sourceMap: isEnvProduction && shouldUseSourceMap,
-              }),
-              // Don't consider CSS imports dead code even if the
-              // containing package claims to have no side effects.
-              // Remove this when webpack adds a warning or an error for this.
-              // See https://github.com/webpack/webpack/issues/6571
-              sideEffects: true,
             },
             // Adds support for CSS Modules (https://github.com/css-modules/css-modules)
             // using the extension .module.css
