@@ -8,7 +8,7 @@ import { SIGNIN_REQUESTED } from './login/login';
 import { redirectToLogout } from './login/logout';
 import handleLoginRedirect from './login/redirect';
 import loginReducer from './login/reducer';
-import { isUserSessionExpired } from './login/selectors';
+import { isUserSessionExpired, getUserAccount } from './login/selectors';
 import sessionReducer from './login/sessionReducer';
 import configReducer from './setup/configReducer';
 import { history, store } from './setup/store';
@@ -49,14 +49,13 @@ function main(renderFn) {
         }
     });
 
-
     let renderApp = () => {
         renderApp = () => {};
         renderFn();
     };
 
     const oauthConfig = {
-        onSessionError: (error) => {
+        onSessionError: error => {
             trace('index.onSessionError', error);
             reportErrorToSentry(error);
         },
@@ -66,7 +65,7 @@ function main(renderFn) {
             accessToken.discardAccessToken();
             store.dispatch(userSessionExpired());
         },
-        onTokenRenewed: (result) => {
+        onTokenRenewed: result => {
             trace('index.onTokenRenewed', result);
 
             accessToken.saveAccessToken(result.accessToken);
@@ -80,18 +79,20 @@ function main(renderFn) {
             // you may fetch the suitable messages from the CDN. Depending
             // on when and from where you fetch the user settings you might
             // want to employ a loading spinner while the request is ongoing.
-            fetchLanguageData(result.locale).then(() => {
-                trace(`Language data fetched for "${result.locale}"`);
-                renderApp();
-            }).catch((error) => {
-                // eslint-disable-next-line no-console, max-len
-                console.error(`Language data for "${result.locale}" could not be fetched.`, error);
-                reportErrorToSentry(error);
-            });
+            fetchLanguageData(result.locale)
+                .then(() => {
+                    trace(`Language data fetched for "${result.locale}"`);
+                    renderApp();
+                })
+                .catch(error => {
+                    // eslint-disable-next-line no-console, max-len
+                    console.error(`Language data for "${result.locale}" could not be fetched.`, error);
+                    reportErrorToSentry(error);
+                });
         },
     };
 
-    oauthBehavior(oauthConfig).catch((error) => {
+    oauthBehavior(oauthConfig).catch(error => {
         trace('auth problem?', error);
     });
 }
@@ -103,6 +104,7 @@ export {
     getIdToken,
     getLanguageData,
     getLocale,
+    getUserAccount,
     handleLoginRedirect,
     history,
     isUserSessionExpired,
@@ -111,5 +113,5 @@ export {
     sessionReducer,
     store,
     tokenHandlingReducer,
-    DEFAULT_LOCALE
+    DEFAULT_LOCALE,
 };

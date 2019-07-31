@@ -80,6 +80,7 @@ declare function getIdToken(state: any): IdToken
 declare function isUserSessionExpired(state: any): boolean
 declare function getLanguageData(state: any): LanguageDataInterface
 declare function getLocale(state: any): string
+declare function getUserAccount(state: any): string | null;
 
 declare const store: Store;
 declare const history: History<any>;
@@ -93,6 +94,7 @@ export {
     getIdToken,
     getLanguageData,
     getLocale,
+    getUserAccount,
     history,
     isUserSessionExpired,
     langReducer,
