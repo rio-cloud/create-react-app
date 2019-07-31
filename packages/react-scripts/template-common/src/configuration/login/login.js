@@ -12,7 +12,7 @@ export const SIGNIN_REQUESTED = 'rio.core.login.signinrequested';
 
 const trace = process.env.NODE_ENV !== 'production' ? (...args) => console.log(`[oidcLogin]`, ...args) : () => {};
 
-const getWindow = () => typeof window === 'undefined' ? {} : window;
+const getWindow = () => (typeof window === 'undefined' ? {} : window);
 
 const param = (window, regex, defaultValue = null) => {
     // eslint-disable-next-line immutable/no-let
@@ -53,52 +53,51 @@ export const configureAuth = (window, processEnv) => {
 };
 
 export const configureSetupOAuth = (auth, storage, window, processEnv) => {
-
     const isFreshRedirect = Boolean(param(window, /access_token=([^&]+)/u));
 
     const saveCurrentRoute = () => {
-        const initialRoute =
-            [
-                window.location.hash,
-                window.location.search,
-            ].join('').replace(/^#/u, '');
+        const initialRoute = [window.location.hash, window.location.search].join('').replace(/^#/u, '');
 
         storage.saveRoute(initialRoute);
 
         trace('saving initial route', initialRoute);
     };
 
-    return (config) => {
-
+    return oauthConfig => {
         const trySignin = () =>
-            auth.signinSilent().then((result) => {
-                trace('oidc.signinSilent success!', result);
-                config.onTokenRenewed(adaptPublishedInfo(result));
+            auth
+                .signinSilent()
+                .then(result => {
+                    trace('oidc.signinSilent success!', result);
+                    oauthConfig.onTokenRenewed(adaptPublishedInfo(result));
 
-                if (!isFreshRedirect) {
-                    saveCurrentRoute();
-                }
+                    if (!isFreshRedirect) {
+                        saveCurrentRoute();
+                    }
 
-                return result;
-            }).catch((error) => {
-                trace('oidc.signinSilent failed', error);
+                    return result;
+                })
+                .catch(error => {
+                    trace('oidc.signinSilent failed', error);
 
-                if (!isFreshRedirect) {
-                    saveCurrentRoute();
-                }
+                    if (!isFreshRedirect) {
+                        saveCurrentRoute();
+                    }
 
-                config.onTokenExpired();
-                return Promise.reject(error);
-            });
+                    oauthConfig.onTokenExpired();
+                    return Promise.reject(error);
+                });
 
         if (get('document.addEventListener', window)) {
             window.document.addEventListener(SIGNIN_REQUESTED, () => {
                 trace('[features/login/signinrequested] Trying to sign in silently...');
-                trySignin().then((result) => {
-                    trace('[features/login/signinrequested] Re-Signin successful.', result);
-                }).catch((error) => {
-                    trace('[features/login/signinrequested] Re-Signin failed.', error);
-                });
+                trySignin()
+                    .then(result => {
+                        trace('[features/login/signinrequested] Re-Signin successful.', result);
+                    })
+                    .catch(error => {
+                        trace('[features/login/signinrequested] Re-Signin failed.', error);
+                    });
             });
         }
 
@@ -112,13 +111,13 @@ export const configureSetupOAuth = (auth, storage, window, processEnv) => {
 
         auth.events.addAccessTokenExpired((...args) => {
             trace('oidc.accessTokenExpired', ...args);
-            config.onTokenExpired();
+            oauthConfig.onTokenExpired();
         });
 
-        auth.events.addSilentRenewError((error) => {
+        auth.events.addSilentRenewError(error => {
             trace('oidc.silentRenewError', error);
-            config.onSessionError(error);
-            config.onTokenExpired();
+            oauthConfig.onSessionError(error);
+            oauthConfig.onTokenExpired();
         });
 
         auth.events.addUserLoaded((...args) => {
@@ -127,10 +126,10 @@ export const configureSetupOAuth = (auth, storage, window, processEnv) => {
 
         auth.events.addUserSignedOut((...args) => {
             trace('oidc.userSignedOut', ...args);
-            config.onTokenExpired();
+            oauthConfig.onTokenExpired();
         });
 
-        return trySignin().catch((error) => {
+        return trySignin().catch(error => {
             trace('oidc.signinSilent failed, trying page redirect...', error);
 
             const mightBeSuspicious = isFreshRedirect;
@@ -141,7 +140,7 @@ export const configureSetupOAuth = (auth, storage, window, processEnv) => {
             } else if (mightBeSuspicious) {
                 trace('oidc.signinSilent.error', 'redirect prevented due to supsicious signin error', error);
                 storage.discardRoute();
-                config.onSessionError(error);
+                oauthConfig.onSessionError(error);
             } else {
                 saveCurrentRoute();
                 auth.signinRedirect();
@@ -154,39 +153,35 @@ export const configureSetupOAuth = (auth, storage, window, processEnv) => {
 
 const runtimeAuth = configureAuth(window, process.env);
 
-export const setupOAuth = configureSetupOAuth(
-    runtimeAuth,
-    configureStorage(getWindow()),
-    getWindow(),
-    process.env
-);
+export const setupOAuth = configureSetupOAuth(runtimeAuth, configureStorage(getWindow()), getWindow(), process.env);
 
 export const mockOAuth = ({ onTokenRenewed }) => {
     // eslint-disable-next-line no-console
     console.warn(`[feature/login/oidc-session] Using mocked authorization due to config setting`);
 
-    onTokenRenewed(adaptPublishedInfo({
-        access_token: 'valid-mocked-oauth-bogus-token',
-        // eslint-disable-next-line no-magic-numbers
-        expires_in: 60 * 60 * 24 * 365,
-        profile: {
-            account: 'mockaccount',
-            azp: 'test-client',
-            email: 'test@example.com',
-            family_name: 'Client',
-            given_name: 'Test',
-            locale: config.login.mockLocale,
-            name: 'Test Client',
-            sub: 'prod-rio-users:mock-user',
-        },
-    }));
+    onTokenRenewed(
+        adaptPublishedInfo({
+            access_token: 'valid-mocked-oauth-bogus-token',
+            // eslint-disable-next-line no-magic-numbers
+            expires_in: 60 * 60 * 24 * 365,
+            profile: {
+                account: 'mockaccount',
+                azp: 'test-client',
+                email: 'test@example.com',
+                family_name: 'Client',
+                given_name: 'Test',
+                locale: config.login.mockLocale,
+                name: 'Test Client',
+                sub: 'prod-rio-users:mock-user',
+            },
+        })
+    );
 
     return Promise.resolve();
 };
 
-export const configureRetrieveInitialState = (storage) => () => ({
+export const configureRetrieveInitialState = storage => () => ({
     initialRoute: storage.getRoute(),
 });
 
-export const retrieveInitialState =
-    configureRetrieveInitialState(configureStorage(getWindow()));
+export const retrieveInitialState = configureRetrieveInitialState(configureStorage(getWindow()));
