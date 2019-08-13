@@ -5,7 +5,6 @@ import { authorizeFetch } from '../setup/fetch';
 
 import { changeLocale, languageDataFetched } from './actions';
 import { getSupportedLocale as defaultGetSupportedLocale } from './selectors';
-import {trace} from "../setup/trace";
 
 // TODO: change the module ID
 const MODULE_NAME = `web-starter-template`;
@@ -57,14 +56,11 @@ export const configureFetchLanguageData =
 
         store.dispatch(changeLocale(locale));
         const supportedLocale = getSupportedLocale(store.getState());
-        return fetchLanguageData(supportedLocale)
-            .then(languageData => {
-                trace(`Language data fetched for "${supportedLocale}"`);
-                store.dispatch(languageDataFetched(supportedLocale, languageData));
-            }).catch(error => {
-                // eslint-disable-next-line no-console
-                console.error(`Language data for "${supportedLocale}" could not be fetched.`, error);
-                sendError(error);
-                return error;
-            });
+        return fetchLanguageData(supportedLocale).then(languageData => {
+            store.dispatch(languageDataFetched(supportedLocale, languageData));
+        }).catch(error => {
+            // eslint-disable-next-line no-console
+            sendError(error);
+            return error;
+        });
     };

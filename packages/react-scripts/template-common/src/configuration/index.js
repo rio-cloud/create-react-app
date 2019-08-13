@@ -4,7 +4,7 @@ import langReducer from './lang/reducer';
 import { getLanguageData, getLocale } from './lang/selectors';
 import { configureFetchLanguageData } from './lang/services';
 import { userProfileObtained, userSessionExpired, userSessionRenewed } from './login/actions';
-import {configureMockUserManager, configureUserManager, createUserManager} from './login/login';
+import { SIGNIN_REQUESTED } from './login/login';
 import { redirectToLogout } from './login/logout';
 import handleLoginRedirect from './login/redirect';
 import loginReducer from './login/reducer';
@@ -16,17 +16,27 @@ import { accessToken } from './tokenHandling/accessToken';
 import { accessTokenStored, idTokenStored } from './tokenHandling/actions';
 import tokenHandlingReducer from './tokenHandling/reducer';
 import { getAccessToken, getIdToken } from './tokenHandling/selectors';
+import { reportErrorToSentry } from './setup/sentry';
 import { trace } from './setup/trace';
-import { attemptInitialSignIn } from './setup/oauth';
-import { config } from '../config';
+import { oauthBehavior } from './setup/oauth';
 
-function main(renderApp) {
+function main(renderFn) {
     const fetchLanguageData = configureFetchLanguageData(store);
 
     const onLogout = () => {
         accessToken.discardAccessToken();
         redirectToLogout();
     };
+
+    const renewToken = (...args) => {
+        trace('index.renewToken(', ...args, ')');
+        const ev = new window.CustomEvent(SIGNIN_REQUESTED);
+        document.dispatchEvent(ev);
+    };
+
+    document.addEventListener(EVENT_USER_LOGGED_OUT, onLogout);
+    document.addEventListener(EVENT_USER_LANGUAGE_CHANGED, renewToken);
+    document.addEventListener(EVENT_USER_PROFILE_CHANGED, renewToken);
 
     // We want the `<html lang>` attribute to be synced with the
     // language currently displayed
@@ -39,7 +49,16 @@ function main(renderApp) {
         }
     });
 
+    let renderApp = () => {
+        renderApp = () => {};
+        renderFn();
+    };
+
     const oauthConfig = {
+        onSessionError: error => {
+            trace('index.onSessionError', error);
+            reportErrorToSentry(error);
+        },
         onTokenExpired: () => {
             trace('index.onTokenExpired');
 
@@ -61,21 +80,21 @@ function main(renderApp) {
             // on when and from where you fetch the user settings you might
             // want to employ a loading spinner while the request is ongoing.
             fetchLanguageData(result.locale)
+                .then(() => {
+                    trace(`Language data fetched for "${result.locale}"`);
+                    renderApp();
+                })
+                .catch(error => {
+                    // eslint-disable-next-line no-console, max-len
+                    console.error(`Language data for "${result.locale}" could not be fetched.`, error);
+                    reportErrorToSentry(error);
+                });
         },
     };
 
-    const isAllowedToMockAuth = process.env.NODE_ENV !== 'production';
-    const userManager = isAllowedToMockAuth && config.login.mockAuthorization ? configureMockUserManager(oauthConfig) : configureUserManager(oauthConfig, createUserManager());
-
-    document.addEventListener(EVENT_USER_LOGGED_OUT, onLogout);
-    document.addEventListener(EVENT_USER_LANGUAGE_CHANGED, userManager.signinSilent());
-    document.addEventListener(EVENT_USER_PROFILE_CHANGED, userManager.signinSilent());
-
-    attemptInitialSignIn(userManager)
-        .then(renderApp)
-        .catch(error => {trace('could not start application', error);})
-
-
+    oauthBehavior(oauthConfig).catch(error => {
+        trace('auth problem?', error);
+    });
 }
 
 export {
