@@ -41,7 +41,7 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('/', function(req, res) {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 app.listen(9000);
@@ -141,19 +141,19 @@ For example, to create a build environment for a staging environment:
 1. Create a file called `.env.staging`
 1. Set environment variables as you would any other `.env` file (e.g. `REACT_APP_API_URL=http://api-staging.example.com`)
 1. Install [env-cmd](https://www.npmjs.com/package/env-cmd)
-   ```sh
-   $ npm install env-cmd --save
-   $ # or
-   $ yarn add env-cmd
-   ```
+    ```sh
+    $ npm install env-cmd --save
+    $ # or
+    $ yarn add env-cmd
+    ```
 1. Add a new script to your `package.json`, building with your new environment:
-   ```json
-   {
-     "scripts": {
-       "build:staging": "env-cmd .env.staging npm run build"
-     }
-   }
-   ```
+    ```json
+    {
+        "scripts": {
+            "build:staging": "env-cmd -f .env.staging npm run build"
+        }
+    }
+    ```
 
 Now you can run `npm run build:staging` to build with the staging environment config.
 You can specify other environments in the same way.
@@ -348,8 +348,8 @@ mywebsite.com
 
 GitHub Pages doesn’t support routers that use the HTML5 `pushState` history API under the hood (for example, React Router using `browserHistory`). This is because when there is a fresh page load for a url like `http://user.github.io/todomvc/todos/42`, where `/todos/42` is a frontend route, the GitHub Pages server returns 404 because it knows nothing of `/todos/42`. If you want to add a router to a project hosted on GitHub Pages, here are a couple of solutions:
 
-- You could switch from using HTML5 history API to routing with hashes. If you use React Router, you can switch to `hashHistory` for this effect, but the URL will be longer and more verbose (for example, `http://user.github.io/todomvc/#/todos/42?_k=yknaj`). [Read more](https://reacttraining.com/react-router/web/api/Router) about different history implementations in React Router.
-- Alternatively, you can use a trick to teach GitHub Pages to handle 404 by redirecting to your `index.html` page with a special redirect parameter. You would need to add a `404.html` file with the redirection code to the `build` folder before deploying your project, and you’ll need to add code handling the redirect parameter to `index.html`. You can find a detailed explanation of this technique [in this guide](https://github.com/rafrex/spa-github-pages).
+-   You could switch from using HTML5 history API to routing with hashes. If you use React Router, you can switch to `hashHistory` for this effect, but the URL will be longer and more verbose (for example, `http://user.github.io/todomvc/#/todos/42?_k=yknaj`). [Read more](https://reacttraining.com/react-router/web/api/Router) about different history implementations in React Router.
+-   Alternatively, you can use a trick to teach GitHub Pages to handle 404 by redirecting to your `index.html` page with a special redirect parameter. You would need to add a `404.html` file with the redirection code to the `build` folder before deploying your project, and you’ll need to add code handling the redirect parameter to `index.html`. You can find a detailed explanation of this technique [in this guide](https://github.com/rafrex/spa-github-pages).
 
 ### Troubleshooting
 
@@ -436,27 +436,35 @@ To support `pushState`, make sure to create a `public/_redirects` file with the 
 
 When you build the project, Create React App will place the `public` folder contents into the build output.
 
-## [Now](https://zeit.co/now)
+## [ZEIT Now](https://zeit.co)
 
-[Now](https://zeit.co/docs) offers a simple, single-command deployment. You can use `now` to deploy your app for free.
+[ZEIT Now](https://zeit.co) is a cloud platform for websites and serverless APIs, that you can use to deploy your Create React App projects to your personal domain (or a free `.now.sh` suffixed URL).
 
-The first step is to install Now. You can do this by installing [the Now Desktop app](https://zeit.co/download), which also installs Now CLI and keeps it up-to-date, or by [installing Now CLI](https://zeit.co/download#now-cli) directly with npm:
+This guide will show you how to get started in a few quick steps:
+
+### Step 1: Installing Now CLI
+
+To install their command-line interface with [npm](https://www.npmjs.com/package/now), run the following command:
 
 ```shell
 npm i -g now
 ```
 
-To deploy your built project directly with Now CLI in your terminal, without any configuration:
+### Step 2: Deploying
 
-1. Build your app by running `npm run build`.
+You can deploy your application by running the following command in the root of the project directory:
 
-2. Move into the build directory by running `cd build`.
+```shell
+now
+```
 
-3. Run `now --name your-project-name` from within the build directory. You will be given a **now.sh** URL as a response as your build is deployed, similar to the following: https://my-cra-project-4rx7b16z3.now.sh/
+**Alternatively**, you can also use their integration for [GitHub](https://zeit.co/github) or [GitLab](https://zeit.co/gitlab).
 
-Click or paste the deployment URL into your browser when the build is complete and you will see your deployed app.
+That’s all!
 
-For more information on deploying React applications with Now, including automatically building your application fresh in the cloud, setting up routes to rewrite all paths to the index.html file, and setting up caching headers for speed, see [the ZEIT Guide for Deploying a React app with Create React App](https://zeit.co/guides/deploying-react-with-now-cra/).
+Your site will now deploy, and you will receive a link similar to the following: https://react.now-examples.now.sh
+
+Out of the box, you are preconfigured for client-side routing compatibility and appropriate default caching headers. This behaviour can be overwritten [like this](https://zeit.co/docs/v2/advanced/routes/).
 
 ## [Render](https://render.com)
 

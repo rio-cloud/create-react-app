@@ -19,9 +19,9 @@ We recommend that you use a separate tool for browser end-to-end tests if you ne
 
 Jest will look for test files with any of the following popular naming conventions:
 
-- Files with `.js` suffix in `__tests__` folders.
-- Files with `.test.js` suffix.
-- Files with `.spec.js` suffix.
+-   Files with `.js` suffix in `__tests__` folders.
+-   Files with `.test.js` suffix.
+-   Files with `.spec.js` suffix.
 
 The `.test.js` / `.spec.js` files (or the `__tests__` folders) can be located at any depth under the `src` top level folder.
 
@@ -55,8 +55,8 @@ Jest provides a built-in `expect()` global function for making assertions. A bas
 import sum from './sum';
 
 it('sums numbers', () => {
-  expect(sum(1, 2)).toEqual(3);
-  expect(sum(2, 2)).toEqual(4);
+    expect(sum(1, 2)).toEqual(3);
+    expect(sum(2, 2)).toEqual(4);
 });
 ```
 
@@ -75,8 +75,8 @@ import ReactDOM from 'react-dom';
 import App from './App';
 
 it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
+    const div = document.createElement('div');
+    ReactDOM.render(<App />, div);
 });
 ```
 
@@ -111,8 +111,6 @@ import Adapter from 'enzyme-adapter-react-16';
 configure({ adapter: new Adapter() });
 ```
 
-> Note: When using TypeScript with Babel, all your files need to have at least one export, otherwise you will get the error `Cannot compile namespaces when the '--isolatedModules' flag is provided.`. To fix this, you can add `export default undefined` to `src/setupTests.ts`.
-
 > Note: Keep in mind that if you decide to "eject" before creating `src/setupTests.js`, the resulting `package.json` file won't contain any reference to it. [Read here](#initializing-test-environment) to learn how to add this after ejecting.
 
 Now you can write a smoke test with it:
@@ -123,7 +121,7 @@ import { shallow } from 'enzyme';
 import App from './App';
 
 it('renders without crashing', () => {
-  shallow(<App />);
+    shallow(<App />);
 });
 ```
 
@@ -139,10 +137,10 @@ import { shallow } from 'enzyme';
 import App from './App';
 
 it('renders welcome message', () => {
-  const wrapper = shallow(<App />);
-  const welcome = <h2>Welcome to React</h2>;
-  // expect(wrapper.contains(welcome)).toBe(true);
-  expect(wrapper.contains(welcome)).toEqual(true);
+    const wrapper = shallow(<App />);
+    const welcome = <h2>Welcome to React</h2>;
+    // expect(wrapper.contains(welcome)).toBe(true);
+    expect(wrapper.contains(welcome)).toEqual(true);
 });
 ```
 
@@ -175,18 +173,18 @@ import 'jest-enzyme';
 
 ### Option 2: React Testing Library
 
-As an alternative or companion to `enzyme`, you may consider using `react-testing-library`. [`react-testing-library`](https://github.com/kentcdodds/react-testing-library) is a library for testing React components in a way that resembles the way the components are used by end users. It is well suited for unit, integration, and end-to-end testing of React components and applications. It works more directly with DOM nodes, and therefore it's recommended to use with [`jest-dom`](https://github.com/gnapse/jest-dom) for improved assertions.
+As an alternative or companion to `enzyme`, you may consider using `react-testing-library`. [`react-testing-library`](https://github.com/testing-library/react-testing-library) is a library for testing React components in a way that resembles the way the components are used by end users. It is well suited for unit, integration, and end-to-end testing of React components and applications. It works more directly with DOM nodes, and therefore it's recommended to use with [`jest-dom`](https://github.com/testing-library/jest-dom) for improved assertions.
 
 To install `react-testing-library` and `jest-dom`, you can run:
 
 ```sh
-npm install --save react-testing-library jest-dom
+npm install --save @testing-library/react @testing-library/jest-dom
 ```
 
 Alternatively you may use `yarn`:
 
 ```sh
-yarn add react-testing-library jest-dom
+yarn add @testing-library/react @testing-library/jest-dom
 ```
 
 Similar to `enzyme` you can create a `src/setupTests.js` file to avoid boilerplate in your test files:
@@ -194,25 +192,25 @@ Similar to `enzyme` you can create a `src/setupTests.js` file to avoid boilerpla
 ```js
 // react-testing-library renders your components to document.body,
 // this will ensure they're removed after each test.
-import 'react-testing-library/cleanup-after-each';
+import '@testing-library/react/cleanup-after-each';
 // this adds jest-dom's custom assertions
-import 'jest-dom/extend-expect';
+import '@testing-library/jest-dom/extend-expect';
 ```
 
 Here's an example of using `react-testing-library` and `jest-dom` for testing that the `<App />` component renders "Welcome to React".
 
 ```js
 import React from 'react';
-import { render } from 'react-testing-library';
+import { render } from '@testing-library/react';
 import App from './App';
 
 it('renders welcome message', () => {
-  const { getByText } = render(<App />);
-  expect(getByText('Welcome to React')).toBeInTheDocument();
+    const { getByText } = render(<App />);
+    expect(getByText('Welcome to React')).toBeInTheDocument();
 });
 ```
 
-Learn more about the utilities provided by `react-testing-library` to facilitate testing asynchronous interactions as well as selecting form elements from [the `react-testing-library` documentation](https://testing-library.com/react) and [examples](https://codesandbox.io/s/github/kentcdodds/react-testing-library-examples).
+Learn more about the utilities provided by `react-testing-library` to facilitate testing asynchronous interactions as well as selecting form elements from the [`react-testing-library` documentation](https://testing-library.com/react) and [examples](https://codesandbox.io/s/github/kentcdodds/react-testing-library-examples).
 
 ## Using Third Party Assertion Libraries
 
@@ -239,10 +237,10 @@ For example:
 
 ```js
 const localStorageMock = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
+    getItem: jest.fn(),
+    setItem: jest.fn(),
+    removeItem: jest.fn(),
+    clear: jest.fn(),
 };
 global.localStorage = localStorageMock;
 ```
@@ -276,33 +274,29 @@ The default Jest coverage configuration can be overridden by adding any of the f
 
 Supported overrides:
 
-- [`collectCoverageFrom`](https://jestjs.io/docs/en/configuration.html#collectcoveragefrom-array)
-- [`coverageReporters`](https://jestjs.io/docs/en/configuration.html#coveragereporters-array-string)
-- [`coverageThreshold`](https://jestjs.io/docs/en/configuration.html#coveragethreshold-object)
-- [`snapshotSerializers`](https://jestjs.io/docs/en/configuration.html#snapshotserializers-array-string)
+-   [`collectCoverageFrom`](https://jestjs.io/docs/en/configuration.html#collectcoveragefrom-array)
+-   [`coverageReporters`](https://jestjs.io/docs/en/configuration.html#coveragereporters-array-string)
+-   [`coverageThreshold`](https://jestjs.io/docs/en/configuration.html#coveragethreshold-object)
+-   [`snapshotSerializers`](https://jestjs.io/docs/en/configuration.html#snapshotserializers-array-string)
 
 Example package.json:
 
 ```json
 {
-  "name": "your-package",
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!<rootDir>/node_modules/",
-      "!<rootDir>/path/to/dir/"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 90,
-        "functions": 90,
-        "lines": 90,
-        "statements": 90
-      }
-    },
-    "coverageReporters": ["text"],
-    "snapshotSerializers": ["my-serializer-module"]
-  }
+    "name": "your-package",
+    "jest": {
+        "collectCoverageFrom": ["src/**/*.{js,jsx,ts,tsx}", "!<rootDir>/node_modules/", "!<rootDir>/path/to/dir/"],
+        "coverageThreshold": {
+            "global": {
+                "branches": 90,
+                "functions": 90,
+                "lines": 90,
+                "statements": 90
+            }
+        },
+        "coverageReporters": ["text"],
+        "snapshotSerializers": ["my-serializer-module"]
+    }
 }
 ```
 
@@ -324,13 +318,13 @@ Popular CI servers already set the environment variable `CI` by default but you 
 ```yaml
 language: node_js
 node_js:
-  - 8
+    - 8
 cache:
-  directories:
-    - node_modules
+    directories:
+        - node_modules
 script:
-  - npm run build
-  - npm test
+    - npm run build
+    - npm test
 ```
 
 1. Trigger your first build with a git push.
@@ -394,15 +388,15 @@ If you know that none of your tests depend on [jsdom](https://github.com/tmpvar/
 
 To help you make up your mind, here is a list of APIs that **need jsdom**:
 
-- Any browser globals like `window` and `document`
-- [`ReactDOM.render()`](https://facebook.github.io/react/docs/top-level-api.html#reactdom.render)
-- [`TestUtils.renderIntoDocument()`](https://facebook.github.io/react/docs/test-utils.html#renderintodocument) ([a shortcut](https://github.com/facebook/react/blob/34761cf9a252964abfaab6faf74d473ad95d1f21/src/test/ReactTestUtils.js#L83-L91) for the above)
-- [`mount()`](https://airbnb.io/enzyme/docs/api/mount.html) in [Enzyme](https://airbnb.io/enzyme/index.html)
+-   Any browser globals like `window` and `document`
+-   [`ReactDOM.render()`](https://facebook.github.io/react/docs/top-level-api.html#reactdom.render)
+-   [`TestUtils.renderIntoDocument()`](https://facebook.github.io/react/docs/test-utils.html#renderintodocument) ([a shortcut](https://github.com/facebook/react/blob/34761cf9a252964abfaab6faf74d473ad95d1f21/src/test/ReactTestUtils.js#L83-L91) for the above)
+-   [`mount()`](https://airbnb.io/enzyme/docs/api/mount.html) in [Enzyme](https://airbnb.io/enzyme/index.html)
 
 In contrast, **jsdom is not needed** for the following APIs:
 
-- [`TestUtils.createRenderer()`](https://facebook.github.io/react/docs/test-utils.html#shallow-rendering) (shallow rendering)
-- [`shallow()`](https://airbnb.io/enzyme/docs/api/shallow.html) in [Enzyme](https://airbnb.io/enzyme/index.html)
+-   [`TestUtils.createRenderer()`](https://facebook.github.io/react/docs/test-utils.html#shallow-rendering) (shallow rendering)
+-   [`shallow()`](https://airbnb.io/enzyme/docs/api/shallow.html) in [Enzyme](https://airbnb.io/enzyme/index.html)
 
 Finally, jsdom is also not needed for [snapshot testing](https://jestjs.io/blog/2016/07/27/jest-14.html).
 
