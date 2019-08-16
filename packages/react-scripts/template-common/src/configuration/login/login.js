@@ -15,7 +15,6 @@ const trace = process.env.NODE_ENV !== 'production' ? (...args) => console.log(`
 const getWindow = () => (typeof window === 'undefined' ? {} : window);
 
 const param = (window, regex, defaultValue = null) => {
-    // eslint-disable-next-line immutable/no-let
     let result = defaultValue;
     decodeURI(window.location.href).replace(regex, (_, it) => {
         result = it;

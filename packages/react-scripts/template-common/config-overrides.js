@@ -10,7 +10,8 @@ module.exports = {
         const webpackMode = env['NODE_ENV'] === 'production' ? 'production' : 'development';
         const plugins = config.plugins || [];
 
-        config.plugins = [...plugins,
+        config.plugins = [
+            ...plugins,
             new HtmlWebpackExternalsPlugin({
                 externals,
                 //enabled: env === 'production',
@@ -23,16 +24,4 @@ module.exports = {
         ];
         return config;
     },
-    // The Jest config to use when running your jest tests - note that the normal rewires do not
-    // work here.
-    jest: function(config) {
-        if (!config.moduleNameMapper) {
-            config.moduleNameMapper = {};
-        }
-
-        // workaround to make smart components in __mocks__ folder work
-        config.moduleNameMapper["ReactDOM"] = "react-dom";
-
-        return config;
-    }
 };

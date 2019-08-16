@@ -13,10 +13,10 @@ externals.forEach(external => {
         return;
     }
 
-    let path = `./__mocks__/${external.module}.js`;
+    let path = `./mocks/${external.module}.js`;
 
     if ('react' === external.module) {
-        path = `./__mocks__/React.js`; //important because smart components require a module called "React"
+        path = `./mocks/React.js`; //important because smart components require a module called "React"
     }
 
     const file = fs.createWriteStream(path);

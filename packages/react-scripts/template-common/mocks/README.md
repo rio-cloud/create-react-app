@@ -12,5 +12,5 @@ Note that `react` and `react-dom` are installed as dev dependencies. But the moc
 
 # Dev mocks
 
-`rio-starter-devmocks.js` serves as the user settings mock server for development purposes. 
+`rio-starter-devmocks.js` serves as the user settings mock server for development purposes.
 This is the only file that is not downloaded as external.

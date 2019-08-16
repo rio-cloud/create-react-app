@@ -1,6 +1,4 @@
-
 export const configureStorage = () => {
-    // eslint-disable-next-line immutable/no-let
     let accessToken = null;
     return {
         discardAccessToken: () => {
@@ -8,9 +6,8 @@ export const configureStorage = () => {
         },
         getAccessToken: () => accessToken,
         hasAccessToken: () => Boolean(accessToken),
-        saveAccessToken: (token) => {
+        saveAccessToken: token => {
             accessToken = token;
         },
     };
-
 };
