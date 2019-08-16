@@ -11,6 +11,8 @@ function mockUserSettings(app) {
     const ROLE_FLEET_USER = 'rio.customer.base.FleetUser';
     let preferredLanguage = 'en-GB';
 
+    app.use(express.static(__dirname + '/static'));
+
     app.get('/usersettings/whoami', function(req, res) {
         res.json({
             userId: 'a6783b60-4cfe-4876-b1d0-b480846288c5',
@@ -61,6 +63,20 @@ function mockUserSettings(app) {
         res.json({
             // FIXME
         });
+    });
+
+    app.get('/menu', function(req, res) {
+        res.send(
+            '<!DOCTYPE html>\n' +
+                '<html lang="en">\n' +
+                '<head>\n' +
+                '    <meta charset="UTF-8">\n' +
+                '    <title>Mocked Menu</title>\n' +
+                '</head>\n' +
+                '<body style="background-position: left top; background-image: url(menu.png); background-repeat: no-repeat;">\n' +
+                '</body>\n' +
+                '</html>'
+        );
     });
 }
 // Convenience export to use all available mocks

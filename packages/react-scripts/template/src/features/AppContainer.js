@@ -3,12 +3,19 @@ import { connect } from 'react-redux';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Route, Switch, Redirect, NavLink, Link } from 'react-router-dom';
 import { DefaultAccountMenu } from 'rio-accountmenu';
-import { DefaultAppNavigator } from 'rio-appnavigator';
 import { SessionExpiredDialog } from 'rio-session-expired-info';
 import { ApplicationHeader, NotificationsContainer, ApplicationLayout, ActionBarItem } from 'rio-uikit';
+import IframeResizer from '@rio-cloud/iframe-resizer';
 
 // Import language configuration
-import { DEFAULT_LOCALE, getLanguageData, getLocale, getAccessToken, getIdToken, isUserSessionExpired } from '../configuration';
+import {
+    DEFAULT_LOCALE,
+    getLanguageData,
+    getLocale,
+    getAccessToken,
+    getIdToken,
+    isUserSessionExpired,
+} from '../configuration';
 import { hideSessionExpiredDialog } from './app/actions';
 import { getSessionExpiredAcknowledged } from './app/selectors';
 
@@ -21,31 +28,36 @@ import './app/styles.css';
 
 import { config } from '../config';
 
-const {
-    APP_REGISTRY,
-    USER_SETTINGS_SERVICE,
-} = config.backend;
+const { USER_SETTINGS_SERVICE } = config.backend;
 
 // Define the navigation items of the current application
 const navItems = [
     {
         key: 'intro',
-        route: <NavLink to='/intro'><FormattedMessage id='starterTemplate.sublink.intro'/></NavLink>,
+        route: (
+            <NavLink to="/intro">
+                <FormattedMessage id="starterTemplate.sublink.intro" />
+            </NavLink>
+        ),
     },
     {
         key: 'more',
-        route: <NavLink to='/more'><FormattedMessage id='starterTemplate.sublink.more'/></NavLink>,
+        route: (
+            <NavLink to="/more">
+                <FormattedMessage id="starterTemplate.sublink.more" />
+            </NavLink>
+        ),
     },
 ];
 
 const ServiceInfo = () => (
     <div>
-        <div className='line-height-largest'>
+        <div className="line-height-largest">
             <a onClick={() => {}}>
                 <span>{'Release notes'}</span>
             </a>
         </div>
-        <div className='line-height-largest'>
+        <div className="line-height-largest">
             <Link to={'/abcd'}>{'Link'}</Link>
         </div>
     </div>
@@ -54,23 +66,23 @@ const ServiceInfo = () => (
 const title = (
     <div>
         <span>{'Service XYZ'}</span>
-        <span className='text-color-gray margin-left-10'>{'v1.1.0'}</span>
+        <span className="text-color-gray margin-left-10">{'v1.1.0'}</span>
     </div>
 );
 
 const serviceInfoItem = (
-    <ActionBarItem id='serviceInfo' className='myItem'>
+    <ActionBarItem id="serviceInfo" className="myItem">
         <ActionBarItem.Icon>
-            <span className='icon rioglyph rioglyph-info-sign'></span>
-            <span className='badge bg-primary'>{'1'}</span>
+            <span className="icon rioglyph rioglyph-info-sign" />
+            <span className="badge bg-primary">{'1'}</span>
         </ActionBarItem.Icon>
-        <ActionBarItem.Popover className='myItemPopover' title={title}>
+        <ActionBarItem.Popover className="myItemPopover" title={title}>
             <ServiceInfo />
         </ActionBarItem.Popover>
     </ActionBarItem>
 );
 
-export const AppContainer = (props) => {
+export const AppContainer = props => {
     const {
         accessToken,
         hideSessionDialog,
@@ -82,21 +94,12 @@ export const AppContainer = (props) => {
     } = props;
     const appTitle = <FormattedMessage id={'starterTemplate.moduleName'} />;
     const accountMenu = (
-        <DefaultAccountMenu
-            accessToken={accessToken}
-            idToken={idToken}
-            userSettingsEndpoint={USER_SETTINGS_SERVICE}
-        />
+        <DefaultAccountMenu accessToken={accessToken} idToken={idToken} userSettingsEndpoint={USER_SETTINGS_SERVICE} />
     );
-    const appNavigator = (
-        <DefaultAppNavigator
-            accessToken={accessToken}
-            appsEndpoint={`${APP_REGISTRY}/apps`}
-            locale={locale}
-        />
-    );
+    const menuUrl = config.backend.MENU_SERVICE;
+    const appNavigator = <IframeResizer url={menuUrl} />;
 
-    const homeLink = <a href={homeRoute}></a>;
+    const homeLink = <a href={homeRoute} />;
 
     return (
         <IntlProvider locale={locale} messages={languageData} defaultLocale={DEFAULT_LOCALE}>
@@ -112,15 +115,11 @@ export const AppContainer = (props) => {
                 </ApplicationLayout.Header>
                 <ApplicationLayout.Body>
                     <NotificationsContainer />
-                    <SessionExpiredDialog
-                        locale={locale}
-                        onClose={hideSessionDialog}
-                        show={showSessionExpired}
-                    />
+                    <SessionExpiredDialog locale={locale} onClose={hideSessionDialog} show={showSessionExpired} />
                     <Switch>
-                        <Route path='/intro' component={Intro} />
-                        <Route path='/more' component={More} />
-                        <Redirect to='/intro'/>
+                        <Route path="/intro" component={Intro} />
+                        <Route path="/more" component={More} />
+                        <Redirect to="/intro" />
                     </Switch>
                 </ApplicationLayout.Body>
             </ApplicationLayout>
@@ -128,11 +127,11 @@ export const AppContainer = (props) => {
     );
 };
 
-export const mapDispatchToProps = (dispatch) => ({
+export const mapDispatchToProps = dispatch => ({
     hideSessionDialog: () => dispatch(hideSessionExpiredDialog()),
 });
 
-export const mapStateToProps = (state) => {
+export const mapStateToProps = state => {
     return {
         accessToken: getAccessToken(state),
         homeRoute: config.homeRoute,
@@ -143,4 +142,7 @@ export const mapStateToProps = (state) => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppContainer);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AppContainer);
