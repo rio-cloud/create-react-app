@@ -36,3 +36,7 @@ export const configureStorage = (window) => {
     };
 
 };
+
+const getWindow = () => (typeof window === 'undefined' ? {} : window);
+
+export const routeStorage = configureStorage(getWindow());
