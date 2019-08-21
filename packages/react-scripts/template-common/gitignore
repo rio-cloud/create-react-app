@@ -327,8 +327,7 @@ $RECYCLE.BIN/
 
 build
 
-__mocks__/React.js
-__mocks__/rio-accountmenu.js
-__mocks__/rio-appnavigator.js
-__mocks__/rio-session-expired-info.js
-__mocks__/rio-uikit.js
+mocks/React.js
+mocks/rio-accountmenu.js
+mocks/rio-session-expired-info.js
+mocks/rio-uikit.js

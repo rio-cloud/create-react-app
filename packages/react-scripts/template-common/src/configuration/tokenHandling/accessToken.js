@@ -1,6 +1,6 @@
 import { configureStorage } from './storage';
 
-export const extractAccessTokenFromWindowLocation = (window) => {
+export const extractAccessTokenFromWindowLocation = window => {
     if (!window || !window.location || !window.location.href) {
         return undefined;
     }
@@ -9,7 +9,6 @@ export const extractAccessTokenFromWindowLocation = (window) => {
         return undefined;
     }
 
-    // eslint-disable-next-line immutable/no-let
     let token;
     window.location.href.replace(/access_token=([^&]+)/u, (_, it) => {
         token = it;
@@ -19,7 +18,6 @@ export const extractAccessTokenFromWindowLocation = (window) => {
 };
 
 export const configureAccessToken = (window, storage) => {
-
     const urlToken = extractAccessTokenFromWindowLocation(window);
 
     if (urlToken) {
@@ -29,7 +27,4 @@ export const configureAccessToken = (window, storage) => {
     return storage;
 };
 
-export const accessToken = configureAccessToken(
-    typeof window === 'undefined' ? null : window,
-    configureStorage()
-);
+export const accessToken = configureAccessToken(typeof window === 'undefined' ? null : window, configureStorage());

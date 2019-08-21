@@ -3,9 +3,9 @@ import { FormattedMessage, IntlProvider } from 'react-intl';
 import { Link, NavLink, Redirect, Route, Switch } from 'react-router-dom';
 
 import { DefaultAccountMenu } from 'rio-accountmenu';
-import { DefaultAppNavigator } from 'rio-appnavigator';
 import { SessionExpiredDialog } from 'rio-session-expired-info';
 import { ApplicationHeader, NotificationsContainer, ApplicationLayout, ActionBarItem } from 'rio-uikit';
+import IframeResizer from '@rio-cloud/iframe-resizer';
 
 import { DEFAULT_LOCALE } from '../../../configuration';
 import Intro from './Intro';
@@ -38,7 +38,7 @@ export default class App extends React.Component<AppProperties, {}> {
     render() {
         const { accessToken, hideSessionDialog, homeRoute, idToken, languageData, showSessionExpired, userLocale: locale } = this.props;
 
-        const { APP_REGISTRY, USER_SETTINGS_SERVICE } = config.backend;
+        const { USER_SETTINGS_SERVICE } = config.backend;
 
         const title = (
             <div>
@@ -82,9 +82,8 @@ export default class App extends React.Component<AppProperties, {}> {
         const accountMenu = (
             <DefaultAccountMenu accessToken={accessToken} idToken={idToken} userSettingsEndpoint={USER_SETTINGS_SERVICE} />
         );
-        const appNavigator = (
-            <DefaultAppNavigator accessToken={accessToken} appsEndpoint={`${APP_REGISTRY}/apps`} locale={locale} />
-        );
+        const menuUrl = config.backend.MENU_SERVICE as string;
+        const appNavigator = <IframeResizer url={menuUrl} />;
 
         // eslint-disable-next-line jsx-a11y/anchor-has-content
         const homeLink = <a href={homeRoute} />;

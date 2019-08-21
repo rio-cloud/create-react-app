@@ -6,8 +6,7 @@ import { mapUserProfile } from './userProfile';
 import { config } from '../../config';
 import { reportErrorToSentry } from "../setup/sentry";
 
-const trace = process.env.NODE_ENV !== 'production' ? (...args) => console.log(`[oidcLogin]`, ...args) : () => {
-};
+const trace = process.env.NODE_ENV !== 'production' ? (...args) => console.log(`[oidcLogin]`, ...args) : () => {};
 
 const pullLocale = getOr('en-GB', 'profile.locale');
 

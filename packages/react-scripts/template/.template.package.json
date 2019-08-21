@@ -1,15 +1,16 @@
 {
     "dependencies": {
-        "@sentry/browser": "^5.5.0",
+        "@rio-cloud/iframe-resizer": "0.0.1-alpha.12",
+        "@sentry/browser": "^5.6.1",
         "classlist-polyfill": "^1.2.0",
         "connected-react-router": "^6.5.2",
-        "core-js": "^3.1.4",
+        "core-js": "^3.2.1",
         "custom-event-polyfill": "^1.0.7",
         "history": "^4.9.0",
         "less": "^3.9.0",
         "lodash": "^4.17.15",
-        "oidc-client": "^1.8.2",
-        "react-app-polyfill": "^1.0.1",
+        "oidc-client": "^1.9.0",
+        "react-app-polyfill": "^1.0.2",
         "react-intl": "^2.9.0",
         "react-redux": "^7.1.0",
         "react-router-dom": "^5.0.1",
@@ -22,11 +23,13 @@
     },
     "devDependencies": {
         "concurrently": "^4.1.1",
-        "css-loader": "^3.1.0",
+        "css-loader": "^3.2.0",
         "eslint-plugin-compat": "^3.3.0",
         "html-webpack-externals-plugin": "^3.8.0",
         "http-proxy-middleware": "^0.19.1",
-        "husky": "^3.0.2",
+        "husky": "^3.0.3",
+        "jest-changed-files": "^24.9.0",
+        "jest-environment-jsdom": "^24.9.0",
         "less-loader": "^5.0.0",
         "license-checker": "^25.0.1",
         "lint-staged": "^9.2.1",
@@ -38,7 +41,7 @@
         "react-dom": "^16.8.6",
         "redux-devtools-extension": "^2.13.8",
         "source-map-explorer": "^2.0.1",
-        "style-loader": "^0.23.1"
+        "style-loader": "^1.0.0"
     },
     "husky": {
         "hooks": {
@@ -57,10 +60,19 @@
         "check-licenses": "bash ./check_licenses.sh",
         "ci-install": "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install",
         "audit": "npm audit --registry https://registry.npmjs.org --parseable",
-        "dev-mock-server": "nodenv __mocks__/rio-starter-devmocks.js --exec nodemon",
+        "dev-mock-server": "nodenv mocks/rio-starter-devmocks.js --exec nodemon",
         "download-externals": "nodenv ./loadExternals.js",
         "analyze": "source-map-explorer 'build/static/js/*.js'",
         "lint": "eslint 'src/**/*.js' 'test/**/*.js'",
         "format-code": "prettier --write 'src/**/*.{js,jsx,ts,tsx,json,css,scss,md}'"
+    },
+    "jest": {
+        "moduleNameMapper": {
+            "ReactDOM": "react-dom"
+        },
+        "moduleDirectories": [
+            "node_modules",
+            "mocks"
+        ]
     }
 }

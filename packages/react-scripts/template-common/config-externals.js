@@ -23,11 +23,6 @@ module.exports = [
         module: 'rio-accountmenu',
     },
     {
-        entry: 'https://appnavigator.developers.rio.cloud/1.0.4/rio-appnavigator.js',
-        global: 'RioAppNavigator',
-        module: 'rio-appnavigator',
-    },
-    {
         entry: 'https://session-expired-info.developers.rio.cloud/0.9.4/rio-session-expired-info.js',
         global: 'RioSessionExpiredInfo',
         module: 'rio-session-expired-info',

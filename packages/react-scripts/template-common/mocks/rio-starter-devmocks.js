@@ -2,19 +2,18 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const express = require("express");
-const bodyParser = require("body-parser");
+const express = require('express');
+const bodyParser = require('body-parser');
 
 function mockUserSettings(app) {
-
-    const isAuthorized = headers => (
-        /Bearer\s+(.+)/.test(headers.authorization)
-    );
+    const isAuthorized = headers => /Bearer\s+(.+)/.test(headers.authorization);
 
     const ROLE_FLEET_USER = 'rio.customer.base.FleetUser';
     let preferredLanguage = 'en-GB';
 
-    app.get('/usersettings/whoami', function (req, res) {
+    app.use(express.static(__dirname + '/static'));
+
+    app.get('/usersettings/whoami', function(req, res) {
         res.json({
             userId: 'a6783b60-4cfe-4876-b1d0-b480846288c5',
             email: 'user-en@my-rio',
@@ -39,7 +38,7 @@ function mockUserSettings(app) {
     });
 
     // Adapted from https://collaboration.msi.audi.com/stash/projects/MANZL/repos/platform/browse/frontend/web/backendMock/userSettingsMock.js
-    app.get('/usersettings/user/settings/language', function (req, res) {
+    app.get('/usersettings/user/settings/language', function(req, res) {
         if (!isAuthorized(req.headers)) {
             res.send(401);
         } else {
@@ -49,7 +48,7 @@ function mockUserSettings(app) {
         }
     });
 
-    app.put('/usersettings/user/settings/language', function (req, res) {
+    app.put('/usersettings/user/settings/language', function(req, res) {
         if (!isAuthorized(req.headers)) {
             res.status(401).end();
         } else if (req.body && req.body.preferredLanguage) {
@@ -60,12 +59,25 @@ function mockUserSettings(app) {
         }
     });
 
-    app.get('/usersettings/user/settings/newsletter', function (req, res) {
+    app.get('/usersettings/user/settings/newsletter', function(req, res) {
         res.json({
             // FIXME
         });
     });
 
+    app.get('/menu', function(req, res) {
+        res.send(
+            '<!DOCTYPE html>\n' +
+                '<html lang="en">\n' +
+                '<head>\n' +
+                '    <meta charset="UTF-8">\n' +
+                '    <title>Mocked Menu</title>\n' +
+                '</head>\n' +
+                '<body style="background-position: left top; background-image: url(menu.png); background-repeat: no-repeat;">\n' +
+                '</body>\n' +
+                '</html>'
+        );
+    });
 }
 // Convenience export to use all available mocks
 function mockAll(app) {
@@ -74,9 +86,9 @@ function mockAll(app) {
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json()); 
+app.use(bodyParser.json());
 mockAll(app);
-app.listen(3001, () => console.log("Express server is running on localhost:3001"));
+app.listen(3001, () => console.log('Express server is running on localhost:3001'));
 
 exports.mockUserSettings = mockUserSettings;
 exports.mockAll = mockAll;
