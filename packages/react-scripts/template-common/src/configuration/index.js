@@ -4,7 +4,7 @@ import langReducer from './lang/reducer';
 import { getLanguageData, getLocale } from './lang/selectors';
 import { configureFetchLanguageData } from './lang/services';
 import { userProfileObtained, userSessionExpired, userSessionRenewed } from './login/actions';
-import {configureMockUserManager, configureUserManager, createUserManager} from './login/login';
+import { configureMockUserManager, configureUserManager, createUserManager } from './login/login';
 import { redirectToLogout } from './login/logout';
 import handleLoginRedirect from './login/redirect';
 import loginReducer from './login/reducer';
@@ -60,22 +60,25 @@ function main(renderApp) {
             // you may fetch the suitable messages from the CDN. Depending
             // on when and from where you fetch the user settings you might
             // want to employ a loading spinner while the request is ongoing.
-            fetchLanguageData(result.locale)
+            fetchLanguageData(result.locale);
         },
     };
 
     const isAllowedToMockAuth = process.env.NODE_ENV !== 'production';
-    const userManager = isAllowedToMockAuth && config.login.mockAuthorization ? configureMockUserManager(oauthConfig) : configureUserManager(oauthConfig, createUserManager());
+    const userManager =
+        isAllowedToMockAuth && config.login.mockAuthorization
+            ? configureMockUserManager(oauthConfig)
+            : configureUserManager(oauthConfig, createUserManager());
 
     document.addEventListener(EVENT_USER_LOGGED_OUT, onLogout);
-    document.addEventListener(EVENT_USER_LANGUAGE_CHANGED, userManager.signinSilent());
-    document.addEventListener(EVENT_USER_PROFILE_CHANGED, userManager.signinSilent());
+    document.addEventListener(EVENT_USER_LANGUAGE_CHANGED, userManager.signinSilent);
+    document.addEventListener(EVENT_USER_PROFILE_CHANGED, userManager.signinSilent);
 
     attemptInitialSignIn(userManager)
         .then(renderApp)
-        .catch(error => {trace('could not start application', error);})
-
-
+        .catch(error => {
+            trace('could not start application', error);
+        });
 }
 
 export {

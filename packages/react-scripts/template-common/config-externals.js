@@ -18,7 +18,7 @@ module.exports = [
         module: 'rio-uikit',
     },
     {
-        entry: 'https://accountmenu.developers.rio.cloud/1.2.1/rio-accountmenu.js',
+        entry: 'https://accountmenu.developers.rio.cloud/1.2.4/rio-accountmenu.js',
         global: 'RioAccountMenu',
         module: 'rio-accountmenu',
     },
