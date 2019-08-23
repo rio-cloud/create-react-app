@@ -71,8 +71,8 @@ function main(renderApp) {
             : configureUserManager(oauthConfig, createUserManager());
 
     document.addEventListener(EVENT_USER_LOGGED_OUT, onLogout);
-    document.addEventListener(EVENT_USER_LANGUAGE_CHANGED, userManager.signinSilent);
-    document.addEventListener(EVENT_USER_PROFILE_CHANGED, userManager.signinSilent);
+    document.addEventListener(EVENT_USER_LANGUAGE_CHANGED, userManager.signinSilent.bind(userManager));
+    document.addEventListener(EVENT_USER_PROFILE_CHANGED, userManager.signinSilent.bind(userManager));
 
     attemptInitialSignIn(userManager)
         .then(renderApp)
