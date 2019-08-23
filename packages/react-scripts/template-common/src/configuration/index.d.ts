@@ -57,7 +57,6 @@ interface GenericActionInterface {
 declare function configReducer(state: any, action: GenericActionInterface): any
 declare function langReducer(state: any, action: GenericActionInterface): any
 declare function loginReducer(state: any, action: GenericActionInterface): any
-declare function sessionReducer(state: any, action: GenericActionInterface): any
 declare function tokenHandlingReducer(state: any, action: GenericActionInterface): any
 
 declare function handleLoginRedirect(): void
@@ -86,7 +85,6 @@ export {
     isUserSessionExpired,
     langReducer,
     loginReducer,
-    sessionReducer,
     store,
     tokenHandlingReducer,
     AccessToken,
