@@ -1,12 +1,11 @@
 import { AppState } from './features/app/reducers/types';
-import { AccessTokenState, LanguageState, LoginState, SessionState } from './configuration';
+import { AccessTokenState, LanguageState, LoginState } from './configuration';
 
 export interface State {
     tokenHandling?: AccessTokenState;
     login?: LoginState;
     lang?: LanguageState;
     config?: ConfigState;
-    session?: SessionState;
     app: AppState;
 }
 

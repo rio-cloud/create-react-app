@@ -1,5 +1,3 @@
-/* eslint-disable import/no-default-export */
-
 import { accessToken } from './accessToken';
 import { ACCESS_TOKEN_STORED, ID_TOKEN_STORED } from './actions';
 

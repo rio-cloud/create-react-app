@@ -49,19 +49,6 @@ interface LoginState {
     userSessionExpired: boolean;
 }
 
-interface SessionState {
-    errorMessage: string;
-    hasUserInfo: boolean;
-    isLoggedIn: boolean;
-    showError: boolean;
-    userInfo: {
-        email?: string;
-        firstName?: string;
-        lastName?: string;
-        roles: Array<string>;
-    } | null;
-}
-
 interface GenericActionInterface {
     type?: string;
     payload?: any;
@@ -109,7 +96,6 @@ export {
     LanguageState,
     LoginState,
     MessagesInterface,
-    SessionState,
     UserProfileType,
     DEFAULT_LOCALE
 }

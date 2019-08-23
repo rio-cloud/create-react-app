@@ -9,7 +9,6 @@ import { redirectToLogout } from './login/logout';
 import handleLoginRedirect from './login/redirect';
 import loginReducer from './login/reducer';
 import { isUserSessionExpired, getUserAccount } from './login/selectors';
-import sessionReducer from './login/sessionReducer';
 import configReducer from './setup/configReducer';
 import { history, store } from './setup/store';
 import { accessToken } from './tokenHandling/accessToken';
@@ -94,7 +93,6 @@ export {
     isUserSessionExpired,
     langReducer,
     loginReducer,
-    sessionReducer,
     store,
     tokenHandlingReducer,
     DEFAULT_LOCALE,
