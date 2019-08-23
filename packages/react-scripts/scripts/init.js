@@ -12,7 +12,7 @@
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
 process.on('unhandledRejection', err => {
-  throw err;
+    throw err;
 });
 
 const fs = require('fs-extra');
@@ -25,348 +25,314 @@ const os = require('os');
 const verifyTypeScriptSetup = require('./utils/verifyTypeScriptSetup');
 
 function isInGitRepository() {
-  try {
-    execSync('git rev-parse --is-inside-work-tree', { stdio: 'ignore' });
-    return true;
-  } catch (e) {
-    return false;
-  }
+    try {
+        execSync('git rev-parse --is-inside-work-tree', { stdio: 'ignore' });
+        return true;
+    } catch (e) {
+        return false;
+    }
 }
 
 function isInMercurialRepository() {
-  try {
-    execSync('hg --cwd . root', { stdio: 'ignore' });
-    return true;
-  } catch (e) {
-    return false;
-  }
+    try {
+        execSync('hg --cwd . root', { stdio: 'ignore' });
+        return true;
+    } catch (e) {
+        return false;
+    }
 }
 
 function tryGitInit(appPath) {
-  let didInit = false;
-  try {
-    execSync('git --version', { stdio: 'ignore' });
-    if (isInGitRepository() || isInMercurialRepository()) {
-      return false;
-    }
+    let didInit = false;
+    try {
+        execSync('git --version', { stdio: 'ignore' });
+        if (isInGitRepository() || isInMercurialRepository()) {
+            return false;
+        }
 
-    execSync('git init', { stdio: 'ignore' });
-    didInit = true;
+        execSync('git init', { stdio: 'ignore' });
+        didInit = true;
 
-    execSync('git add -A', { stdio: 'ignore' });
-    execSync('git commit -m "Initial commit from Create React App"', {
-      stdio: 'ignore',
-    });
-    return true;
-  } catch (e) {
-    if (didInit) {
-      // If we successfully initialized but couldn't commit,
-      // maybe the commit author config is not set.
-      // In the future, we might supply our own committer
-      // like Ember CLI does, but for now, let's just
-      // remove the Git files to avoid a half-done state.
-      try {
-        // unlinkSync() doesn't work on directories.
-        fs.removeSync(path.join(appPath, '.git'));
-      } catch (removeErr) {
-        // Ignore.
-      }
+        execSync('git add -A', { stdio: 'ignore' });
+        return true;
+    } catch (e) {
+        if (didInit) {
+            // If we successfully initialized but couldn't commit,
+            // maybe the commit author config is not set.
+            // In the future, we might supply our own committer
+            // like Ember CLI does, but for now, let's just
+            // remove the Git files to avoid a half-done state.
+            try {
+                // unlinkSync() doesn't work on directories.
+                fs.removeSync(path.join(appPath, '.git'));
+            } catch (removeErr) {
+                // Ignore.
+            }
+        }
+        return false;
     }
-    return false;
-  }
 }
 
-module.exports = function(
-  appPath,
-  appName,
-  verbose,
-  originalDirectory,
-  template
-) {
-  const ownPath = path.dirname(
-    require.resolve(path.join(__dirname, '..', 'package.json'))
-  );
-  const appPackage = require(path.join(appPath, 'package.json'));
-  const useYarn = fs.existsSync(path.join(appPath, 'yarn.lock'));
+module.exports = function(appPath, appName, verbose, originalDirectory, template) {
+    const ownPath = path.dirname(require.resolve(path.join(__dirname, '..', 'package.json')));
+    const appPackage = require(path.join(appPath, 'package.json'));
+    const useYarn = fs.existsSync(path.join(appPath, 'yarn.lock'));
 
     // Copy over some of the devDependencies
-  appPackage.dependencies = appPackage.dependencies || {};
+    appPackage.dependencies = appPackage.dependencies || {};
 
-  const useTypeScript = appPackage.dependencies['typescript'] != null;
+    const useTypeScript = appPackage.dependencies['typescript'] != null;
 
-  const templatePath = template
-    ? path.resolve(originalDirectory, template)
-    : path.join(ownPath, useTypeScript ? 'template-typescript' : 'template');
+    const templatePath = template
+        ? path.resolve(originalDirectory, template)
+        : path.join(ownPath, useTypeScript ? 'template-typescript' : 'template');
 
-  // Setup the script rules
-  appPackage.scripts = {
-    start: 'react-scripts start',
-    build: 'react-scripts build',
-    test: 'react-scripts test',
-    eject: 'react-scripts eject',
-  };
+    // Setup the script rules
+    appPackage.scripts = {
+        start: 'react-scripts start',
+        build: 'react-scripts build',
+        test: 'react-scripts test',
+        eject: 'react-scripts eject',
+    };
 
-  // Setup the eslint config
-  appPackage.eslintConfig = {
-    extends: 'react-app',
-  };
+    // Setup the eslint config
+    appPackage.eslintConfig = {
+        extends: 'react-app',
+    };
 
-  // Setup the browsers list
-  appPackage.browserslist = getRioBrowserList();
+    // Setup the browsers list
+    appPackage.browserslist = getRioBrowserList();
 
-  const finalAppPackage = extendAppPackageWithRioStuff(appPackage, templatePath);
+    const finalAppPackage = extendAppPackageWithRioStuff(appPackage, templatePath);
 
-  fs.writeFileSync(
-    path.join(appPath, 'package.json'),
-    JSON.stringify(finalAppPackage, null, 2) + os.EOL
-  );
+    fs.writeFileSync(path.join(appPath, 'package.json'), JSON.stringify(finalAppPackage, null, 2) + os.EOL);
 
-  const readmeExists = fs.existsSync(path.join(appPath, 'README.md'));
-  if (readmeExists) {
-    fs.renameSync(
-      path.join(appPath, 'README.md'),
-      path.join(appPath, 'README.old.md')
-    );
-  }
-
-  // Copy the files for the user
-  if (fs.existsSync(templatePath)) {
-    fs.copySync(templatePath, appPath);
-  } else {
-    console.error(
-      `Could not locate supplied template: ${chalk.green(templatePath)}`
-    );
-    return;
-  }
-
-  const templateCommonPath = path.join(ownPath, 'template-common');
-  // Copy the files for the user
-  if (fs.existsSync(templateCommonPath)) {
-    fs.copySync(templateCommonPath, appPath);
-  } else {
-    console.error(
-      `Could not locate supplied common template: ${chalk.green(templateCommonPath)}`
-    );
-    return;
-  }
-
-  // Rename gitignore after the fact to prevent npm from renaming it to .npmignore
-  // See: https://github.com/npm/npm/issues/1862
-  try {
-    fs.moveSync(
-      path.join(appPath, 'gitignore'),
-      path.join(appPath, '.gitignore'),
-      []
-    );
-  } catch (err) {
-    // Append if there's already a `.gitignore` file there
-    if (err.code === 'EEXIST') {
-      const data = fs.readFileSync(path.join(appPath, 'gitignore'));
-      fs.appendFileSync(path.join(appPath, '.gitignore'), data);
-      fs.unlinkSync(path.join(appPath, 'gitignore'));
-    } else {
-      throw err;
+    const readmeExists = fs.existsSync(path.join(appPath, 'README.md'));
+    if (readmeExists) {
+        fs.renameSync(path.join(appPath, 'README.md'), path.join(appPath, 'README.old.md'));
     }
-  }
 
-  let command;
-  let args;
+    // Copy the files for the user
+    if (fs.existsSync(templatePath)) {
+        fs.copySync(templatePath, appPath);
+    } else {
+        console.error(`Could not locate supplied template: ${chalk.green(templatePath)}`);
+        return;
+    }
 
-  if (useYarn) {
-    command = 'yarnpkg';
-    args = ['add'];
-  } else {
-    command = 'npm';
-    args = ['install', '--save', verbose && '--verbose'].filter(e => e);
-  }
-  args.push('react', 'react-dom');
+    const templateCommonPath = path.join(ownPath, 'template-common');
+    // Copy the files for the user
+    if (fs.existsSync(templateCommonPath)) {
+        fs.copySync(templateCommonPath, appPath);
+    } else {
+        console.error(`Could not locate supplied common template: ${chalk.green(templateCommonPath)}`);
+        return;
+    }
 
-  // Install additional template dependencies, if present
-  const templateDependenciesPath = path.join(
-    appPath,
-    '.template.dependencies.json'
-  );
-  if (fs.existsSync(templateDependenciesPath)) {
-    const templateDependencies = require(templateDependenciesPath).dependencies;
-    args = args.concat(
-      Object.keys(templateDependencies).map(key => {
-        return `${key}@${templateDependencies[key]}`;
-      })
-    );
-    fs.unlinkSync(templateDependenciesPath);
-  }
+    // Rename gitignore after the fact to prevent npm from renaming it to .npmignore
+    // See: https://github.com/npm/npm/issues/1862
+    try {
+        fs.moveSync(path.join(appPath, 'gitignore'), path.join(appPath, '.gitignore'), []);
+    } catch (err) {
+        // Append if there's already a `.gitignore` file there
+        if (err.code === 'EEXIST') {
+            const data = fs.readFileSync(path.join(appPath, 'gitignore'));
+            fs.appendFileSync(path.join(appPath, '.gitignore'), data);
+            fs.unlinkSync(path.join(appPath, 'gitignore'));
+        } else {
+            throw err;
+        }
+    }
 
-  // Install react and react-dom for backward compatibility with old CRA cli
-  // which doesn't install react and react-dom along with react-scripts
-  // or template is presetend (via --internal-testing-template)
-  if (!isReactInstalled(appPackage) || template) {
-    console.log(`Installing react and react-dom using ${command}...`);
+    let command;
+    let args;
+
+    if (useYarn) {
+        command = 'yarnpkg';
+        args = ['add'];
+    } else {
+        command = 'npm';
+        args = ['install', '--save', verbose && '--verbose'].filter(e => e);
+    }
+    args.push('react', 'react-dom');
+
+    // Install additional template dependencies, if present
+    const templateDependenciesPath = path.join(appPath, '.template.dependencies.json');
+    if (fs.existsSync(templateDependenciesPath)) {
+        const templateDependencies = require(templateDependenciesPath).dependencies;
+        args = args.concat(
+            Object.keys(templateDependencies).map(key => {
+                return `${key}@${templateDependencies[key]}`;
+            })
+        );
+        fs.unlinkSync(templateDependenciesPath);
+    }
+
+    // Install react and react-dom for backward compatibility with old CRA cli
+    // which doesn't install react and react-dom along with react-scripts
+    // or template is presetend (via --internal-testing-template)
+    if (!isReactInstalled(appPackage) || template) {
+        console.log(`Installing react and react-dom using ${command}...`);
+        console.log();
+
+        const proc = spawn.sync(command, args, { stdio: 'inherit' });
+        if (proc.status !== 0) {
+            console.error(`\`${command} ${args.join(' ')}\` failed`);
+            return;
+        }
+    }
+
+    if (useTypeScript) {
+        verifyTypeScriptSetup();
+    }
+
+    if (tryGitInit(appPath)) {
+        console.log();
+        console.log('Initialized a git repository.');
+    }
+
+    // Final npm install for all additional dependencies
+    const procStatus = installRioDependencies(useYarn, verbose);
+    if (procStatus !== 0) {
+        return;
+    }
+
+    if (tryFinalGitAdd(appPath)) {
+        console.log();
+        console.log('Added final installation and commited.');
+    }
+
+    // Display the most elegant way to cd.
+    // This needs to handle an undefined originalDirectory for
+    // backward compatibility with old global-cli's.
+    let cdpath;
+    if (originalDirectory && path.join(originalDirectory, appName) === appPath) {
+        cdpath = appName;
+    } else {
+        cdpath = appPath;
+    }
+
+    // Change displayed command to yarn instead of yarnpkg
+    const displayedCommand = useYarn ? 'yarn' : 'npm';
+
+    console.log();
+    console.log(`Success! Created ${appName} at ${appPath}`);
+    console.log();
+    console.log(chalk.red('RIO starter template'));
+    console.log('You are using the RIO starter template which is a fork of the original create-react-app templates');
+    console.log();
+    console.log('Inside that directory, you can run several commands:');
+    console.log();
+    console.log(chalk.cyan(`  ${displayedCommand} start`));
+    console.log('    Starts the development server.');
+    console.log();
+    console.log(chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}build`));
+    console.log('    Bundles the app into static files for production.');
+    console.log();
+    console.log(chalk.cyan(`  ${displayedCommand} test`));
+    console.log('    Starts the test runner.');
+    console.log();
+    console.log(chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}eject`));
+    console.log('    Removes this tool and copies build dependencies, configuration files');
+    console.log('    and scripts into the app directory. If you do this, you can’t go back!');
+    console.log();
+    console.log('We suggest that you begin by typing:');
+    console.log();
+    console.log(chalk.cyan('  cd'), cdpath);
+    console.log(`  ${chalk.cyan(`${displayedCommand} start`)}`);
+    if (readmeExists) {
+        console.log();
+        console.log(chalk.yellow('You had a `README.md` file, we renamed it to `README.old.md`'));
+    }
+    console.log();
+    console.log('Happy hacking!');
+};
+
+function isReactInstalled(appPackage) {
+    const dependencies = appPackage.dependencies || {};
+
+    return typeof dependencies.react !== 'undefined' && typeof dependencies['react-dom'] !== 'undefined';
+}
+
+function getRioDependencies(templatePath) {
+    const templateDependenciesPath = path.join(templatePath, '.template.package.json');
+
+    if (fs.existsSync(templateDependenciesPath)) {
+        const templateDependencies = require(templateDependenciesPath);
+        fs.unlinkSync(templateDependenciesPath);
+
+        return templateDependencies;
+    } else {
+        console.log('No additional dependencies found...');
+
+        return { dependencies: {}, devDependencies: {} };
+    }
+}
+
+function extendAppPackageWithRioStuff(appPackage, templatePath) {
+    const extendedAppPackage = { ...appPackage };
+    const rioDependencies = getRioDependencies(templatePath);
+
+    extendedAppPackage.devDependencies = extendedAppPackage.devDependencies || {};
+    rioDependencies.dependencies = rioDependencies.dependencies || {};
+    rioDependencies.devDependencies = rioDependencies.devDependencies || {};
+
+    Object.entries(rioDependencies.dependencies).forEach(entry => {
+        extendedAppPackage.dependencies[entry[0]] = entry[1];
+    });
+
+    Object.entries(rioDependencies.devDependencies).forEach(entry => {
+        if (extendedAppPackage.dependencies.hasOwnProperty(entry[0])) {
+            //some types are declared as dependencies instead of dev dependencies
+            delete extendedAppPackage.dependencies[entry[0]];
+        }
+        extendedAppPackage.devDependencies[entry[0]] = entry[1];
+    });
+
+    Object.entries(rioDependencies).forEach(entry => {
+        if (['dependencies', 'devDependencies'].indexOf(entry[0]) === -1) {
+            extendedAppPackage[entry[0]] = entry[1];
+        }
+    });
+
+    return extendedAppPackage;
+}
+
+function installRioDependencies(useYarn, verbose) {
+    let command;
+    let args;
+
+    if (useYarn) {
+        command = 'yarnpkg';
+        args = [];
+    } else {
+        command = 'npm';
+        args = ['install', verbose && '--verbose'].filter(e => e);
+    }
+
+    console.log(`Installing additional RIO dependencies using ${command}...`);
     console.log();
 
     const proc = spawn.sync(command, args, { stdio: 'inherit' });
     if (proc.status !== 0) {
-      console.error(`\`${command} ${args.join(' ')}\` failed`);
-      return;
+        console.error(`\`${command} ${args.join(' ')}\` failed`);
     }
-  }
 
-  // Final npm install for all additional dependencies
-  const procStatus = installRioDependencies(useYarn, verbose);
-  if (procStatus !== 0) {
-    return;
-  }
-
-  if (useTypeScript) {
-    verifyTypeScriptSetup();
-  }
-
-  if (tryGitInit(appPath)) {
-    console.log();
-    console.log('Initialized a git repository.');
-  }
-
-  // Display the most elegant way to cd.
-  // This needs to handle an undefined originalDirectory for
-  // backward compatibility with old global-cli's.
-  let cdpath;
-  if (originalDirectory && path.join(originalDirectory, appName) === appPath) {
-    cdpath = appName;
-  } else {
-    cdpath = appPath;
-  }
-
-  // Change displayed command to yarn instead of yarnpkg
-  const displayedCommand = useYarn ? 'yarn' : 'npm';
-
-  console.log();
-  console.log(`Success! Created ${appName} at ${appPath}`);
-  console.log();
-  console.log(chalk.red('RIO starter template'));
-  console.log('You are using the RIO starter template which is a fork of the original create-react-app templates');
-  console.log();
-  console.log('Inside that directory, you can run several commands:');
-  console.log();
-  console.log(chalk.cyan(`  ${displayedCommand} start`));
-  console.log('    Starts the development server.');
-  console.log();
-  console.log(
-    chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}build`)
-  );
-  console.log('    Bundles the app into static files for production.');
-  console.log();
-  console.log(chalk.cyan(`  ${displayedCommand} test`));
-  console.log('    Starts the test runner.');
-  console.log();
-  console.log(
-    chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}eject`)
-  );
-  console.log(
-    '    Removes this tool and copies build dependencies, configuration files'
-  );
-  console.log(
-    '    and scripts into the app directory. If you do this, you can’t go back!'
-  );
-  console.log();
-  console.log('We suggest that you begin by typing:');
-  console.log();
-  console.log(chalk.cyan('  cd'), cdpath);
-  console.log(`  ${chalk.cyan(`${displayedCommand} start`)}`);
-  if (readmeExists) {
-    console.log();
-    console.log(
-      chalk.yellow(
-        'You had a `README.md` file, we renamed it to `README.old.md`'
-      )
-    );
-  }
-  console.log();
-  console.log('Happy hacking!');
-};
-
-function isReactInstalled(appPackage) {
-  const dependencies = appPackage.dependencies || {};
-
-  return (
-    typeof dependencies.react !== 'undefined' &&
-    typeof dependencies['react-dom'] !== 'undefined'
-  );
+    return proc.status;
 }
 
-function getRioDependencies(templatePath) {
-  const templateDependenciesPath = path.join(
-    templatePath,
-    '.template.package.json'
-  );
-
-  if (fs.existsSync(templateDependenciesPath)) {
-    const templateDependencies = require(templateDependenciesPath);
-    fs.unlinkSync(templateDependenciesPath);
-
-    return templateDependencies;
-  } else {
-    console.log('No additional dependencies found...');
-
-    return { dependencies: {}, devDependencies: {}};
-  }
-}
-
-function extendAppPackageWithRioStuff(appPackage, templatePath) {
-  const extendedAppPackage = {...appPackage};
-  const rioDependencies = getRioDependencies(templatePath);
-
-  extendedAppPackage.devDependencies = extendedAppPackage.devDependencies || {};
-  rioDependencies.dependencies = rioDependencies.dependencies || {};
-  rioDependencies.devDependencies = rioDependencies.devDependencies || {};
-
-  Object.entries(rioDependencies.dependencies).forEach(entry => {
-    extendedAppPackage.dependencies[entry[0]] = entry[1];
-  });
-
-  Object.entries(rioDependencies.devDependencies).forEach(entry => {
-    if (extendedAppPackage.dependencies.hasOwnProperty(entry[0])) {
-      //some types are declared as dependencies instead of dev dependencies
-      delete extendedAppPackage.dependencies[entry[0]];
+function tryFinalGitAdd(appPath) {
+    try {
+        execSync('git add -A', { stdio: 'ignore' });
+        execSync('git commit -m "Initial commit from Create React App"', {
+            stdio: 'ignore',
+        });
+        return true;
+    } catch (e) {
+        return false;
     }
-    extendedAppPackage.devDependencies[entry[0]] = entry[1];
-  });
-
-  Object.entries(rioDependencies).forEach(entry => {
-    if (entry[0] !== "dependencies") {
-      extendedAppPackage[entry[0]] = entry[1];
-    }
-  });
-
-  return extendedAppPackage;
-}
-
-function installRioDependencies(useYarn, verbose) {
-  let command;
-  let args;
-
-  if (useYarn) {
-    command = 'yarnpkg';
-    args = [];
-  } else {
-    command = 'npm';
-    args = ['install', verbose && '--verbose'].filter(e => e);
-  }
-
-  console.log(`Installing additional RIO dependencies using ${command}...`);
-  console.log();
-
-  const proc = spawn.sync(command, args, { stdio: 'inherit' });
-  if (proc.status !== 0) {
-    console.error(`\`${command} ${args.join(' ')}\` failed`);
-  }
-
-  return proc.status;
 }
 
 function getRioBrowserList() {
-  return [
-    'last 2 versions',
-    'Firefox 52',
-    'safari >= 7',
-    'IE >= 11'
-  ];
+    return ['last 2 versions', 'Firefox 52', 'safari >= 7', 'IE >= 11'];
 }
