@@ -5,7 +5,6 @@ import { routeStorage } from '../login/storage';
 import { reportErrorToSentry } from './sentry';
 
 const param = (window, regex, defaultValue = null) => {
-    // eslint-disable-next-line immutable/no-let
     let result = defaultValue;
     decodeURI(window.location.href).replace(regex, (_, it) => {
         result = it;
@@ -24,8 +23,9 @@ const saveCurrentRoute = () => {
 export const attemptInitialSignIn = userManager => {
     const isFreshRedirect = Boolean(param(window, /access_token=([^&]+)/u));
 
-    return userManager.signinSilent()
-        .then((user) => {
+    return userManager
+        .signinSilent()
+        .then(user => {
             const initialRoute = routeStorage.getRoute();
 
             trace('initialRoute lookup', initialRoute);
@@ -54,5 +54,4 @@ export const attemptInitialSignIn = userManager => {
             trace('auth problem?', error);
             return Promise.reject(new Error(`Need to sign in`));
         });
-
 };
