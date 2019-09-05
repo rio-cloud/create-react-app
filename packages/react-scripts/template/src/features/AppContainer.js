@@ -102,7 +102,7 @@ export const AppContainer = props => {
     const homeLink = <a href={homeRoute} />;
 
     return (
-        <IntlProvider locale={locale} messages={languageData} defaultLocale={DEFAULT_LOCALE}>
+        <IntlProvider defaultLocale={DEFAULT_LOCALE} key={userLocale} locale={userLocale} messages={languageData}>
             <ApplicationLayout className={'StarterTemplate'}>
                 <ApplicationLayout.Header>
                     <ApplicationHeader
