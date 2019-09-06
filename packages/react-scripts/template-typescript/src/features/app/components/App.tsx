@@ -36,7 +36,15 @@ class ServiceInfo extends React.Component<{}, {}> {
 
 export default class App extends React.Component<AppProperties, {}> {
     render() {
-        const { accessToken, hideSessionDialog, homeRoute, idToken, languageData, showSessionExpired, userLocale: locale } = this.props;
+        const {
+            accessToken,
+            hideSessionDialog,
+            homeRoute,
+            idToken,
+            languageData,
+            showSessionExpired,
+            userLocale,
+        } = this.props;
 
         const { USER_SETTINGS_SERVICE } = config.backend;
 
@@ -80,7 +88,11 @@ export default class App extends React.Component<AppProperties, {}> {
 
         const appTitle = <FormattedMessage id={'starterTemplate.moduleName'} />;
         const accountMenu = (
-            <DefaultAccountMenu accessToken={accessToken} idToken={idToken} userSettingsEndpoint={USER_SETTINGS_SERVICE} />
+            <DefaultAccountMenu
+                accessToken={accessToken}
+                idToken={idToken}
+                userSettingsEndpoint={USER_SETTINGS_SERVICE}
+            />
         );
         const menuUrl = config.backend.MENU_SERVICE as string;
         const appNavigator = <IframeResizer url={menuUrl} />;
@@ -89,7 +101,7 @@ export default class App extends React.Component<AppProperties, {}> {
         const homeLink = <a href={homeRoute} />;
 
         return (
-            <IntlProvider locale={locale} messages={languageData} defaultLocale={DEFAULT_LOCALE}>
+            <IntlProvider defaultLocale={DEFAULT_LOCALE} key={userLocale} locale={userLocale} messages={languageData}>
                 <ApplicationLayout className={'StarterTemplate'}>
                     <ApplicationLayout.Header>
                         <ApplicationHeader
@@ -102,7 +114,11 @@ export default class App extends React.Component<AppProperties, {}> {
                     </ApplicationLayout.Header>
                     <ApplicationLayout.Body>
                         <NotificationsContainer />
-                        <SessionExpiredDialog locale={locale} onClose={hideSessionDialog} show={showSessionExpired} />
+                        <SessionExpiredDialog
+                            locale={userLocale}
+                            onClose={hideSessionDialog}
+                            show={showSessionExpired}
+                        />
                         <Switch>
                             <Route path="/intro" component={Intro} />
                             <Route path="/more" component={More} />
