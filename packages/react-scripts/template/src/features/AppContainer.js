@@ -90,7 +90,7 @@ export const AppContainer = props => {
         idToken,
         languageData,
         showSessionExpired,
-        userLocale: locale,
+        userLocale,
     } = props;
     const appTitle = <FormattedMessage id={'starterTemplate.moduleName'} />;
     const accountMenu = (
@@ -115,7 +115,7 @@ export const AppContainer = props => {
                 </ApplicationLayout.Header>
                 <ApplicationLayout.Body>
                     <NotificationsContainer />
-                    <SessionExpiredDialog locale={locale} onClose={hideSessionDialog} show={showSessionExpired} />
+                    <SessionExpiredDialog locale={userLocale} onClose={hideSessionDialog} show={showSessionExpired} />
                     <Switch>
                         <Route path="/intro" component={Intro} />
                         <Route path="/more" component={More} />
