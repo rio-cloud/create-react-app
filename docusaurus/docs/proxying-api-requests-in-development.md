@@ -34,9 +34,9 @@ Keep in mind that `proxy` only has effect in development (with `npm start`), and
 The `proxy` option supports HTTP, HTTPS and WebSocket connections.<br>
 If the `proxy` option is **not** flexible enough for you, alternatively you can:
 
-- [Configure the proxy yourself](#configuring-the-proxy-manually)
-- Enable CORS on your server ([here’s how to do it for Express](https://enable-cors.org/server_expressjs.html)).
-- Use [environment variables](adding-custom-environment-variables.md) to inject the right server host and port into your app.
+-   [Configure the proxy yourself](#configuring-the-proxy-manually)
+-   Enable CORS on your server ([here’s how to do it for Express](https://enable-cors.org/server_expressjs.html)).
+-   Use [environment variables](adding-custom-environment-variables.md) to inject the right server host and port into your app.
 
 ## "Invalid Host Header" Errors After Configuring Proxy
 
@@ -86,7 +86,7 @@ Next, create `src/setupProxy.js` and place the following contents in it:
 const proxy = require('http-proxy-middleware');
 
 module.exports = function(app) {
-  // ...
+    // ...
 };
 ```
 
@@ -96,7 +96,13 @@ You can now register proxies as you wish! Here's an example using the above `htt
 const proxy = require('http-proxy-middleware');
 
 module.exports = function(app) {
-  app.use(proxy('/api', { target: 'http://localhost:5000/' }));
+    app.use(
+        '/api',
+        proxy({
+            target: 'http://localhost:5000',
+            changeOrigin: true,
+        })
+    );
 };
 ```
 

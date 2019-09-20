@@ -222,7 +222,10 @@ module.exports = function(webpackEnv) {
             },
             // Keep the runtime chunk separated to enable long term caching
             // https://twitter.com/wSokra/status/969679223278505985
-            runtimeChunk: true,
+            // https://github.com/facebook/create-react-app/issues/5358
+            runtimeChunk: {
+                name: entrypoint => `runtime-${entrypoint.name}`,
+            },
         },
         resolve: {
             // This allows you to set a fallback for where Webpack should look for modules.
@@ -277,6 +280,7 @@ module.exports = function(webpackEnv) {
                     use: [
                         {
                             options: {
+                                cache: true,
                                 formatter: require.resolve('react-dev-utils/eslintFormatter'),
                                 eslintPath: require.resolve('eslint'),
                                 resolvePluginsRelativeTo: __dirname,
@@ -291,7 +295,7 @@ module.exports = function(webpackEnv) {
                                     }
 
                                     // We allow overriding the config only if the env variable is set
-                                    if (process.env.EXTEND_ESLINT && eslintConfig) {
+                                    if (process.env.EXTEND_ESLINT === 'true' && eslintConfig) {
                                         return eslintConfig;
                                     } else {
                                         return {
@@ -367,7 +371,8 @@ module.exports = function(webpackEnv) {
                                 // It enables caching results in ./node_modules/.cache/babel-loader/
                                 // directory for faster rebuilds.
                                 cacheDirectory: true,
-                                cacheCompression: isEnvProduction,
+                                // See #6846 for context on why cacheCompression is disabled
+                                cacheCompression: false,
                                 compact: isEnvProduction,
                             },
                         },
@@ -383,7 +388,8 @@ module.exports = function(webpackEnv) {
                                 compact: false,
                                 presets: [[require.resolve('babel-preset-react-app/dependencies'), { helpers: true }]],
                                 cacheDirectory: true,
-                                cacheCompression: isEnvProduction,
+                                // See #6846 for context on why cacheCompression is disabled
+                                cacheCompression: false,
                                 // @remove-on-eject-begin
                                 cacheIdentifier: getCacheIdentifier(
                                     isEnvProduction ? 'production' : isEnvDevelopment && 'development',
@@ -401,6 +407,26 @@ module.exports = function(webpackEnv) {
                                 // being evaluated would be much more helpful.
                                 sourceMaps: false,
                             },
+                        },
+                        // "postcss" loader applies autoprefixer to our CSS.
+                        // "css" loader resolves paths in CSS and adds assets as dependencies.
+                        // "style" loader turns CSS into JS modules that inject <style> tags.
+                        // In production, we use MiniCSSExtractPlugin to extract that CSS
+                        // to a file, but in development "style" loader enables hot editing
+                        // of CSS.
+                        // By default we support CSS Modules with the extension .module.css
+                        {
+                            test: cssRegex,
+                            exclude: cssModuleRegex,
+                            use: getStyleLoaders({
+                                importLoaders: 1,
+                                sourceMap: isEnvProduction && shouldUseSourceMap,
+                            }),
+                            // Don't consider CSS imports dead code even if the
+                            // containing package claims to have no side effects.
+                            // Remove this when webpack adds a warning or an error for this.
+                            // See https://github.com/webpack/webpack/issues/6571
+                            sideEffects: true,
                         },
                         // Adds support for CSS Modules (https://github.com/css-modules/css-modules)
                         // using the extension .module.css
@@ -497,9 +523,10 @@ module.exports = function(webpackEnv) {
             ),
             // Inlines the webpack runtime script. This script is too small to warrant
             // a network request.
+            // https://github.com/facebook/create-react-app/issues/5358
             isEnvProduction &&
                 shouldInlineRuntimeChunk &&
-                new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
+                new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime-.+[.]js/]),
             // Makes some environment variables available in index.html.
             // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
             // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
@@ -577,7 +604,6 @@ module.exports = function(webpackEnv) {
                         '!**/src/setupProxy.*',
                         '!**/src/setupTests.*',
                     ],
-                    watch: paths.appSrc,
                     silent: true,
                     // The formatter is invoked directly in WebpackDevServerUtils during development
                     formatter: isEnvProduction ? typescriptFormatter : undefined,
