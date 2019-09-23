@@ -29,10 +29,11 @@ export const attemptInitialSignIn = userManager => {
             const initialRoute = routeStorage.getRoute();
 
             trace('initialRoute lookup', initialRoute);
-            if (initialRoute) {
+            if (initialRoute && isFreshRedirect) {
                 trace(`history.replace("/${initialRoute}")`);
                 history.replace(`/${initialRoute}`);
             }
+            routeStorage.discardRoute();
 
             return Promise.resolve(user);
         })
