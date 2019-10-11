@@ -11,8 +11,8 @@ module.exports = [
     },
     {
         entry: [
-            'https://uikit.developers.rio.cloud/0.13.4/rio-uikit.js',
-            'https://uikit.developers.rio.cloud/0.13.4/rio-uikit.css',
+            'https://uikit.developers.rio.cloud/0.13.7/rio-uikit.js',
+            'https://uikit.developers.rio.cloud/0.13.7/rio-uikit.css',
         ],
         global: 'RioUikit',
         module: 'rio-uikit',
