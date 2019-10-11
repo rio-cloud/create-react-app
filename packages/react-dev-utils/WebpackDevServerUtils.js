@@ -90,7 +90,7 @@ function printInstructions(appName, urls, useYarn) {
     console.log();
 }
 
-function createCompiler({ appName, config, devSocket, urls, useYarn, useTypeScript, webpack }) {
+function createCompiler({ appName, config, devSocket, urls, useYarn, useTypeScript, tscCompileOnError, webpack }) {
     // "Compiler" is a low-level interface to Webpack.
     // It lets us listen to some events and provide our own custom messages.
     let compiler;
@@ -164,16 +164,28 @@ function createCompiler({ appName, config, devSocket, urls, useYarn, useTypeScri
 
             const messages = await tsMessagesPromise;
             clearTimeout(delayedMsg);
-            statsData.errors.push(...messages.errors);
+            if (tscCompileOnError) {
+                statsData.warnings.push(...messages.errors);
+            } else {
+                statsData.errors.push(...messages.errors);
+            }
             statsData.warnings.push(...messages.warnings);
 
             // Push errors and warnings into compilation result
             // to show them after page refresh triggered by user.
-            stats.compilation.errors.push(...messages.errors);
+            if (tscCompileOnError) {
+                stats.compilation.warnings.push(...messages.errors);
+            } else {
+                stats.compilation.errors.push(...messages.errors);
+            }
             stats.compilation.warnings.push(...messages.warnings);
 
             if (messages.errors.length > 0) {
-                devSocket.errors(messages.errors);
+                if (tscCompileOnError) {
+                    devSocket.warnings(messages.errors);
+                } else {
+                    devSocket.errors(messages.errors);
+                }
             } else if (messages.warnings.length > 0) {
                 devSocket.warnings(messages.warnings);
             }
