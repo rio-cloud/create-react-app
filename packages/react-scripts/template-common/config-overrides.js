@@ -7,7 +7,7 @@ const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin');
 module.exports = {
     // The Webpack config to use when compiling your react app for development or production.
     webpack: function(config, env) {
-        const webpackMode = env['NODE_ENV'] === 'production' ? 'production' : 'development';
+        const webpackMode = env === 'production' ? 'production' : 'development';
         const plugins = config.plugins || [];
 
         config.plugins = [
