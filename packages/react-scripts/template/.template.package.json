@@ -11,7 +11,7 @@
         "lodash": "^4.17.15",
         "oidc-client": "^1.9.1",
         "react-app-polyfill": "^1.0.4",
-        "react-intl": "^2.9.0",
+        "react-intl": "^3.2.2",
         "react-redux": "^7.1.1",
         "react-router-dom": "^5.1.2",
         "react-router": "^5.1.2",
