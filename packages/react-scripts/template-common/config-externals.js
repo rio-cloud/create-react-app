@@ -1,11 +1,11 @@
 module.exports = [
     {
-        entry: 'https://cdn.rio.cloud/libs/react/16.8.6/react.min.js',
+        entry: 'https://cdn.rio.cloud/libs/react/16.10.2/react.min.js',
         global: 'React',
         module: 'react',
     },
     {
-        entry: 'https://cdn.rio.cloud/libs/react-dom/16.8.6/react-dom.min.js',
+        entry: 'https://cdn.rio.cloud/libs/react-dom/16.10.2/react-dom.min.js',
         global: 'ReactDOM',
         module: 'react-dom',
     },
