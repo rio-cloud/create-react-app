@@ -65,19 +65,19 @@
         "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": ["prettier --write", "git add"]
     },
     "scripts": {
-        "start": "concurrently --kill-others 'npm run-script dev-mock-server' 'react-app-rewired start --scripts-version @rio-cloud/react-scripts'",
+        "start": "concurrently --kill-others \"npm run-script dev-mock-server\" \"react-app-rewired start --scripts-version @rio-cloud/react-scripts\"",
         "build": "react-app-rewired --max_old_space_size=4096 build --scripts-version @rio-cloud/react-scripts",
         "test": "react-app-rewired test --scripts-version @rio-cloud/react-scripts",
         "pretest": "tsc && npm run download-externals",
         "eject": "react-scripts eject",
-        "tslint": "tslint -c tslint.json  -p tsconfig.json --format codeFrame 'src/**/*{.ts,.tsx}'",
-        "tslint-fix": "tslint --fix -c tslint.json  -p tsconfig.json --format codeFrame 'src/**/*{.ts,.tsx}'",
+        "tslint": "tslint -c tslint.json  -p tsconfig.json --format codeFrame \"src/**/*{.ts,.tsx}\"",
+        "tslint-fix": "tslint --fix -c tslint.json  -p tsconfig.json --format codeFrame \"src/**/*{.ts,.tsx}\"",
         "check-licenses": "bash ./check_licenses.sh",
         "audit": "npm audit --registry https://registry.npmjs.org --parseable",
         "dev-mock-server": "nodenv mocks/rio-starter-devmocks.js --exec nodemon",
         "download-externals": "nodenv ./loadExternals.js",
-        "analyze": "source-map-explorer 'build/static/js/*.js'",
-        "format-code": "prettier --write 'src/**/*.{js,jsx,ts,tsx,json,css,scss,md}'"
+        "analyze": "source-map-explorer \"build/static/js/*.js\"",
+        "format-code": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
     },
     "jest": {
         "moduleNameMapper": {
