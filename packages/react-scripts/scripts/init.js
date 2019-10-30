@@ -352,5 +352,5 @@ function tryFinalGitAdd(appPath) {
 }
 
 function getRioBrowserList() {
-    return ['last 2 versions', 'Firefox 52', 'safari >= 7', 'IE >= 11'];
+    return ['last 2 versions', 'last 5 Chrome versions', 'Firefox >= 60', 'Edge >= 15', 'Safari >= 10', 'IE >= 11'];
 }
