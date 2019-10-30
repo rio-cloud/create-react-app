@@ -89,9 +89,12 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+      "last 2 versions",
+      "last 5 Chrome versions",
+      "Firefox >= 60",
+      "Edge >= 15",
+      "Safari >= 10",
+      "ie 11"
     ],
     "development": [
       "last 1 chrome version",
