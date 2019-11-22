@@ -10,6 +10,7 @@ import { main, handleLoginRedirect, history, store } from './configuration';
 import { config } from './config';
 import AppContainer from './features/app/containers/App.container';
 import { NoMatch } from './features/app/components/NoMatch';
+import { ErrorBoundary } from './features/app/components/ErrorBoundary';
 
 function renderApplication() {
     const root = document.getElementById('root');
@@ -19,15 +20,17 @@ function renderApplication() {
     // from the outside. So this is effectively a "HashRouter" despite
     // that not being obvious here
     ReactDOM.render(
-        <Provider store={store}>
-            <Router history={history}>
-                <Switch>
-                    <Route path="/error" component={NoMatch} />
-                    <Route path="/" component={AppContainer} />
-                    <Route component={NoMatch} />
-                </Switch>
-            </Router>
-        </Provider>,
+        <ErrorBoundary>
+            <Provider store={store}>
+                <Router history={history}>
+                    <Switch>
+                        <Route path="/error" component={NoMatch} />
+                        <Route path="/" component={AppContainer} />
+                        <Route component={NoMatch} />
+                    </Switch>
+                </Router>
+            </Provider>
+        </ErrorBoundary>,
         root
     );
 }
