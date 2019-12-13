@@ -23,19 +23,19 @@ This package enables a quick setup for internal single page applications for [th
 
 Choose your desired template and create the project as described in the corresponding Readme:
 
--   [Typescript](../rio-template-typescript/README.md) (recommended)
--   [Javascript](../rio-template/README.md)
+-   [Typescript](https://github.com/rio-cloud/create-react-app/tree/rio-react-scripts/packages/rio-template-typescript) (recommended)
+-   [Javascript](https://github.com/rio-cloud/create-react-app/tree/rio-react-scripts/packages/rio-template)
 
 ### Update existing project
 
 Just run (replace the version):
 
 ```
-npm install --save --save-exact @rio-cloud/react-scripts@3.2.0-alpha.1
+npm install --save --save-exact @rio-cloud/react-scripts@3.3.0-alpha.1
 ```
 
 or
 
 ```
-yarn add --exact @rio-cloud/react-scripts@3.2.0-alpha.1
+yarn add --exact @rio-cloud/react-scripts@3.3.0-alpha.1
 ```
