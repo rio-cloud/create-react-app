@@ -4,15 +4,15 @@ title: Developing Components in Isolation
 ---
 
 Usually, in an app, you have a lot of UI components, and each of them has many different states.
-For an example, a simple button component could have the following states:
+For an example, a basic button component could have the following states:
 
-- In a regular state, with a text label.
-- In the disabled mode.
-- In a loading state.
+-   In a regular state, with a text label.
+-   In the disabled mode.
+-   In a loading state.
 
 Usually, it’s hard to see these states without running a sample app or some examples.
 
-Create React App doesn’t include any tools for this by default, but you can easily add [Storybook for React](https://storybook.js.org) ([source](https://github.com/storybooks/storybook)) or [React Styleguidist](https://react-styleguidist.js.org/) ([source](https://github.com/styleguidist/react-styleguidist)) to your project. **These are third-party tools that let you develop components and see all their states in isolation from your app**.
+Create React App doesn’t include any tools for this by default, but you can add [Storybook for React](https://storybook.js.org) ([source](https://github.com/storybooks/storybook)) or [React Styleguidist](https://react-styleguidist.js.org/) ([source](https://github.com/styleguidist/react-styleguidist)) to your project. **These are third-party tools that let you develop components and see all their states in isolation from your app**.
 
 ![Storybook for React Demo](https://i.imgur.com/7CIAWpB.gif)
 
@@ -32,10 +32,10 @@ After that, follow the instructions on the screen.
 
 Learn more about React Storybook:
 
-- [Learn Storybook (tutorial)](https://learnstorybook.com)
-- [Documentation](https://storybook.js.org/basics/introduction/)
-- [GitHub Repo](https://github.com/storybooks/storybook)
-- [Snapshot Testing UI](https://github.com/storybooks/storybook/tree/master/addons/storyshots) with Storybook + addon/storyshot
+-   [Learn Storybook (tutorial)](https://learnstorybook.com)
+-   [Documentation](https://storybook.js.org/basics/introduction/)
+-   [GitHub Repo](https://github.com/storybooks/storybook)
+-   [Snapshot Testing UI](https://github.com/storybooks/storybook/tree/master/addons/storyshots) with Storybook + addon/storyshot
 
 ## Getting Started with Styleguidist
 
@@ -72,5 +72,5 @@ After that, follow the instructions on the screen.
 
 Learn more about React Styleguidist:
 
-- [GitHub Repo](https://github.com/styleguidist/react-styleguidist)
-- [Documentation](https://react-styleguidist.js.org/docs/getting-started.html)
+-   [GitHub Repo](https://github.com/styleguidist/react-styleguidist)
+-   [Documentation](https://react-styleguidist.js.org/docs/getting-started.html)

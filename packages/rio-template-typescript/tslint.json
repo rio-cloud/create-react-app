@@ -1,0 +1,43 @@
+{
+    "extends": [
+        "tslint:latest",
+        "tslint-react"
+    ],
+    "rules": {
+        "quotemark": [
+            true,
+            "single",
+            "jsx-double",
+            "avoid-escape",
+            "avoid-template"
+        ],
+        "max-line-length": [
+            true,
+            180
+        ],
+        "semicolon": [
+            true,
+            "always"
+        ],
+        "interface-name": false,
+        "ordered-imports": false,
+        "object-literal-sort-keys": false,
+        "no-object-literal-type-assertion": false,
+        "ban-types": false,
+        "member-access": false,
+        "max-classes-per-file": false,
+        "array-type": [true, "generic"],
+        "no-implicit-dependencies": [false], // because of cdn dependencies
+        "no-submodule-imports": [true, "react-intl/locale-data", "lodash/fp", "react-app-polyfill", "regenerator-runtime", "core-js"],
+        "no-console": {
+            "severity": "warning",
+            "options": ["log"]
+        },
+        "no-empty": false,
+        "no-empty-interface": false,
+        "trailing-comma": false,
+        "arrow-parens": false,
+        "jsx-wrap-multiline": false,
+        "jsx-no-multiline-js": false
+    }
+}

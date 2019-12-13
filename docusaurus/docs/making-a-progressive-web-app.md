@@ -26,9 +26,9 @@ As the comment states, switching `serviceWorker.unregister()` to
 
 Offline-first Progressive Web Apps are faster and more reliable than traditional web pages, and provide an engaging mobile experience:
 
-- All static site assets are cached so that your page loads fast on subsequent visits, regardless of network connectivity (such as 2G or 3G). Updates are downloaded in the background.
-- Your app will work regardless of network state, even if offline. This means your users will be able to use your app at 10,000 feet and on the subway.
-- On mobile devices, your app can be added directly to the user's home screen, app icon and all. This eliminates the need for the app store.
+-   All static site assets are cached so that your page loads fast on subsequent visits, regardless of network connectivity (such as 2G or 3G). Updates are downloaded in the background.
+-   Your app will work regardless of network state, even if offline. This means your users will be able to use your app at 10,000 feet and on the subway.
+-   On mobile devices, your app can be added directly to the user's home screen, app icon and all. This eliminates the need for the app store.
 
 However, they [can make debugging deployments more challenging](https://github.com/facebook/create-react-app/issues/2398) so, starting with Create React App 2, service workers are opt-in.
 
@@ -64,7 +64,7 @@ following into account:
    these messages is currently left as an exercise to the developer, but as a
    starting point, you can make use of the logic included in [`src/serviceWorker.js`](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/src/serviceWorker.js), which
    demonstrates which service worker lifecycle events to listen for to detect each
-   scenario, and which as a default, just logs appropriate messages to the
+   scenario, and which as a default, only logs appropriate messages to the
    JavaScript console.
 
 1. Service workers [require HTTPS](https://developers.google.com/web/fundamentals/getting-started/primers/service-workers#you_need_https),
@@ -80,7 +80,7 @@ following into account:
    changes you've made locally.
 
 1. If you _need_ to test your offline-first service worker locally, build
-   the application (using `npm run build`) and run a simple http server from your
+   the application (using `npm run build`) and run a standard http server from your
    build directory. After running the build script, `create-react-app` will give
    instructions for one way to test your production build locally and the [deployment instructions](deployment.md) have
    instructions for using other methods. _Be sure to always use an

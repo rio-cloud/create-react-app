@@ -6,57 +6,55 @@
  */
 
 import 'react-app-polyfill/ie9';
-import React from 'react';
+import React, { createContext } from 'react';
 import ReactDOM from 'react-dom';
 import CompileErrorContainer from './containers/CompileErrorContainer';
 import RuntimeErrorContainer from './containers/RuntimeErrorContainer';
 import { overlayStyle } from './styles';
-import { applyStyles } from './utils/dom/css';
+import { applyStyles, getTheme } from './utils/dom/css';
 
 let iframeRoot = null;
+const theme = getTheme();
+export const ThemeContext = createContext();
 
-function render({
-  currentBuildError,
-  currentRuntimeErrorRecords,
-  dismissRuntimeErrors,
-  editorHandler,
-}) {
-  if (currentBuildError) {
-    return (
-      <CompileErrorContainer
-        error={currentBuildError}
-        editorHandler={editorHandler}
-      />
-    );
-  }
-  if (currentRuntimeErrorRecords.length > 0) {
-    return (
-      <RuntimeErrorContainer
-        errorRecords={currentRuntimeErrorRecords}
-        close={dismissRuntimeErrors}
-        editorHandler={editorHandler}
-      />
-    );
-  }
-  return null;
+function render({ currentBuildError, currentRuntimeErrorRecords, dismissRuntimeErrors, editorHandler }) {
+    if (currentBuildError) {
+        return (
+            <ThemeContext.Provider value={theme}>
+                <CompileErrorContainer error={currentBuildError} editorHandler={editorHandler} />
+            </ThemeContext.Provider>
+        );
+    }
+    if (currentRuntimeErrorRecords.length > 0) {
+        return (
+            <ThemeContext.Provider value={theme}>
+                <RuntimeErrorContainer
+                    errorRecords={currentRuntimeErrorRecords}
+                    close={dismissRuntimeErrors}
+                    editorHandler={editorHandler}
+                />
+            </ThemeContext.Provider>
+        );
+    }
+    return null;
 }
 
 window.updateContent = function updateContent(errorOverlayProps) {
-  let renderedElement = render(errorOverlayProps);
+    let renderedElement = render(errorOverlayProps);
 
-  if (renderedElement === null) {
-    ReactDOM.unmountComponentAtNode(iframeRoot);
-    return false;
-  }
-  // Update the overlay
-  ReactDOM.render(renderedElement, iframeRoot);
-  return true;
+    if (renderedElement === null) {
+        ReactDOM.unmountComponentAtNode(iframeRoot);
+        return false;
+    }
+    // Update the overlay
+    ReactDOM.render(renderedElement, iframeRoot);
+    return true;
 };
 
 document.body.style.margin = '0';
 // Keep popup within body boundaries for iOS Safari
 document.body.style['max-width'] = '100vw';
 iframeRoot = document.createElement('div');
-applyStyles(iframeRoot, overlayStyle);
+applyStyles(iframeRoot, overlayStyle(theme));
 document.body.appendChild(iframeRoot);
 window.parent.__REACT_ERROR_OVERLAY_GLOBAL_HOOK__.iframeReady();

@@ -6,28 +6,30 @@
  */
 
 /* @flow */
-import React from 'react';
-import { red } from '../styles';
+import React, { useContext } from 'react';
+import { ThemeContext } from '../iframeScript';
+import type { Theme } from '../styles';
 
-const headerStyle = {
-  fontSize: '2em',
-  fontFamily: 'sans-serif',
-  color: red,
-  whiteSpace: 'pre-wrap',
-  // Top bottom margin spaces header
-  // Right margin revents overlap with close button
-  margin: '0 2rem 0.75rem 0',
-  flex: '0 0 auto',
-  maxHeight: '50%',
-  overflow: 'auto',
-};
+const headerStyle = (theme: Theme) => ({
+    fontSize: '2em',
+    fontFamily: 'sans-serif',
+    color: theme.headerColor,
+    whiteSpace: 'pre-wrap',
+    // Top bottom margin spaces header
+    // Right margin revents overlap with close button
+    margin: '0 2rem 0.75rem 0',
+    flex: '0 0 auto',
+    maxHeight: '50%',
+    overflow: 'auto',
+});
 
 type HeaderPropType = {|
-  headerText: string,
+    headerText: string,
 |};
 
 function Header(props: HeaderPropType) {
-  return <div style={headerStyle}>{props.headerText}</div>;
+    const theme = useContext(ThemeContext);
+    return <div style={headerStyle(theme)}>{props.headerText}</div>;
 }
 
 export default Header;

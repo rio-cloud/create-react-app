@@ -3,7 +3,8 @@ id: importing-a-component
 title: Importing a Component
 ---
 
-This project setup supports ES6 modules thanks to Webpack.<br>
+This project setup supports ES6 modules thanks to Webpack.
+
 While you can still use `require()` and `module.exports`, we encourage you to use [`import` and `export`](http://exploringjs.com/es6/ch_modules.html) instead.
 
 For example:
@@ -14,9 +15,9 @@ For example:
 import React, { Component } from 'react';
 
 class Button extends Component {
-  render() {
-    // ...
-  }
+    render() {
+        // ...
+    }
 }
 
 export default Button; // Don’t forget to use export default!
@@ -29,9 +30,9 @@ import React, { Component } from 'react';
 import Button from './Button'; // Import a component from another file
 
 class DangerButton extends Component {
-  render() {
-    return <Button color="red" />;
-  }
+    render() {
+        return <Button color="red" />;
+    }
 }
 
 export default DangerButton;
@@ -45,9 +46,9 @@ Named exports are useful for utility modules that export several functions. A mo
 
 Learn more about ES6 modules:
 
-- [When to use the curly braces?](https://stackoverflow.com/questions/36795819/react-native-es-6-when-should-i-use-curly-braces-for-import/36796281#36796281)
-- [Exploring ES6: Modules](http://exploringjs.com/es6/ch_modules.html)
-- [Understanding ES6: Modules](https://leanpub.com/understandinges6/read#leanpub-auto-encapsulating-code-with-modules)
+-   [When to use the curly braces?](https://stackoverflow.com/questions/36795819/react-native-es-6-when-should-i-use-curly-braces-for-import/36796281#36796281)
+-   [Exploring ES6: Modules](http://exploringjs.com/es6/ch_modules.html)
+-   [Understanding ES6: Modules](https://leanpub.com/understandinges6/read#leanpub-auto-encapsulating-code-with-modules)
 
 ## Absolute Imports
 
@@ -57,10 +58,10 @@ Below is an example `jsconfig.json` file for a JavaScript project. You can creat
 
 ```json
 {
-  "compilerOptions": {
-    "baseUrl": "src"
-  },
-  "include": ["src"]
+    "compilerOptions": {
+        "baseUrl": "src"
+    },
+    "include": ["src"]
 }
 ```
 
