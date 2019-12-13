@@ -7,7 +7,7 @@
     "template",
     "typescript"
   ],
-  "description": "The Rio TypeScript template for Create React App.",
+  "description": "The RIO TypeScript template for Create React App.",
   "main": "template.json",
   "repository": {
     "type": "git",

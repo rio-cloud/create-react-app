@@ -6,7 +6,7 @@
     "create-react-app",
     "template"
   ],
-  "description": "The base Rio JavaScript template for Create React App.",
+  "description": "The RIO JavaScript template for Create React App.",
   "main": "template.json",
   "repository": {
     "type": "git",

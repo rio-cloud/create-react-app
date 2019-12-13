@@ -1,6 +1,6 @@
 # rio-template-typescript
 
-This is the Rio TypeScript template for [Rio Create React App](https://github.com/rio-cloud/create-react-app).
+This is the RIO TypeScript template for [RIO Create React App](https://github.com/rio-cloud/create-react-app).
 
 To use this template, add `--template @rio-cloud/cra-template-typescript` when creating a new app.
 

@@ -1,6 +1,6 @@
 # rio-template
 
-This is the Rio JavaScript template for [Rio Create React App](https://github.com/rio-cloud/create-react-app).
+This is the RIO JavaScript template for [RIO Create React App](https://github.com/rio-cloud/create-react-app).
 
 To use this template, add `--template @rio-cloud/cra-template` when creating a new app.
 
