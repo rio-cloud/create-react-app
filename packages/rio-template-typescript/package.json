@@ -1,0 +1,29 @@
+{
+  "name": "@rio-cloud/cra-template-typescript",
+  "version": "1.0.0",
+  "keywords": [
+    "react",
+    "create-react-app",
+    "template",
+    "typescript"
+  ],
+  "description": "The Rio TypeScript template for Create React App.",
+  "main": "template.json",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rio-cloud/create-react-app.git",
+    "directory": "packages/rio-template-typescript"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.10"
+  },
+  "scripts": {
+    "prepack": "cp -Rf ../rio-template-common/ ./template/ && cp -Rf ./.template/ ./template/",
+    "postpack": "find ./template ! -name \".gitkeep\" -not -path \"./template\" -exec rm -rf {} +"
+  },
+  "files": [
+    "template",
+    "template.json"
+  ]
+}

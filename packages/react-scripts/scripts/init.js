@@ -20,7 +20,6 @@ const path = require('path');
 const chalk = require('react-dev-utils/chalk');
 const execSync = require('child_process').execSync;
 const spawn = require('react-dev-utils/crossSpawn');
-const { defaultBrowsers } = require('react-dev-utils/browsersHelper');
 const os = require('os');
 const verifyTypeScriptSetup = require('./utils/verifyTypeScriptSetup');
 
@@ -54,10 +53,7 @@ function tryGitInit(appPath) {
         didInit = true;
 
         execSync('git add -A', { stdio: 'ignore' });
-        // TODO
-        execSync('git commit -m "Initial commit from Create React App"', {
-            stdio: 'ignore',
-        });
+
         return true;
     } catch (e) {
         if (didInit) {
@@ -140,11 +136,8 @@ module.exports = function(appPath, appName, verbose, originalDirectory, template
 
     // Setup the browsers list
     appPackage.browserslist = getRioBrowserList();
+    const finalAppPackage = extendAppPackageWithAdditionalRioStuff(appPackage, templateJson);
 
-    //TODO
-    const finalAppPackage = extendAppPackageWithRioStuff(appPackage, templatePath);
-
-    // TODO
     fs.writeFileSync(path.join(appPath, 'package.json'), JSON.stringify(finalAppPackage, null, 2) + os.EOL);
 
     const readmeExists = fs.existsSync(path.join(appPath, 'README.md'));
@@ -228,6 +221,17 @@ module.exports = function(appPath, appName, verbose, originalDirectory, template
         }
     }
 
+    if (tryGitInit(appPath)) {
+        console.log();
+        console.log('Initialized a git repository.');
+    }
+
+    // Final npm install for all additional dependencies
+    const procStatus = installRioDependencies(useYarn, verbose, templateJson);
+    if (procStatus !== 0) {
+        return;
+    }
+
     if (args.find(arg => arg.includes('typescript'))) {
         console.log();
         verifyTypeScriptSetup();
@@ -245,18 +249,7 @@ module.exports = function(appPath, appName, verbose, originalDirectory, template
         return;
     }
 
-    if (tryGitInit(appPath)) {
-        console.log();
-        console.log('Initialized a git repository.');
-    }
-
-    // TODO
-    // Final npm install for all additional dependencies
-    const procStatus = installRioDependencies(useYarn, verbose);
-    if (procStatus !== 0) {
-        return;
-    }
-
+    // first commit
     if (tryFinalGitAdd(appPath)) {
         console.log();
         console.log('Added final installation and commited.');
@@ -314,43 +307,11 @@ function isReactInstalled(appPackage) {
     return typeof dependencies.react !== 'undefined' && typeof dependencies['react-dom'] !== 'undefined';
 }
 
-function getRioDependencies(templatePath) {
-    const templateDependenciesPath = path.join(templatePath, '.template.package.json');
-
-    if (fs.existsSync(templateDependenciesPath)) {
-        const templateDependencies = require(templateDependenciesPath);
-        fs.unlinkSync(templateDependenciesPath);
-
-        return templateDependencies;
-    } else {
-        console.log('No additional dependencies found...');
-
-        return { dependencies: {}, devDependencies: {} };
-    }
-}
-
-function extendAppPackageWithRioStuff(appPackage, templatePath) {
+function extendAppPackageWithAdditionalRioStuff(appPackage, templateJson) {
     const extendedAppPackage = { ...appPackage };
-    const rioDependencies = getRioDependencies(templatePath);
 
-    extendedAppPackage.devDependencies = extendedAppPackage.devDependencies || {};
-    rioDependencies.dependencies = rioDependencies.dependencies || {};
-    rioDependencies.devDependencies = rioDependencies.devDependencies || {};
-
-    Object.entries(rioDependencies.dependencies).forEach(entry => {
-        extendedAppPackage.dependencies[entry[0]] = entry[1];
-    });
-
-    Object.entries(rioDependencies.devDependencies).forEach(entry => {
-        if (extendedAppPackage.dependencies.hasOwnProperty(entry[0])) {
-            //some types are declared as dependencies instead of dev dependencies
-            delete extendedAppPackage.dependencies[entry[0]];
-        }
-        extendedAppPackage.devDependencies[entry[0]] = entry[1];
-    });
-
-    Object.entries(rioDependencies).forEach(entry => {
-        if (['dependencies', 'devDependencies'].indexOf(entry[0]) === -1) {
+    Object.entries(templateJson).forEach(entry => {
+        if (['dependencies', 'devDependencies', 'scripts'].indexOf(entry[0]) === -1) {
             extendedAppPackage[entry[0]] = entry[1];
         }
     });
@@ -358,24 +319,39 @@ function extendAppPackageWithRioStuff(appPackage, templatePath) {
     return extendedAppPackage;
 }
 
-function installRioDependencies(useYarn, verbose) {
+function installRioDependencies(useYarn, verbose, templateJson) {
     let command;
     let args;
 
     if (useYarn) {
         command = 'yarnpkg';
-        args = [];
+        args = ['add', '--dev'];
     } else {
         command = 'npm';
-        args = ['install', verbose && '--verbose'].filter(e => e);
+        args = ['install', '--save-dev', verbose && '--verbose'].filter(e => e);
     }
 
-    console.log(`Installing additional RIO dependencies using ${command}...`);
+    console.log(`Installing additional RIO dev dependencies using ${command}...`);
     console.log();
+
+    // Install additional template dev dependencies, if present
+    const templateDevDependencies = templateJson.devDependencies;
+    if (templateDevDependencies) {
+        args = args.concat(
+            Object.keys(templateDevDependencies).map(key => {
+                return `${key}@${templateDevDependencies[key]}`;
+            })
+        );
+    }
 
     const proc = spawn.sync(command, args, { stdio: 'inherit' });
     if (proc.status !== 0) {
         console.error(`\`${command} ${args.join(' ')}\` failed`);
+    } else {
+        if (args.find(arg => arg.includes('typescript'))) {
+            console.log();
+            verifyTypeScriptSetup();
+        }
     }
 
     return proc.status;

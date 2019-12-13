@@ -17,7 +17,6 @@
     "lib",
     "scripts",
     "template",
-    "../rio-template-common",
     "template-typescript",
     "utils"
   ],

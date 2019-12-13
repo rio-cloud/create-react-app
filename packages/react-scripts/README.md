@@ -21,13 +21,10 @@ This package enables a quick setup for internal single page applications for [th
 
 ### Create new project
 
-Create your app like this:
+Choose your desired template and create the project as described in the corresponding Readme:
 
-```
-npx create-react-app rio-test-app --scripts-version @rio-cloud/react-scripts --use-npm --typescript
-```
-
-Omit `--typescript` if you want to get the Javascript version.
+-   [Typescript](../rio-template-typescript/README.md) (recommended)
+-   [Javascript](../rio-template/README.md)
 
 ### Update existing project
 
