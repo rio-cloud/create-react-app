@@ -1,5 +1,10 @@
 module.exports = [
     {
+        entry: 'https://cdn.rio.cloud/libs/core-js/3.6.4/core-js.min.js',
+        global: 'CoreJs',
+        module: 'core-js',
+    },
+    {
         entry: 'https://cdn.rio.cloud/libs/react/16.10.2/react.min.js',
         global: 'React',
         module: 'react',
