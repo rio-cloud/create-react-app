@@ -24,8 +24,8 @@ function renderApplication() {
             <Provider store={store}>
                 <Router history={history}>
                     <Switch>
-                        <Route path="/error" component={NoMatch} />
-                        <Route path="/" component={AppContainer} />
+                        <Route path={'/error'} component={NoMatch} />
+                        <Route path={'/'} component={AppContainer} />
                         <Route component={NoMatch} />
                     </Switch>
                 </Router>

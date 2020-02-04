@@ -35,16 +35,16 @@ const navItems = [
     {
         key: 'intro',
         route: (
-            <NavLink to="/intro">
-                <FormattedMessage id="starterTemplate.sublink.intro" />
+            <NavLink to={'/intro'}>
+                <FormattedMessage id={'starterTemplate.sublink.intro'} />
             </NavLink>
         ),
     },
     {
         key: 'more',
         route: (
-            <NavLink to="/more">
-                <FormattedMessage id="starterTemplate.sublink.more" />
+            <NavLink to={'/more'}>
+                <FormattedMessage id={'starterTemplate.sublink.more'} />
             </NavLink>
         ),
     },
@@ -52,12 +52,12 @@ const navItems = [
 
 const ServiceInfo = () => (
     <div>
-        <div className="line-height-largest">
+        <div className={'line-height-largest'}>
             <a onClick={() => {}}>
                 <span>{'Release notes'}</span>
             </a>
         </div>
-        <div className="line-height-largest">
+        <div className={'line-height-largest'}>
             <Link to={'/abcd'}>{'Link'}</Link>
         </div>
     </div>
@@ -66,17 +66,17 @@ const ServiceInfo = () => (
 const title = (
     <div>
         <span>{'Service XYZ'}</span>
-        <span className="text-color-gray margin-left-10">{'v1.1.0'}</span>
+        <span className={'text-color-gray margin-left-10'}>{'v1.1.0'}</span>
     </div>
 );
 
 const serviceInfoItem = (
-    <ActionBarItem id="serviceInfo" className="myItem">
+    <ActionBarItem id={'serviceInfo'} className={'myItem'}>
         <ActionBarItem.Icon>
-            <span className="icon rioglyph rioglyph-info-sign" />
-            <span className="badge bg-primary">{'1'}</span>
+            <span className={'icon rioglyph rioglyph-info-sign'} />
+            <span className={'badge bg-primary'}>{'1'}</span>
         </ActionBarItem.Icon>
-        <ActionBarItem.Popover className="myItemPopover" title={title}>
+        <ActionBarItem.Popover className={'myItemPopover'} title={title}>
             <ServiceInfo />
         </ActionBarItem.Popover>
     </ActionBarItem>
@@ -109,9 +109,9 @@ export const AppContainer = props => {
                     <NotificationsContainer />
                     <SessionExpiredDialog locale={userLocale} onClose={hideSessionDialog} show={showSessionExpired} />
                     <Switch>
-                        <Route path="/intro" component={Intro} />
-                        <Route path="/more" component={More} />
-                        <Redirect to="/intro" />
+                        <Route path={'/intro'} component={Intro} />
+                        <Route path={'/more'} component={More} />
+                        <Redirect to={'/intro'} />
                     </Switch>
                 </ApplicationLayout.Body>
             </ApplicationLayout>
