@@ -12,7 +12,6 @@ import {
     DEFAULT_LOCALE,
     getLanguageData,
     getLocale,
-    getAccessToken,
     getIdToken,
     isUserSessionExpired,
 } from '../configuration';
@@ -127,7 +126,6 @@ export const mapDispatchToProps = dispatch => ({
 
 export const mapStateToProps = state => {
     return {
-        accessToken: getAccessToken(state),
         homeRoute: config.homeRoute,
         idToken: getIdToken(state),
         languageData: getLanguageData(state),
