@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-export const More = () => {
+export const More = memo(() => {
     return (
         <div className={'more container'}>
             <div className={'row'}>
@@ -13,4 +13,4 @@ export const More = () => {
             </div>
         </div>
     );
-};
+});
