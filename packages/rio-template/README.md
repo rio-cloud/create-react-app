@@ -7,7 +7,7 @@ To use this template, add `--template @rio-cloud/cra-template` when creating a n
 For example:
 
 ```sh
-npx create-react-app my-app --scripts-version @rio-cloud/react-scripts --template @rio-cloud/cra-template
+npx create-react-app my-app --scripts-version @rio-cloud/react-scripts --template @rio-cloud/cra-template --use-npm
 
 # or
 
