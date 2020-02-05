@@ -4,5 +4,4 @@ import 'regenerator-runtime/runtime';
 
 import 'classlist-polyfill';
 import 'custom-event-polyfill';
-import 'regenerator-runtime/runtime';
 import 'unorm';
