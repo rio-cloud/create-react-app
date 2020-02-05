@@ -19,7 +19,7 @@
     "node": ">=8.10"
   },
   "scripts": {
-    "prepack": "cp -Rf ../rio-template-common/ ./template/ && cp -Rf ./.template/ ./template/",
+    "prepack": "cp -Rf ../rio-template-common/. ./template/ && cp -Rf ./.template/. ./template/",
     "postpack": "find ./template ! -name \".gitkeep\" -not -path \"./template\" -exec rm -rf {} +"
   },
   "files": [
