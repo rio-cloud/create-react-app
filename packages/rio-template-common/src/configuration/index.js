@@ -1,11 +1,10 @@
-import { EVENT_USER_LANGUAGE_CHANGED, EVENT_USER_LOGGED_OUT, EVENT_USER_PROFILE_CHANGED } from 'rio-accountmenu';
+import { EVENT_USER_LANGUAGE_CHANGED, EVENT_USER_PROFILE_CHANGED } from 'rio-user-menu';
 import { extractLanguage, DEFAULT_LOCALE } from './lang/lang';
 import langReducer from './lang/reducer';
 import { getLanguageData, getLocale } from './lang/selectors';
 import { configureFetchLanguageData } from './lang/services';
 import { userProfileObtained, userSessionExpired, userSessionRenewed } from './login/actions';
 import { configureMockUserManager, configureUserManager, createUserManager } from './login/login';
-import { redirectToLogout } from './login/logout';
 import handleLoginRedirect from './login/redirect';
 import loginReducer from './login/reducer';
 import { isUserSessionExpired, getUserAccount } from './login/selectors';
@@ -22,11 +21,6 @@ import { config } from '../config';
 function main(renderApp) {
     const fetchLanguageData = configureFetchLanguageData(store);
 
-    const onLogout = () => {
-        accessToken.discardAccessToken();
-        redirectToLogout();
-    };
-
     // We want the `<html lang>` attribute to be synced with the
     // language currently displayed
     store.subscribe(() => {
@@ -40,8 +34,6 @@ function main(renderApp) {
 
     const oauthConfig = {
         onTokenExpired: () => {
-            trace('index.onTokenExpired');
-
             accessToken.discardAccessToken();
             store.dispatch(userSessionExpired());
         },
@@ -69,7 +61,6 @@ function main(renderApp) {
             ? configureMockUserManager(oauthConfig)
             : configureUserManager(oauthConfig, createUserManager());
 
-    document.addEventListener(EVENT_USER_LOGGED_OUT, onLogout);
     document.addEventListener(EVENT_USER_LANGUAGE_CHANGED, userManager.signinSilent.bind(userManager));
     document.addEventListener(EVENT_USER_PROFILE_CHANGED, userManager.signinSilent.bind(userManager));
 

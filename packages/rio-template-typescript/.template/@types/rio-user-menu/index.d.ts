@@ -1,4 +1,4 @@
-declare module "rio-accountmenu" {
+declare module "rio-user-menu" {
 
     interface IDToken {
         sub: string;
@@ -11,18 +11,16 @@ declare module "rio-accountmenu" {
         email: string;
     }
 
-    interface DefaultAccountMenuProps {
-        accessToken: string;
+    interface DefaultUserMenuProps {
         idToken: IDToken;
-        userSettingsEndpoint?: string;
+        environment: string;
     }
 
-    class DefaultAccountMenu extends React.Component<DefaultAccountMenuProps> {
+    class DefaultUserMenu extends React.Component<DefaultUserMenuProps> {
     }
 
     export {
-        DefaultAccountMenu,
-        EVENT_USER_LOGGED_OUT,
+        DefaultUserMenu,
         EVENT_USER_LANGUAGE_CHANGED,
         EVENT_USER_PROFILE_CHANGED,
     };

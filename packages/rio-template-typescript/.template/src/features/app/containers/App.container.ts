@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { getAccessToken, getIdToken, getLanguageData, getLocale, isUserSessionExpired } from '../../../configuration';
+import { getIdToken, getLanguageData, getLocale, isUserSessionExpired } from '../../../configuration';
 import { config } from '../../../config';
 import { State } from '../../../types';
 import App from '../components/App';
@@ -16,7 +16,6 @@ function mapDispatchToProps(dispatch: Dispatch): AppPropertiesFromDispatch {
 
 function mapStateToProps(state: State): AppPropertiesFromState {
     return {
-        accessToken: getAccessToken(state) as string,
         idToken: getIdToken(state),
         homeRoute: config.homeRoute as string,
         languageData: getLanguageData(state),

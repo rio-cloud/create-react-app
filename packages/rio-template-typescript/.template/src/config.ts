@@ -3,8 +3,6 @@ import { ConfigState } from './types';
 export const config: ConfigState = {
     backend: {
         AUTHENTICATION_SERVICE: process.env.REACT_APP_AUTHENTICATION_SERVICE,
-        USERADMIN_SERVICE: process.env.REACT_APP_USERADMIN_SERVICE,
-        USER_SETTINGS_SERVICE: process.env.REACT_APP_USER_SETTINGS_SERVICE,
         MENU_SERVICE: process.env.REACT_APP_MENU_SERVICE,
     },
     homeRoute: process.env.REACT_APP_HOME_ROUTE,

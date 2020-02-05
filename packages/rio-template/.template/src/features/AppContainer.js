@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Route, Switch, Redirect, NavLink, Link } from 'react-router-dom';
-import { DefaultAccountMenu } from 'rio-accountmenu';
+import { DefaultUserMenu } from 'rio-user-menu';
 import { SessionExpiredDialog } from 'rio-session-expired-info';
 import { ApplicationHeader, NotificationsContainer, ApplicationLayout, ActionBarItem } from 'rio-uikit';
 import IframeResizer from '@rio-cloud/iframe-resizer';
@@ -12,7 +12,6 @@ import {
     DEFAULT_LOCALE,
     getLanguageData,
     getLocale,
-    getAccessToken,
     getIdToken,
     isUserSessionExpired,
 } from '../configuration';
@@ -27,8 +26,6 @@ import { More } from './app/More';
 import './app/styles.css';
 
 import { config } from '../config';
-
-const { USER_SETTINGS_SERVICE } = config.backend;
 
 // Define the navigation items of the current application
 const navItems = [
@@ -83,10 +80,14 @@ const serviceInfoItem = (
 );
 
 export const AppContainer = props => {
-    const { accessToken, hideSessionDialog, homeRoute, idToken, languageData, showSessionExpired, userLocale } = props;
+    const { hideSessionDialog, homeRoute, idToken, languageData, showSessionExpired, userLocale } = props;
     const appTitle = <FormattedMessage id={'starterTemplate.moduleName'} />;
-    const accountMenu = (
-        <DefaultAccountMenu accessToken={accessToken} idToken={idToken} userSettingsEndpoint={USER_SETTINGS_SERVICE} />
+    const environment = process.env.NODE_ENV === 'production' ? 'production': 'local';
+    const userMenu = (
+        <DefaultUserMenu
+            idToken={idToken}
+            environment={environment}
+        />
     );
     const menuUrl = config.backend.MENU_SERVICE;
     const appNavigator = <IframeResizer url={menuUrl} />;
@@ -102,7 +103,7 @@ export const AppContainer = props => {
                         appNavigator={appNavigator}
                         homeRoute={homeLink}
                         navItems={navItems}
-                        actionBarItems={[serviceInfoItem, accountMenu]}
+                        actionBarItems={[serviceInfoItem, userMenu]}
                     />
                 </ApplicationLayout.Header>
                 <ApplicationLayout.Body>
@@ -125,7 +126,6 @@ export const mapDispatchToProps = dispatch => ({
 
 export const mapStateToProps = state => {
     return {
-        accessToken: getAccessToken(state),
         homeRoute: config.homeRoute,
         idToken: getIdToken(state),
         languageData: getLanguageData(state),

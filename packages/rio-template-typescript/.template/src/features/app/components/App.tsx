@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, IntlProvider } from 'react-intl';
 import { Link, NavLink, Redirect, Route, Switch } from 'react-router-dom';
 
-import { DefaultAccountMenu } from 'rio-accountmenu';
+import { DefaultUserMenu } from 'rio-user-menu';
 import { SessionExpiredDialog } from 'rio-session-expired-info';
 import { ApplicationHeader, NotificationsContainer, ApplicationLayout, ActionBarItem } from 'rio-uikit';
 import IframeResizer from '@rio-cloud/iframe-resizer';
@@ -37,7 +37,6 @@ class ServiceInfo extends React.Component<{}, {}> {
 export default class App extends React.Component<AppProperties, {}> {
     render() {
         const {
-            accessToken,
             hideSessionDialog,
             homeRoute,
             idToken,
@@ -45,8 +44,6 @@ export default class App extends React.Component<AppProperties, {}> {
             showSessionExpired,
             userLocale,
         } = this.props;
-
-        const { USER_SETTINGS_SERVICE } = config.backend;
 
         const title = (
             <div>
@@ -87,11 +84,11 @@ export default class App extends React.Component<AppProperties, {}> {
         ];
 
         const appTitle = <FormattedMessage id={'starterTemplate.moduleName'} />;
-        const accountMenu = (
-            <DefaultAccountMenu
-                accessToken={accessToken}
+        const environment = process.env.NODE_ENV === 'production' ? 'production': 'local';
+        const userMenu = (
+            <DefaultUserMenu
                 idToken={idToken}
-                userSettingsEndpoint={USER_SETTINGS_SERVICE}
+                environment={environment}
             />
         );
         const menuUrl = config.backend.MENU_SERVICE as string;
@@ -109,7 +106,7 @@ export default class App extends React.Component<AppProperties, {}> {
                             appNavigator={appNavigator}
                             homeRoute={homeLink}
                             navItems={navItems}
-                            actionBarItems={[serviceInfoItem, accountMenu]}
+                            actionBarItems={[serviceInfoItem, userMenu]}
                         />
                     </ApplicationLayout.Header>
                     <ApplicationLayout.Body>

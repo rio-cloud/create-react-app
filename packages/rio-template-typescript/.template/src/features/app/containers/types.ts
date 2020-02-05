@@ -5,7 +5,6 @@ export interface AppPropertiesFromDispatch {
 }
 
 export interface AppPropertiesFromState {
-    accessToken: string;
     idToken: IdToken;
     homeRoute: string;
     languageData: LanguageDataInterface;

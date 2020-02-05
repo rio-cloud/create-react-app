@@ -6,8 +6,6 @@ import { mapUserProfile } from './userProfile';
 import { config } from '../../config';
 import { reportErrorToSentry } from '../setup/sentry';
 
-const trace = process.env.NODE_ENV !== 'production' ? (...args) => console.log(`[oidcLogin]`, ...args) : () => {};
-
 const pullLocale = getOr('en-GB', 'profile.locale');
 
 export const adaptPublishedInfo = (result = {}) => ({
@@ -32,14 +30,11 @@ export const createUserManager = () => {
         silent_redirect_uri: `${silentRedirectUri || redirectUri}`,
     };
 
-    trace('oidc.auth.settings', settings);
-
     return new UserManager(settings);
 };
 
 export const configureUserManager = (oauthConfig, userManager) => {
     userManager.events.addUserLoaded(user => {
-        trace('oidc.signinSilent success!');
         oauthConfig.onTokenRenewed(adaptPublishedInfo(user));
     });
 
@@ -48,25 +43,20 @@ export const configureUserManager = (oauthConfig, userManager) => {
     });
 
     userManager.events.addAccessTokenExpiring((...args) => {
-        trace('oidc.accessTokenExpiring', ...args);
-        trace('  triggering manual silent renewal...');
         userManager.signinSilent();
     });
 
     userManager.events.addAccessTokenExpired((...args) => {
-        trace('oidc.accessTokenExpired', ...args);
         oauthConfig.onTokenExpired();
     });
 
     userManager.events.addSilentRenewError(error => {
-        trace('oidc.silentRenewError', error);
         reportErrorToSentry(error);
 
         oauthConfig.onTokenExpired();
     });
 
     userManager.events.addUserSignedOut((...args) => {
-        trace('oidc.userSignedOut', ...args);
         oauthConfig.onTokenExpired();
     });
 
