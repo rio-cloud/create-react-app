@@ -12,7 +12,7 @@ import { ErrorBoundary } from './features/app/ErrorBoundary';
 import { config } from './config';
 import { main, handleLoginRedirect, history, store } from './configuration';
 
-function renderApplication() {
+const renderApplication = () => {
     const root = document.getElementById('root');
 
     // Note that we need to use the base "Router" with a "hash" history
@@ -33,7 +33,7 @@ function renderApplication() {
         </ErrorBoundary>,
         root
     );
-}
+};
 
 if (window.location.href.startsWith(config.login.redirectUri)) {
     handleLoginRedirect();

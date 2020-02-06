@@ -12,7 +12,7 @@ import AppContainer from './features/app/containers/App.container';
 import { NoMatch } from './features/app/components/NoMatch';
 import { ErrorBoundary } from './features/app/components/ErrorBoundary';
 
-function renderApplication() {
+const renderApplication = () => {
     const root = document.getElementById('root');
 
     // Note that we need to use the base "Router" with a "hash" history

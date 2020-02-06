@@ -5,7 +5,7 @@ const initialState: AppState = {
     sessionExpiredAcknowledged: false,
 };
 
-export default function reducer(state: AppState = initialState, action: AppActions): AppState {
+const reducer = (state: AppState = initialState, action: AppActions): AppState => {
     switch (action.type) {
         case HIDE_SESSION_EXPIRED_DIALOG:
             return {
@@ -15,4 +15,6 @@ export default function reducer(state: AppState = initialState, action: AppActio
         default:
             return state;
     }
-}
+};
+
+export default reducer;

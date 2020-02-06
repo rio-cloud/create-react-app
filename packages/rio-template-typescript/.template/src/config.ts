@@ -1,5 +1,9 @@
 import { ConfigState } from './types';
 
+const getBoolEnvValue = (envValue: string): boolean => {
+    return typeof process.env[envValue] !== 'undefined' && process.env[envValue] === 'true';
+};
+
 export const config: ConfigState = {
     backend: {
         AUTHENTICATION_SERVICE: process.env.REACT_APP_AUTHENTICATION_SERVICE,
@@ -25,7 +29,3 @@ export const config: ConfigState = {
     // TODO: Create a project in Sentry and use the token here
     sentryToken: '<you-need-to-obtain-your-own-sentry-token>',
 };
-
-function getBoolEnvValue(envValue: string): boolean {
-    return typeof process.env[envValue] !== 'undefined' && process.env[envValue] === 'true';
-}
