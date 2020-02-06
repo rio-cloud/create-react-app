@@ -15,6 +15,16 @@ module.exports = [
         module: 'react-dom',
     },
     {
+        entry: 'https://cdn.rio.cloud/libs/react-intl/3.12.0/react-intl.min.js',
+        global: 'ReactIntl',
+        module: 'react-intl',
+    },
+    {
+        entry: 'https://cdn.rio.cloud/libs/oidc-client/1.10.1/oidc-client.min.js',
+        global: 'Oidc',
+        module: 'oidc-client',
+    },
+    {
         entry: [
             'https://uikit.developers.rio.cloud/0.13.10/rio-uikit.js',
             'https://uikit.developers.rio.cloud/0.13.10/rio-uikit.css',
