@@ -33,11 +33,11 @@ function main(renderApp) {
     });
 
     const oauthConfig = {
-        onTokenExpired: () => {
+        onSessionExpired: () => {
             accessToken.discardAccessToken();
             store.dispatch(userSessionExpired());
         },
-        onTokenRenewed: result => {
+        onSessionRenewed: result => {
             trace('index.onTokenRenewed', result);
 
             accessToken.saveAccessToken(result.accessToken);

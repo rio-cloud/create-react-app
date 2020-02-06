@@ -4,9 +4,20 @@ import join from 'lodash/fp/join';
 import getOr from 'lodash/fp/getOr';
 import { mapUserProfile } from './userProfile';
 import { config } from '../../config';
-import { reportErrorToSentry } from '../setup/sentry';
 
 const pullLocale = getOr('en-GB', 'profile.locale');
+
+const RETRY_SIGNIN_TIMEOUT_IN_MS = 30000;
+
+const retrySigninSilent = (oauthConfig, userManager) => {
+    userManager.signinSilent().catch(error => {
+        if (error.message === 'login_required') {
+            oauthConfig.onSessionExpired();
+        } else {
+            setTimeout(() => retrySigninSilent(oauthConfig, userManager), RETRY_SIGNIN_TIMEOUT_IN_MS);
+        }
+    });
+};
 
 export const adaptPublishedInfo = (result = {}) => ({
     accessToken: result.access_token,
@@ -28,6 +39,8 @@ export const createUserManager = () => {
         response_type: `id_token token`,
         scope: join(' ', config.login.oauthScope),
         silent_redirect_uri: `${silentRedirectUri || redirectUri}`,
+        includeIdTokenInSilentRenew: false,
+        automaticSilentRenew: true,
     };
 
     return new UserManager(settings);
@@ -35,29 +48,19 @@ export const createUserManager = () => {
 
 export const configureUserManager = (oauthConfig, userManager) => {
     userManager.events.addUserLoaded(user => {
-        oauthConfig.onTokenRenewed(adaptPublishedInfo(user));
+        oauthConfig.onSessionRenewed(adaptPublishedInfo(user));
     });
 
     userManager.events.addUserUnloaded(() => {
-        oauthConfig.onTokenExpired();
+        oauthConfig.onSessionExpired();
     });
 
-    userManager.events.addAccessTokenExpiring((...args) => {
-        userManager.signinSilent();
-    });
-
-    userManager.events.addAccessTokenExpired((...args) => {
-        oauthConfig.onTokenExpired();
-    });
-
-    userManager.events.addSilentRenewError(error => {
-        reportErrorToSentry(error);
-
-        oauthConfig.onTokenExpired();
+    userManager.events.addSilentRenewError(() => {
+        retrySigninSilent(oauthConfig, userManager);
     });
 
     userManager.events.addUserSignedOut((...args) => {
-        oauthConfig.onTokenExpired();
+        oauthConfig.onSessionExpired();
     });
 
     return userManager;
