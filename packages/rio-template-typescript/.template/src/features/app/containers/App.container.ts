@@ -8,13 +8,13 @@ import { hideSessionExpiredDialog } from '../actions/App.actions';
 import { getSessionExpiredAcknowledged } from '../selectors/App.selector';
 import { AppPropertiesFromDispatch, AppPropertiesFromState } from './types';
 
-function mapDispatchToProps(dispatch: Dispatch): AppPropertiesFromDispatch {
+const mapDispatchToProps = (dispatch: Dispatch): AppPropertiesFromDispatch => {
     return {
         hideSessionDialog: () => dispatch(hideSessionExpiredDialog()),
     };
 }
 
-function mapStateToProps(state: State): AppPropertiesFromState {
+const mapStateToProps = (state: State): AppPropertiesFromState => {
     return {
         idToken: getIdToken(state),
         homeRoute: config.homeRoute as string,

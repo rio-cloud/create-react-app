@@ -1,7 +1,3 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-export class NoMatch extends Component {
-    render() {
-        return <h1>{'404 - Whoopsie'}</h1>;
-    }
-}
+export const NoMatch = () => <h1>{'404 - Whoopsie'}</h1>;
