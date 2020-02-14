@@ -23,7 +23,7 @@ describe('features/tokenHandling/storage', () => {
 
     const makeWin = (env = 'production', storage = null) => ({
         location: {
-            host: env === 'production' ? 'start.rio.cloud' : 'somewhere.else.ip',
+            host: env === 'production' ? 'home.rio.cloud' : 'somewhere.else.ip',
         },
         localStorage: storage ? makeStore(storage) : null,
     });
