@@ -41,8 +41,7 @@ function isInMercurialRepository() {
     }
 }
 
-function tryGitInit(appPath) {
-    let didInit = false;
+function tryGitInit() {
     try {
         execSync('git --version', { stdio: 'ignore' });
         if (isInGitRepository() || isInMercurialRepository()) {
@@ -50,24 +49,33 @@ function tryGitInit(appPath) {
         }
 
         execSync('git init', { stdio: 'ignore' });
-        didInit = true;
-
-        execSync('git add -A', { stdio: 'ignore' });
-
         return true;
     } catch (e) {
-        if (didInit) {
-            // If we successfully initialized but couldn't commit,
-            // maybe the commit author config is not set.
-            // In the future, we might supply our own committer
-            // like Ember CLI does, but for now, let's just
-            // remove the Git files to avoid a half-done state.
-            try {
-                // unlinkSync() doesn't work on directories.
-                fs.removeSync(path.join(appPath, '.git'));
-            } catch (removeErr) {
-                // Ignore.
-            }
+        console.warn('Git repo not initialized', e);
+        return false;
+    }
+}
+
+function tryGitCommit(appPath) {
+    try {
+        execSync('git add -A', { stdio: 'ignore' });
+        execSync('git commit -m "Initialize project using Create React App"', {
+            stdio: 'ignore',
+        });
+        return true;
+    } catch (e) {
+        // We couldn't commit in already initialized git repo,
+        // maybe the commit author config is not set.
+        // In the future, we might supply our own committer
+        // like Ember CLI does, but for now, let's just
+        // remove the Git files to avoid a half-done state.
+        console.warn('Git commit not created', e);
+        console.warn('Removing .git directory...');
+        try {
+            // unlinkSync() doesn't work on directories.
+            fs.removeSync(path.join(appPath, '.git'));
+        } catch (removeErr) {
+            // Ignore.
         }
         return false;
     }
@@ -103,11 +111,51 @@ module.exports = function(appPath, appName, verbose, originalDirectory, template
         templateJson = require(templateJsonPath);
     }
 
+    const templatePackage = templateJson.package || {};
+
+    // Keys to ignore in templatePackage
+    const templatePackageBlacklist = [
+        'name',
+        'version',
+        'description',
+        'keywords',
+        'bugs',
+        'license',
+        'author',
+        'contributors',
+        'files',
+        'main',
+        'browser',
+        'bin',
+        'man',
+        'directories',
+        'repository',
+        'peerDependencies',
+        'bundledDependencies',
+        'optionalDependencies',
+        'engineStrict',
+        'os',
+        'cpu',
+        'preferGlobal',
+        'private',
+        'publishConfig',
+    ];
+
+    // Keys from templatePackage that will be merged with appPackage
+    const templatePackageToMerge = ['dependencies', 'scripts'];
+
+    // Keys from templatePackage that will be added to appPackage,
+    // replacing any existing entries.
+    const templatePackageToReplace = Object.keys(templatePackage).filter(key => {
+        return !templatePackageBlacklist.includes(key) && !templatePackageToMerge.includes(key);
+    });
+
     // Copy over some of the devDependencies
     appPackage.dependencies = appPackage.dependencies || {};
 
     // Setup the script rules
-    const templateScripts = templateJson.scripts || {};
+    // TODO: deprecate 'scripts' key directly on templateJson
+    const templateScripts = templatePackage.scripts || templateJson.scripts || {};
     appPackage.scripts = Object.assign(
         {
             start: 'react-scripts start',
@@ -136,9 +184,13 @@ module.exports = function(appPath, appName, verbose, originalDirectory, template
 
     // Setup the browsers list
     appPackage.browserslist = getRioBrowserList();
-    const finalAppPackage = extendAppPackageWithAdditionalRioStuff(appPackage, templateJson);
 
-    fs.writeFileSync(path.join(appPath, 'package.json'), JSON.stringify(finalAppPackage, null, 2) + os.EOL);
+    // Add templatePackage keys/values to appPackage, replacing existing entries
+    templatePackageToReplace.forEach(key => {
+        appPackage[key] = templatePackage[key];
+    });
+
+    fs.writeFileSync(path.join(appPath, 'package.json'), JSON.stringify(appPackage, null, 2) + os.EOL);
 
     const readmeExists = fs.existsSync(path.join(appPath, 'README.md'));
     if (readmeExists) {
@@ -164,19 +216,25 @@ module.exports = function(appPath, appName, verbose, originalDirectory, template
         }
     }
 
-    // Rename gitignore after the fact to prevent npm from renaming it to .npmignore
-    // See: https://github.com/npm/npm/issues/1862
-    try {
-        fs.moveSync(path.join(appPath, 'gitignore'), path.join(appPath, '.gitignore'), []);
-    } catch (err) {
+    const gitignoreExists = fs.existsSync(path.join(appPath, '.gitignore'));
+    if (gitignoreExists) {
         // Append if there's already a `.gitignore` file there
-        if (err.code === 'EEXIST') {
-            const data = fs.readFileSync(path.join(appPath, 'gitignore'));
-            fs.appendFileSync(path.join(appPath, '.gitignore'), data);
-            fs.unlinkSync(path.join(appPath, 'gitignore'));
-        } else {
-            throw err;
-        }
+        const data = fs.readFileSync(path.join(appPath, 'gitignore'));
+        fs.appendFileSync(path.join(appPath, '.gitignore'), data);
+        fs.unlinkSync(path.join(appPath, 'gitignore'));
+    } else {
+        // Rename gitignore after the fact to prevent npm from renaming it to .npmignore
+        // See: https://github.com/npm/npm/issues/1862
+        fs.moveSync(path.join(appPath, 'gitignore'), path.join(appPath, '.gitignore'), []);
+    }
+
+    // Initialize git repo
+    let initializedGit = false;
+
+    if (tryGitInit()) {
+        initializedGit = true;
+        console.log();
+        console.log('Initialized a git repository.');
     }
 
     let command;
@@ -194,7 +252,8 @@ module.exports = function(appPath, appName, verbose, originalDirectory, template
     }
 
     // Install additional template dependencies, if present
-    const templateDependencies = templateJson.dependencies;
+    // TODO: deprecate 'dependencies' key directly on templateJson
+    const templateDependencies = templatePackage.dependencies || templateJson.dependencies;
     if (templateDependencies) {
         args = args.concat(
             Object.keys(templateDependencies).map(key => {
@@ -220,14 +279,8 @@ module.exports = function(appPath, appName, verbose, originalDirectory, template
             return;
         }
     }
-
-    if (tryGitInit(appPath)) {
-        console.log();
-        console.log('Initialized a git repository.');
-    }
-
-    // Final npm install for all additional dependencies
-    const procStatus = installRioDependencies(useYarn, verbose, templateJson);
+    // Final npm install for all additional dev dependencies
+    const procStatus = installRioDevDependencies(useYarn, verbose, templateJson);
     if (procStatus !== 0) {
         return;
     }
@@ -249,10 +302,10 @@ module.exports = function(appPath, appName, verbose, originalDirectory, template
         return;
     }
 
-    // first commit
-    if (tryFinalGitAdd(appPath)) {
+    // Create git commit if git repo was initialized
+    if (initializedGit && tryGitCommit(appPath)) {
         console.log();
-        console.log('Added final installation and commited.');
+        console.log('Created git commit.');
     }
 
     // Display the most elegant way to cd.
@@ -307,19 +360,7 @@ function isReactInstalled(appPackage) {
     return typeof dependencies.react !== 'undefined' && typeof dependencies['react-dom'] !== 'undefined';
 }
 
-function extendAppPackageWithAdditionalRioStuff(appPackage, templateJson) {
-    const extendedAppPackage = { ...appPackage };
-
-    Object.entries(templateJson).forEach(entry => {
-        if (['dependencies', 'devDependencies', 'scripts'].indexOf(entry[0]) === -1) {
-            extendedAppPackage[entry[0]] = entry[1];
-        }
-    });
-
-    return extendedAppPackage;
-}
-
-function installRioDependencies(useYarn, verbose, templateJson) {
+function installRioDevDependencies(useYarn, verbose, templateJson) {
     let command;
     let args;
 
