@@ -12,8 +12,6 @@ export interface State {
 export interface ConfigState {
     backend: {
         AUTHENTICATION_SERVICE: string | undefined;
-        USERADMIN_SERVICE: string | undefined;
-        USER_SETTINGS_SERVICE: string | undefined;
         MENU_SERVICE: string | undefined;
     };
     homeRoute: string | undefined;

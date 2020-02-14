@@ -66,12 +66,12 @@ export const configureUserManager = (oauthConfig, userManager) => {
     return userManager;
 };
 
-export const configureMockUserManager = ({ onTokenRenewed }) => {
+export const configureMockUserManager = ({ onSessionRenewed }) => {
     // eslint-disable-next-line no-console
     console.warn(`[feature/login/oidc-session] Using mocked authorization due to config setting`);
 
     const signinSilent = () => {
-        onTokenRenewed(
+        onSessionRenewed(
             adaptPublishedInfo({
                 access_token: 'valid-mocked-oauth-bogus-token',
                 // eslint-disable-next-line no-magic-numbers
