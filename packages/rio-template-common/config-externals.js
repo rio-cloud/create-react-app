@@ -33,7 +33,7 @@ module.exports = [
         module: 'rio-uikit',
     },
     {
-        entry: 'https://user-menu-component.iam.rio.cloud/1.0.0/rio-user-menu.js',
+        entry: 'https://user-menu-component.iam.rio.cloud/1.0.1/rio-user-menu.js',
         global: 'RioUserMenu',
         module: 'rio-user-menu',
     },
