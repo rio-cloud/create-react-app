@@ -8,13 +8,7 @@ import { ApplicationHeader, NotificationsContainer, ApplicationLayout, ActionBar
 import IframeResizer from '@rio-cloud/iframe-resizer';
 
 // Import language configuration
-import {
-    DEFAULT_LOCALE,
-    getLanguageData,
-    getLocale,
-    getIdToken,
-    isUserSessionExpired,
-} from '../configuration';
+import { DEFAULT_LOCALE, getLanguageData, getLocale, isUserSessionExpired } from '../configuration';
 import { hideSessionExpiredDialog } from './app/actions';
 import { getSessionExpiredAcknowledged } from './app/selectors';
 
@@ -80,15 +74,10 @@ const serviceInfoItem = (
 );
 
 export const AppContainer = props => {
-    const { hideSessionDialog, homeRoute, idToken, languageData, showSessionExpired, userLocale } = props;
+    const { hideSessionDialog, homeRoute, languageData, showSessionExpired, userLocale } = props;
     const appTitle = <FormattedMessage id={'starterTemplate.moduleName'} />;
-    const environment = process.env.NODE_ENV === 'production' ? 'production': 'local';
-    const userMenu = (
-        <DefaultUserMenu
-            idToken={idToken}
-            environment={environment}
-        />
-    );
+    const environment = process.env.NODE_ENV === 'production' ? 'production' : 'local';
+    const userMenu = <DefaultUserMenu environment={environment} />;
     const menuUrl = config.backend.MENU_SERVICE;
     const appNavigator = <IframeResizer url={menuUrl} />;
 
@@ -127,14 +116,10 @@ export const mapDispatchToProps = dispatch => ({
 export const mapStateToProps = state => {
     return {
         homeRoute: config.homeRoute,
-        idToken: getIdToken(state),
         languageData: getLanguageData(state),
         showSessionExpired: isUserSessionExpired(state) && !getSessionExpiredAcknowledged(state),
         userLocale: getLocale(state),
     };
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(AppContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(AppContainer);

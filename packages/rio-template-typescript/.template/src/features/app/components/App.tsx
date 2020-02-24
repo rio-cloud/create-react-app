@@ -39,7 +39,6 @@ export default class App extends React.Component<AppProperties, {}> {
         const {
             hideSessionDialog,
             homeRoute,
-            idToken,
             languageData,
             showSessionExpired,
             userLocale,
@@ -87,7 +86,6 @@ export default class App extends React.Component<AppProperties, {}> {
         const environment = process.env.NODE_ENV === 'production' ? 'production': 'local';
         const userMenu = (
             <DefaultUserMenu
-                idToken={idToken}
                 environment={environment}
             />
         );

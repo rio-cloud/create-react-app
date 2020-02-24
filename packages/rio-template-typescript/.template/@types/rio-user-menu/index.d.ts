@@ -1,19 +1,8 @@
 declare module "rio-user-menu" {
 
-    interface IDToken {
-        sub: string;
-        azp: string;
-        account: string;
-        given_name: string;
-        family_name: string;
-        name: string;
-        locale: string;
-        email: string;
-    }
-
     interface DefaultUserMenuProps {
-        idToken: IDToken;
         environment: string;
+        localUserMenu?: boolean;
     }
 
     class DefaultUserMenu extends React.Component<DefaultUserMenuProps> {

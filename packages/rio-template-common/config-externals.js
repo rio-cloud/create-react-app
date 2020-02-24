@@ -26,14 +26,14 @@ module.exports = [
     },
     {
         entry: [
-            'https://uikit.developers.rio.cloud/0.13.10/rio-uikit.js',
-            'https://uikit.developers.rio.cloud/0.13.10/rio-uikit.css',
+            'https://uikit.developers.rio.cloud/0.13.11/rio-uikit.js',
+            'https://uikit.developers.rio.cloud/0.13.11/rio-uikit.css',
         ],
         global: 'RioUikit',
         module: 'rio-uikit',
     },
     {
-        entry: 'https://user-menu-component.iam.rio.cloud/0.2.0/rio-user-menu.js',
+        entry: 'https://user-menu-component.iam.rio.cloud/1.0.1/rio-user-menu.js',
         global: 'RioUserMenu',
         module: 'rio-user-menu',
     },
