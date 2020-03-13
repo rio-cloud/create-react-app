@@ -24,7 +24,7 @@ This package enables a quick setup for internal single page applications for [th
 Choose your desired template and create the project as described in the corresponding Readme:
 
 -   [Typescript](https://github.com/rio-cloud/create-react-app/tree/rio-react-scripts/packages/rio-template-typescript) (recommended)
--   [Javascript](https://github.com/rio-cloud/create-react-app/tree/rio-react-scripts/packages/rio-template)
+-   ~~Javascript~~ is no longer supported
 
 ### Update existing project
 

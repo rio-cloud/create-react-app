@@ -5,12 +5,12 @@ module.exports = [
         module: 'core-js',
     },
     {
-        entry: 'https://cdn.rio.cloud/libs/react/16.10.2/react.min.js',
+        entry: 'https://cdn.rio.cloud/libs/react/16.12.0/react.min.js',
         global: 'React',
         module: 'react',
     },
     {
-        entry: 'https://cdn.rio.cloud/libs/react-dom/16.10.2/react-dom.min.js',
+        entry: 'https://cdn.rio.cloud/libs/react-dom/16.12.0/react-dom.min.js',
         global: 'ReactDOM',
         module: 'react-dom',
     },

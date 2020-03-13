@@ -328,6 +328,5 @@ $RECYCLE.BIN/
 build
 
 mocks/React.js
-mocks/rio-accountmenu.js
 mocks/rio-session-expired-info.js
 mocks/rio-uikit.js

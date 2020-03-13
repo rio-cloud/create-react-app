@@ -6,7 +6,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 function mockUserSettings(app) {
-
     app.use(express.static(__dirname + '/static'));
 
     app.get('/menu', function(req, res) {

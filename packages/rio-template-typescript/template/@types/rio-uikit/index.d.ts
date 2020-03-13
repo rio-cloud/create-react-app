@@ -369,6 +369,37 @@ declare module 'rio-uikit' {
 
     class ExpanderPanel extends React.Component<ExpanderPanelProps> {}
 
+    class ReleaseNotes extends React.Component<ReleaseNotesProps> {}
+
+    interface ReleaseNotesDialogProps {
+        releaseNotes: {
+            [key: string]: {
+                date: string;
+                content: Array<HTMLElement | React.ReactElement>;
+            };
+        };
+    }
+
+    class ReleaseNotesDialog extends React.Component<ReleaseNotesDialogProps> {}
+
+    interface ReleaseNotesDialogProps {
+        showReleaseNotes: boolean;
+        setShowReleaseNotes: (boolean) => void;
+        translations?: object;
+        whatsNewTitle?: string;
+        moduleName?: string;
+        closeButtonText?: string;
+        translatedReleaseNotes: {
+            [key: string]: {
+                date: string;
+                content: Array<HTMLElement | React.ReactElement>;
+            };
+        };
+        currentVersion: string;
+        RELEASE_NOTES_ITEM: string;
+        useOverflow?: boolean;
+    }
+
     interface SpinnerProps {
         isInverse?: boolean;
         isDoubleSized?: boolean;
@@ -586,6 +617,7 @@ declare module 'rio-uikit' {
         onChange: (toggleState: boolean) => void;
         checked?: boolean;
         minWidth?: number;
+        disabled?: boolean;
         enabledText?: string;
         disabledText?: string;
         labelPosition?: 'left' | 'right';
@@ -899,6 +931,8 @@ declare module 'rio-uikit' {
         NumberInputProps,
         OnboardingTip,
         RadioButton,
+        ReleaseNotesDialog,
+        ReleaseNotesDialogProps,
         RioBootstrapTable,
         RioBootstrapTableProps,
         RioTableHeaderColumn,
