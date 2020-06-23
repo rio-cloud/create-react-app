@@ -5,17 +5,17 @@ module.exports = [
         module: 'core-js',
     },
     {
-        entry: 'https://cdn.rio.cloud/libs/react/16.12.0/react.min.js',
+        entry: 'https://cdn.rio.cloud/libs/react/16.13.1/react.min.js',
         global: 'React',
         module: 'react',
     },
     {
-        entry: 'https://cdn.rio.cloud/libs/react-dom/16.12.0/react-dom.min.js',
+        entry: 'https://cdn.rio.cloud/libs/react-dom/16.13.1/react-dom.min.js',
         global: 'ReactDOM',
         module: 'react-dom',
     },
     {
-        entry: 'https://cdn.rio.cloud/libs/react-intl/3.12.0/react-intl.min.js',
+        entry: 'https://cdn.rio.cloud/libs/react-intl/4.5.4/react-intl.min.js',
         global: 'ReactIntl',
         module: 'react-intl',
     },
@@ -26,8 +26,8 @@ module.exports = [
     },
     {
         entry: [
-            'https://uikit.developers.rio.cloud/0.13.11/rio-uikit.js',
-            'https://uikit.developers.rio.cloud/0.13.11/rio-uikit.css',
+            'https://uikit.developers.rio.cloud/0.14.0/rio-uikit.js',
+            'https://uikit.developers.rio.cloud/0.14.0/rio-uikit.css',
         ],
         global: 'RioUikit',
         module: 'rio-uikit',
