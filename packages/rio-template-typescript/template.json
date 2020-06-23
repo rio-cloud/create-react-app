@@ -4,7 +4,6 @@
     "@sentry/browser": "^5.12.1",
     "classlist-polyfill": "^1.2.0",
     "connected-react-router": "^6.7.0",
-    "custom-event-polyfill": "^1.0.7",
     "history": "^4.10.1",
     "less": "^3.11.1",
     "lodash": "^4.17.15",
@@ -15,8 +14,7 @@
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "regenerator-runtime": "^0.13.3",
-    "unorm": "^1.6.0"
+    "regenerator-runtime": "^0.13.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.1.1",
