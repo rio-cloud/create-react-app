@@ -4,6 +4,7 @@ import head from 'lodash/fp/head';
 import split from 'lodash/fp/split';
 
 const DEFAULT_LOCALE = 'en-GB';
+
 const supportedLocaleMap = {
     de: 'de-DE',
     'de-DE': 'de-DE',

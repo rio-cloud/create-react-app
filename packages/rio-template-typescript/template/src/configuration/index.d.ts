@@ -21,12 +21,12 @@ type UserProfileType = {
     locale: string;
 }
 
-interface LanguageDataInterface {
+interface DisplayMessagesInterface {
     [key: string]: string;
 }
 
 interface MessagesInterface {
-    [key: string]: LanguageDataInterface;
+    [key: string]: DisplayMessagesInterface;
 }
 
 interface AccessTokenState {
@@ -37,7 +37,7 @@ interface AccessTokenState {
 interface LanguageState {
     allMessages: MessagesInterface;
     canFetchSupportedLocale?: boolean;
-    displayMessages?: LanguageDataInterface;
+    displayMessages?: DisplayMessagesInterface;
     displayLocale?: string;
     preferredLocale?: string;
     supportedLocale?: string;
@@ -64,7 +64,7 @@ declare function main(renderFn: () => void): void
 declare function getAccessToken(state: any): AccessToken
 declare function getIdToken(state: any): IdToken
 declare function isUserSessionExpired(state: any): boolean
-declare function getLanguageData(state: any): LanguageDataInterface
+declare function getDisplayMessages(state: any): DisplayMessagesInterface
 declare function getLocale(state: any): string
 declare function getUserAccount(state: any): string | null;
 
@@ -78,7 +78,7 @@ export {
     configReducer,
     getAccessToken,
     getIdToken,
-    getLanguageData,
+    getDisplayMessages,
     getLocale,
     getUserAccount,
     history,
@@ -90,7 +90,7 @@ export {
     AccessToken,
     AccessTokenState,
     IdToken,
-    LanguageDataInterface,
+    DisplayMessagesInterface,
     LanguageState,
     LoginState,
     MessagesInterface,

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { getIdToken, getLanguageData, getLocale, isUserSessionExpired } from '../../../configuration';
+import { getIdToken, getDisplayMessages, getLocale, isUserSessionExpired } from '../../../configuration';
 import { config } from '../../../config';
 import { State } from '../../../types';
 import App from '../components/App';
@@ -18,7 +18,7 @@ const mapStateToProps = (state: State): AppPropertiesFromState => {
     return {
         idToken: getIdToken(state),
         homeRoute: config.homeRoute as string,
-        languageData: getLanguageData(state),
+        displayMessages: getDisplayMessages(state),
         showSessionExpired: isUserSessionExpired(state) && !getSessionExpiredAcknowledged(state),
         userLocale: getLocale(state),
     };

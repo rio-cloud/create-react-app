@@ -1,8 +1,4 @@
-import cloneDeep from 'lodash/fp/cloneDeep';
-import flow from 'lodash/fp/flow';
-import forEach from 'lodash/fp/forEach';
 import has from 'lodash/fp/has';
-import keys from 'lodash/fp/keys';
 
 import { CHANGE_LOCALE, LANGUAGE_DATA_FETCHED } from './actions';
 
@@ -14,49 +10,19 @@ const defaultMessages = {
     [DEFAULT_LOCALE]: messagesEN,
 };
 
-const getSupportedLocaleFromData = data =>
-    flow(
-        locale => (has(locale, data) ? locale : extractLanguage(locale)),
-        locale => (has(locale, data) ? locale : DEFAULT_LOCALE)
-    );
-
-const getMessages = ({ allMessages }, locale) => allMessages[supportedLocaleMap[locale]] || allMessages[DEFAULT_LOCALE];
-
-const isLangOnly = locale => !/-/.test(locale);
-
-const defaultFor = locale => supportedLocaleMap[locale];
-
-const patchMissingMessages = (knownMessages, messages) => {
-    const result = cloneDeep(messages);
-
-    flow(
-        keys,
-        forEach(key => {
-            if (!has(key, result)) {
-                result[key] = knownMessages[key];
-            }
-        })
-    )(knownMessages);
-
-    return result;
-};
+const getMessages = ({ allMessages }, locale) => allMessages[locale];
 
 const applyLocale = (state, preferredLocale) => {
     const { allMessages } = state;
 
-    const getDisplayLocale = getSupportedLocaleFromData(allMessages);
-    const getSupported = getSupportedLocaleFromData(supportedLocaleMap);
+    const displayLocale = has(preferredLocale, allMessages) ? preferredLocale : extractLanguage(preferredLocale);
+    const supportedLocale = has(preferredLocale, supportedLocaleMap) ? preferredLocale : DEFAULT_LOCALE;
 
-    const displayLocale = getDisplayLocale(preferredLocale);
+    const canFetchSupportedLocale = displayLocale !== supportedLocale && supportedLocale !== DEFAULT_LOCALE;
 
-    const closest = getSupported(preferredLocale);
-    const supportedLocale = isLangOnly(closest) ? defaultFor(closest) : closest;
+    const displayMessages = getMessages(state, supportedLocale);
 
-    const canFetchSupportedLocale = displayLocale !== supportedLocale;
-
-    const displayMessages = patchMissingMessages(getMessages(state, DEFAULT_LOCALE), getMessages(state, displayLocale));
-
-    const result = {
+    return {
         allMessages,
         canFetchSupportedLocale,
         displayLocale,
@@ -64,10 +30,9 @@ const applyLocale = (state, preferredLocale) => {
         preferredLocale,
         supportedLocale,
     };
-
-    return result;
 };
 
+// Initially, set DEFAULT_LOCALE and store respective displayMessages in redux store
 const defaultState = applyLocale({ allMessages: defaultMessages }, DEFAULT_LOCALE);
 
 const isDefaultLocaleForLang = locale => supportedLocaleMap[locale] === locale;
@@ -90,7 +55,7 @@ const mergeLanguageData = (allMessages, languageData, locale) => {
     };
 };
 
-export default function langReducer(state = defaultState, action = {}) {
+const langReducer = (state = defaultState, action = {}) => {
     switch (action.type) {
         case CHANGE_LOCALE: {
             return {
@@ -122,3 +87,5 @@ export default function langReducer(state = defaultState, action = {}) {
             return state;
     }
 }
+
+export default langReducer;

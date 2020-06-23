@@ -39,10 +39,14 @@ export default class App extends React.Component<AppProperties, {}> {
         const {
             hideSessionDialog,
             homeRoute,
-            languageData,
+            displayMessages,
             showSessionExpired,
             userLocale,
         } = this.props;
+
+        if (!displayMessages) {
+            return null;
+        }
 
         const title = (
             <div>
@@ -96,7 +100,7 @@ export default class App extends React.Component<AppProperties, {}> {
         const homeLink = <a href={homeRoute} />;
 
         return (
-            <IntlProvider defaultLocale={DEFAULT_LOCALE} key={userLocale} locale={userLocale} messages={languageData}>
+            <IntlProvider defaultLocale={DEFAULT_LOCALE} key={userLocale} locale={userLocale} messages={displayMessages}>
                 <ApplicationLayout className={'StarterTemplate'}>
                     <ApplicationLayout.Header>
                         <ApplicationHeader
