@@ -22,8 +22,11 @@ declare module 'rio-uikit' {
         innerClassName?: string;
         enableScrollToTop?: boolean;
         forceScrollbar?: boolean;
-        banner?: any;
+        banner?: React.ReactNode;
+        bottomBar?: React.ReactNode;
     }
+
+    export class ApplicationLayoutBodyBanner extends React.Component<ApplicationLayoutBodyBannerProps> {}
 
     interface ApplicationLayoutBodyBannerProps {
         className?: string;
@@ -31,18 +34,25 @@ declare module 'rio-uikit' {
         backgroundColor?: string;
         isSticky?: boolean;
     }
-    class ApplicationLayoutBodyBanner extends React.Component<ApplicationLayoutBodyProps> {}
+
+    export class ApplicationLayoutBodyBottomBar extends React.Component<ApplicationLayoutBodyBottomBarProps> {}
+
+    interface ApplicationLayoutBodyBottomBarProps {
+        className?: string;
+        useBodyPaddings?: boolean;
+        buttonAlignment?: 'left' | 'right';
+    }
 
     class ApplicationLayout extends React.Component<ApplicationLayoutProps> {
         static Header: React.ComponentClass<ApplicationLayoutHeaderProps>;
         static Body: React.ComponentClass<ApplicationLayoutBodyProps>;
-        static Sidebar: React.ComponentClass<any>;
+        static Sidebar: React.ComponentClass<ApplicationLayoutSidebarProps>;
     }
 
     interface ActivityProps {
         activity: string;
         bsSize?: string;
-        duration: string | React.ReactNode;
+        duration?: string | React.ReactNode;
         isOutdated?: boolean;
         onClick?: Function;
         className?: string;
@@ -73,7 +83,7 @@ declare module 'rio-uikit' {
 
     interface TreeItem {
         id: string;
-        name: string | React.ReactNode | TreeItemName;
+        name: string | TreeItemName;
         type: string;
         groupIds?: string[];
         className?: string;
@@ -85,8 +95,6 @@ declare module 'rio-uikit' {
         selectedGroups?: string[];
         selectedItems?: string[];
         onSelectionChange?: Function;
-        onItemSelectionChange?: Function;
-        onGroupSelectionChange?: Function;
         hasMultiselect?: boolean;
         hideSearch?: boolean;
         searchPlaceholder?: string;
@@ -135,6 +143,7 @@ declare module 'rio-uikit' {
         onToggleTree?: Function;
         currentCategoryId: string;
         onCategoryChange: Function;
+        useOffscreen: boolean;
         className?: string;
         children?: TreeCategory[];
     }
@@ -178,14 +187,18 @@ declare module 'rio-uikit' {
 
     class ClearableInput extends React.Component<ClearableInputProps> {}
 
-    class NotificationsContainer extends React.Component {}
+    interface NotificationsContainerProps {
+        stacked?: boolean;
+    }
+
+    class NotificationsContainer extends React.Component<NotificationsContainerProps> {}
 
     type notificationTriggerFunction = (
-      message: string | JSX.Element | JSX.Element[],
-      title?: string,
-      timeOut?: number,
-      callback?: Function,
-      priority?: boolean
+        message: string | JSX.Element | JSX.Element[],
+        title?: string,
+        timeOut?: number,
+        callback?: Function,
+        priority?: boolean
     ) => void;
 
     class Notification {
@@ -207,9 +220,30 @@ declare module 'rio-uikit' {
 
     class NumberInput extends React.Component<NumberInputProps> {}
 
+    interface TimePickerInputProps {
+        className?: string;
+    }
+
+    interface TimePickerProps {
+        onChange?: Function;
+        onComplete?: Function;
+        value?: string;
+        alwaysShowMask?: boolean;
+        className?: string;
+        inputProps?: TimePickerInputProps;
+    }
+
+    class TimePicker extends React.Component<TimePickerProps> {}
+
     interface DatePickerProps extends DatetimepickerProps {
         className?: string;
         locale?: string;
+        closeOnSelect?: boolean;
+        value?: Date | string | Moment;
+        dateFormat?: string | boolean;
+        timeFormat?: string | boolean;
+        dropup?: boolean;
+        onChange?: (value: Moment | string) => void;
     }
 
     class DatePicker extends React.Component<DatePickerProps> {}
@@ -291,6 +325,7 @@ declare module 'rio-uikit' {
         onChange: (SelectOption) => void;
         id?: string;
         name?: string;
+        toggleButtonLabel?: string | React.ReactNode;
         placeholder?: string | React.ReactNode;
         bsSize?: string;
         disabled?: boolean;
@@ -346,9 +381,28 @@ declare module 'rio-uikit' {
 
     class RioTableHeaderColumn extends React.Component<RioTableHeaderColumnProps | TableHeaderColumnProps> {}
 
+    interface ExpanderListItem {
+        id?: string | number;
+        header: string | React.ReactNode;
+        body: string | React.ReactNode;
+        open?: boolean;
+        className?: string;
+        headerClassName?: string;
+        bodyClassName?: string;
+    }
+
+    interface ExpanderListProps {
+        items: ExpanderListItem[];
+        mountOnEnter?: boolean;
+        unmountOnExit?: boolean;
+        className?: string;
+    }
+
+    class ExpanderList extends React.Component<ExpanderListProps> {}
+
     interface ExpanderPanelProps {
         title: string | React.ReactNode;
-        bsStyle?: 'blank' | 'default' | 'primary' | 'info' | 'warning' | 'danger' | 'success';
+        bsStyle?: 'blank' | 'default' | 'separator' | 'primary' | 'info' | 'warning' | 'danger' | 'success';
         iconLeft?: boolean;
         open?: boolean;
         mountOnEnter?: boolean;
@@ -371,7 +425,7 @@ declare module 'rio-uikit' {
 
     class ReleaseNotes extends React.Component<ReleaseNotesProps> {}
 
-    interface ReleaseNotesDialogProps {
+    interface ReleaseNotesProps {
         releaseNotes: {
             [key: string]: {
                 date: string;
@@ -385,7 +439,6 @@ declare module 'rio-uikit' {
     interface ReleaseNotesDialogProps {
         showReleaseNotes: boolean;
         setShowReleaseNotes: (boolean) => void;
-        translations?: object;
         whatsNewTitle?: string;
         moduleName?: string;
         closeButtonText?: string;
@@ -403,6 +456,7 @@ declare module 'rio-uikit' {
     interface SpinnerProps {
         isInverse?: boolean;
         isDoubleSized?: boolean;
+        isFullSized?: boolean;
     }
 
     class Spinner extends React.Component<SpinnerProps> {}
@@ -486,7 +540,7 @@ declare module 'rio-uikit' {
 
     class RadioButton extends React.Component<RadioButtonProps> {}
 
-    type markerColor = 'bg-map-marker-asset' | 'bg-map-marker-poi' | 'bg-map-marker-event';
+    type markerColor = 'bg-map-marker-asset' | 'bg-map-marker-poi' | 'bg-map-marker-geofence' | 'bg-map-marker-route';
 
     interface SingleMapMarkerProps {
         bearing?: number;
@@ -494,6 +548,7 @@ declare module 'rio-uikit' {
         warningCount?: number;
         exceptionCount?: number;
         active?: boolean;
+        clickable?: boolean;
         moving?: boolean;
         iconNames?: string[];
         markerColor?: markerColor;
@@ -511,6 +566,7 @@ declare module 'rio-uikit' {
         tabIndex?: number;
         value?: string;
         disabled?: boolean;
+        readOnly?: boolean;
         onBlur?: Function;
         inputRef?: Function;
         autoComplete?: string;
@@ -533,10 +589,9 @@ declare module 'rio-uikit' {
         suggestions: AutoSuggestSuggestion[];
         noItemMessage?: string | JSX.Element;
         onSuggestionsFetchRequested: (argument: { value: string }) => void;
-        onSuggestionsClearRequested: () => void;
         onSuggestionSelected: (
-          indexOfClickedItemInDropdownList: number,
-          selectedSuggestion: SelectedSuggestion
+            indexOfClickedItemInDropdownList: number,
+            selectedSuggestion: SelectedSuggestion
         ) => void;
         renderSuggestion?: (suggestion: AutoSuggestSuggestion) => JSX.Element;
         onSuggestionHighlighted?: () => void;
@@ -547,6 +602,8 @@ declare module 'rio-uikit' {
         dropdownClassName?: string;
         isLoading?: boolean;
         openOnFocus?: boolean;
+        leadingInputAddons?: React.ReactNode[];
+        trailingInputAddons?: React.ReactNode[];
     }
 
     class AutoSuggest extends React.Component<AutoSuggestProps> {}
@@ -587,7 +644,7 @@ declare module 'rio-uikit' {
 
     interface SimpleDialogProps {
         show?: boolean;
-        title: string;
+        title: string | JSX.Element;
         content: JSX.Element;
         onClose?: Function;
         bsSize?: bsSize;
@@ -683,6 +740,18 @@ declare module 'rio-uikit' {
 
     class Slider extends React.Component<SliderProps> {}
 
+    interface NotBookedStateProps {
+        headline: string | React.ReactNode;
+        message: string | React.ReactNode;
+        buttons?: object[];
+        features?: Array<React.ReactNode>;
+        condensed?: boolean;
+        fullWidth?: boolean;
+        image?: React.ReactNode;
+    }
+
+    class NotBookedState extends React.Component<NotBookedStateProps> {}
+
     interface NotFoundStateProps {
         headline: string;
         message: string;
@@ -715,6 +784,8 @@ declare module 'rio-uikit' {
     interface SpinnerInfoBoxProperties {
         text: string;
         isInverse?: boolean;
+        isFullSized?: boolean;
+        isFullScreen?: boolean;
     }
 
     class SpinnerInfoBox extends React.Component<SpinnerInfoBoxProperties> {}
@@ -795,18 +866,18 @@ declare module 'rio-uikit' {
     class DataTab extends React.Component<DataTabProps> {}
 
     type tooltipPlacement =
-      | 'top-left'
-      | 'top'
-      | 'top-right'
-      | 'right-top'
-      | 'right'
-      | 'right-bottom'
-      | 'bottom-right'
-      | 'bottom'
-      | 'bottom-left'
-      | 'left-bottom'
-      | 'left'
-      | 'left-top';
+        | 'top-left'
+        | 'top'
+        | 'top-right'
+        | 'right-top'
+        | 'right'
+        | 'right-bottom'
+        | 'bottom-right'
+        | 'bottom'
+        | 'bottom-left'
+        | 'left-bottom'
+        | 'left'
+        | 'left-top';
 
     type tooltipWidth = 'auto' | 100 | 150 | 200 | 250 | 300 | 350 | 400 | 450 | 500;
 
@@ -832,7 +903,7 @@ declare module 'rio-uikit' {
         onHide: Function;
         scrollTargetRef?: React.ReactNode;
         hideOnScroll?: boolean;
-        useInDialog?: Boolean;
+        useInDialog?: boolean;
         title?: string | React.ReactNode;
         content?: string | React.ReactNode;
         className?: string;
@@ -841,9 +912,26 @@ declare module 'rio-uikit' {
     }
     class OnboardingTip extends React.Component<OnboardingTipProps> {}
 
+    interface OverlayTriggerProps {
+        placement:
+            | 'top'
+            | 'right'
+            | 'bottom'
+            | 'left'
+            | Tooltip.PLACEMENT_TOP
+            | Tooltip.PLACEMENT_RIGHT
+            | Tooltip.PLACEMENT_BOTTOM
+            | Tooltip.PLACEMENT_LEFT;
+        overlay: ReactNode;
+        trigger?: 'click' | 'hover' | 'focus';
+    }
+
+    class OverlayTrigger extends React.Component<OverlayTriggerProps> {}
+
     interface DialogProperties {
         show: boolean;
-        title: string | React.ReactFragment;
+        title?: string | React.ReactNode;
+        subtitle?: string | React.ReactNode;
         body: React.ReactNode;
         footer: React.ReactNode;
         className?: string;
@@ -871,18 +959,99 @@ declare module 'rio-uikit' {
 
     class ErrorState extends React.Component<ErrorStateProperties> {}
 
-    interface TagProperties {
-        size?: string;
-        deletable?: boolean;
-        clickable?: boolean;
+    interface StatsWidgetsProperties {
         className?: string;
     }
+
+    class StatsWidgets extends React.Component<StatsWidgetsProperties> {}
+
+    interface StatsWidgetProperties {
+        onFilterReset?: Function;
+        hasFilter?: boolean;
+        className?: string;
+    }
+
+    interface StatsWidgetHeaderProperties {
+        className?: string;
+    }
+
+    interface StatsWidgetBodyProperties {
+        className?: string;
+    }
+
+    interface StatsWidgetFooterProperties {
+        className?: string;
+    }
+
+    class StatsWidget extends React.Component<StatsWidgetProperties> {
+        static Header: React.ComponentClass<StatsWidgetHeaderProperties>;
+        static Body: React.ComponentClass<StatsWidgetBodyProperties>;
+        static Footer: React.ComponentClass<StatsWidgetFooterProperties>;
+    }
+
+    interface StatsWidgetSpacerProperties {
+        className?: string;
+    }
+
+    class StatsWidgetSpacer extends React.Component<StatsWidgetSpacerProperties> {}
+
+    interface StatsWidgetNumberProperties {
+        value: string | number | React.ReactNode;
+        total?: string | number | React.ReactNode;
+        label?: string | React.ReactNode;
+        clickable?: boolean;
+        onClick?: Function;
+        className?: string;
+    }
+
+    class StatsWidgetNumber extends React.Component<StatsWidgetNumberProperties> {}
+
+    interface TagProperties {
+        active?: boolean;
+        className?: string;
+        clickable?: boolean;
+        deletable?: boolean;
+        revertable?: boolean;
+        disabled?: boolean;
+        icon?: string;
+        muted?: boolean;
+        rounded?: boolean;
+        selectable?: boolean;
+        size?: string;
+    }
+
+    class Tag extends React.Component<TagProperties> {}
+
+    interface TagListProperties {
+        inline?: boolean;
+        autoWidthTags?: boolean;
+        tagsPerRow?: 1 | 2 | 3 | 4 | 6;
+        className?: string;
+    }
+
+    class TagList extends React.Component<TagListProperties> {}
+
+    interface TagManagerTagProp {
+        label?: string;
+    }
+
+    interface TagManagerProperties {
+        tagList: TagManagerTagProp[];
+        tagSuggestions: TagManagerTagProp[];
+        onTagListChange?: Function;
+        placeholder?: string;
+        customTagPlaceholder?: string;
+        dropdownSeparatorText?: string;
+        useCustomTags?: boolean;
+        showInput?: boolean;
+        noItemMessage?: string | React.ReactNode;
+    }
+
+    class TagManager extends React.Component<TagManagerProperties> {}
 
     interface TableSearchProperties extends ClearableInputProps {}
 
     class TableSearch extends React.Component<TableSearchProperties> {}
-
-    class Tag extends React.Component<TagProperties> {}
 
     enum SortDirection {
         ASCENDING = 'asc',
@@ -895,12 +1064,22 @@ declare module 'rio-uikit' {
 
     class SortArrows extends React.Component<SortArrowsProperties> {}
 
+    interface LoadMoreButtonProperties {
+        loaded?: number;
+        total?: number;
+        noMoreMessage?: string | React.ReactNode;
+        loadMoreMessage?: string | React.ReactNode;
+        onLoadMore?: Function;
+        className?: string;
+    }
+
+    class LoadMoreButton extends React.Component<LoadMoreButtonProperties> {}
+
     export {
         ActionBarItem,
         Activity,
         ApplicationHeader,
         ApplicationLayout,
-        ApplicationLayoutBodyBanner,
         AssetTree,
         AutoSuggest,
         AutoSuggestProps,
@@ -918,11 +1097,16 @@ declare module 'rio-uikit' {
         Dialog,
         ErrorState,
         ErrorStateProperties,
+        ExpanderList,
+        ExpanderListItem,
         ExpanderPanel,
         FilePicker,
         FilePickerProps,
         InfoDialog,
         LabelObject,
+        LoadMoreButton,
+        NotBookedStateProps,
+        NotBookedState,
         NotFoundState,
         NotFoundStateProps,
         Notification,
@@ -930,7 +1114,9 @@ declare module 'rio-uikit' {
         NumberInput,
         NumberInputProps,
         OnboardingTip,
+        OverlayTrigger,
         RadioButton,
+        ReleaseNotes,
         ReleaseNotesDialog,
         ReleaseNotesDialogProps,
         RioBootstrapTable,
@@ -954,6 +1140,10 @@ declare module 'rio-uikit' {
         SpinnerInfoBoxProperties,
         SplitDialog,
         StatusBar,
+        StatsWidgets,
+        StatsWidget,
+        StatsWidgetSpacer,
+        StatsWidgetNumber,
         SteppedProgressBar,
         Switch,
         SwitchProps,
@@ -965,8 +1155,11 @@ declare module 'rio-uikit' {
         TableViewTogglesValues,
         Tabs,
         Tag,
+        TagList,
+        TagManager,
         Teaser,
         TeaserContainer,
+        TimePicker,
         ToggleButton,
         Tooltip,
         Tree,

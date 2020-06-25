@@ -2,7 +2,7 @@ import getOr from 'lodash/fp/getOr';
 
 import { reportErrorToSentry } from '../setup/sentry';
 
-import { changeLocale, languageDataFetched } from './actions';
+import { changeLocale, displayMessagesFetched } from './actions';
 import { getSupportedLocale as defaultGetSupportedLocale } from './selectors';
 import { trace } from '../setup/trace';
 
@@ -20,7 +20,7 @@ const sendError = exception => {
 // Webpack is weird sometimes, maybe it's Babel, who knows...
 const normalizeDynamicImport = imported => getOr(imported, 'default', imported);
 
-export const getLanguageData = locale =>
+export const importDisplayMessages = locale =>
     import(/* webpackChunkName: "[request]" */ `../../features/translations/${locale}.json`)
         .then(normalizeDynamicImport)
         .catch(error => {
@@ -28,28 +28,26 @@ export const getLanguageData = locale =>
             return error;
         });
 
-export const configureFetchLanguageData = (
+export const configureFetchDisplayMessages = (
     store,
-    fetchLanguageData = getLanguageData,
+    fetchDisplayMessages = importDisplayMessages,
     getSupportedLocale = defaultGetSupportedLocale
-) => locale => {
+) => async locale => {
     if (!locale) {
-        // eslint-disable-next-line no-console
-        console.warn(`No "locale" supplied when fetching language data!`);
+        console.warn('No "locale" supplied when fetching display messages!');
         return Promise.reject();
     }
 
     store.dispatch(changeLocale(locale));
     const supportedLocale = getSupportedLocale(store.getState());
-    return fetchLanguageData(supportedLocale)
-        .then(languageData => {
-            trace(`Language data fetched for "${supportedLocale}"`);
-            store.dispatch(languageDataFetched(supportedLocale, languageData));
-        })
-        .catch(error => {
-            // eslint-disable-next-line no-console
-            console.error(`Language data for "${supportedLocale}" could not be fetched.`, error);
-            sendError(error);
-            return error;
-        });
+
+    try {
+        const displayMessages = await fetchDisplayMessages(supportedLocale);
+        trace(`Display messages fetched for "${supportedLocale}"`);
+        store.dispatch(displayMessagesFetched(supportedLocale, displayMessages));
+    } catch (error) {
+        console.error(`Display messages for "${supportedLocale}" could not be fetched.`, error);
+        sendError(error);
+        return error;
+    }
 };
