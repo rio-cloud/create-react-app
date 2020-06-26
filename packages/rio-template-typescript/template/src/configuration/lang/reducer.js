@@ -39,14 +39,14 @@ const isDefaultLocaleForLang = locale => supportedLocaleMap[locale] === locale;
 
 const hasLocale = locale => Boolean(supportedLocaleMap[locale]);
 
-const mergeLanguageData = (allMessages, languageData, locale) => {
+const mergeLanguageData = (allMessages, displayMessages, locale) => {
     const baseLang = extractLanguage(locale);
     const messages = {
-        [locale]: languageData,
+        [locale]: displayMessages,
     };
 
     if (isDefaultLocaleForLang(locale) || !hasLocale(baseLang)) {
-        messages[baseLang] = languageData;
+        messages[baseLang] = displayMessages;
     }
 
     return {
@@ -64,9 +64,9 @@ const langReducer = (state = defaultState, action = {}) => {
             };
         }
         case LANGUAGE_DATA_FETCHED: {
-            const { locale, languageData } = action.payload;
+            const { locale, displayMessages } = action.payload;
 
-            if (!languageData) {
+            if (!displayMessages) {
                 return {
                     ...state,
                     ...applyLocale(state, locale),
@@ -75,7 +75,7 @@ const langReducer = (state = defaultState, action = {}) => {
 
             const merged = {
                 ...state,
-                allMessages: mergeLanguageData(state.allMessages, languageData, locale),
+                allMessages: mergeLanguageData(state.allMessages, displayMessages, locale),
             };
 
             return {
