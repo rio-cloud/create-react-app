@@ -2,6 +2,7 @@ import defaultTo from 'lodash/fp/defaultTo';
 import flow from 'lodash/fp/flow';
 import head from 'lodash/fp/head';
 import split from 'lodash/fp/split';
+import has from 'lodash/fp/has';
 
 const DEFAULT_LOCALE = 'en-GB';
 
@@ -20,4 +21,7 @@ const extractLanguage = flow(
 
 const DEFAULT_LANG = extractLanguage(DEFAULT_LOCALE);
 
-export { DEFAULT_LANG, DEFAULT_LOCALE, extractLanguage, supportedLocaleMap };
+const getSupportedLocale = (preferredLocale) => has(preferredLocale, supportedLocaleMap) ?
+    supportedLocaleMap[preferredLocale] : DEFAULT_LOCALE;
+
+export { DEFAULT_LANG, DEFAULT_LOCALE, extractLanguage, supportedLocaleMap, getSupportedLocale };
