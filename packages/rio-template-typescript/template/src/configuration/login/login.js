@@ -93,7 +93,7 @@ export const configureMockUserManager = ({ onSessionRenewed }) => {
     };
 
     const clearStaleState = () => {
-        console.log('[feature/login/oidc-session] Stale state cleared');
+        console.info('[feature/login/oidc-session] Stale state cleared');
         return Promise.resolve();
     };
 
