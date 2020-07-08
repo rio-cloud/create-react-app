@@ -53,10 +53,6 @@ const validateProjectName = require('validate-npm-package-name');
 
 const packageJson = require('./package.json');
 
-// These files should be allowed to remain on a failed install,
-// but then silently removed during the next create.
-const errorLogFilePatterns = ['npm-debug.log', 'yarn-error.log', 'yarn-debug.log'];
-
 let projectName;
 
 const program = new commander.Command(packageJson.name)
@@ -110,6 +106,8 @@ const program = new commander.Command(packageJson.name)
 
 if (program.info) {
     console.log(chalk.bold('\nEnvironment Info:'));
+    console.log(`\n  current version of ${packageJson.name}: ${packageJson.version}`);
+    console.log(`  running from ${__dirname}`);
     return envinfo
         .run(
             {
@@ -136,14 +134,6 @@ if (typeof projectName === 'undefined') {
     console.log();
     console.log(`Run ${chalk.cyan(`${program.name()} --help`)} to see all options.`);
     process.exit(1);
-}
-
-function printValidationResults(results) {
-    if (typeof results !== 'undefined') {
-        results.forEach(error => {
-            console.error(chalk.red(`  *  ${error}`));
-        });
-    }
 }
 
 createApp(
@@ -185,6 +175,7 @@ function createApp(name, verbose, version, template, useNpm, usePnp, useTypeScri
     if (!isSafeToCreateProjectIn(root, name)) {
         process.exit(1);
     }
+    console.log();
 
     console.log(`Creating a new React app in ${chalk.green(root)}.`);
     console.log();
@@ -347,8 +338,7 @@ function run(root, appName, version, verbose, originalDirectory, template, useYa
             .then(({ isOnline, packageInfo, templateInfo }) => {
                 let packageVersion = semver.coerce(packageInfo.version);
 
-                // This environment variable can be removed post-release.
-                const templatesVersionMinimum = process.env.CRA_INTERNAL_TEST ? '3.2.0' : '3.3.0';
+                const templatesVersionMinimum = '3.3.0';
 
                 // Assume compatibility if we can't test the version.
                 if (!semver.valid(packageVersion)) {
@@ -466,7 +456,7 @@ function getInstallPackage(version, originalDirectory) {
     if (validSemver) {
         packageToInstall += `@${validSemver}`;
     } else if (version) {
-        if (version[0] === '@' && version.indexOf('/') === -1) {
+        if (version[0] === '@' && !version.includes('/')) {
             packageToInstall += version;
         } else if (version.match(/^file:/)) {
             packageToInstall = `file:${path.resolve(originalDirectory, version.match(/^file:(.*)?$/)[1])}`;
@@ -524,10 +514,22 @@ function getTemplateInstallPackage(template, originalDirectory) {
             const scope = packageMatch[1] || '';
             const templateName = packageMatch[2];
 
-            const name = templateName.startsWith(templateToInstall)
-                ? templateName
-                : `${templateToInstall}-${templateName}`;
-            templateToInstall = `${scope}${name}`;
+            if (templateName === templateToInstall || templateName.startsWith(`${templateToInstall}-`)) {
+                // Covers:
+                // - cra-template
+                // - @SCOPE/cra-template
+                // - cra-template-NAME
+                // - @SCOPE/cra-template-NAME
+                templateToInstall = `${scope}${templateName}`;
+            } else if (templateName.startsWith('@')) {
+                // Covers using @SCOPE only
+                templateToInstall = `${templateName}/${templateToInstall}`;
+            } else {
+                // Covers templates without the `cra-template` prefix:
+                // - NAME
+                // - @SCOPE/NAME
+                templateToInstall = `${scope}${templateToInstall}-${templateName}`;
+            }
         }
     }
 
@@ -598,7 +600,7 @@ function getPackageInfo(installPackage) {
                 console.log(`Based on the filename, assuming it is "${chalk.cyan(assumedProjectName)}"`);
                 return Promise.resolve({ name: assumedProjectName });
             });
-    } else if (installPackage.indexOf('git+') === 0) {
+    } else if (installPackage.startsWith('git+')) {
         // Pull package name out of git urls e.g:
         // git+https://github.com/mycompany/react-scripts.git
         // git+ssh://github.com/mycompany/react-scripts.git#v1.2.3
@@ -637,17 +639,25 @@ function checkNpmVersion() {
 }
 
 function checkYarnVersion() {
+    const minYarnPnp = '1.12.0';
     let hasMinYarnPnp = false;
     let yarnVersion = null;
     try {
         yarnVersion = execSync('yarnpkg --version')
             .toString()
             .trim();
-        let trimmedYarnVersion = /^(.+?)[-+].+$/.exec(yarnVersion);
-        if (trimmedYarnVersion) {
-            trimmedYarnVersion = trimmedYarnVersion.pop();
+        if (semver.valid(yarnVersion)) {
+            hasMinYarnPnp = semver.gte(yarnVersion, minYarnPnp);
+        } else {
+            // Handle non-semver compliant yarn version strings, which yarn currently
+            // uses for nightly builds. The regex truncates anything after the first
+            // dash. See #5362.
+            const trimmedYarnVersionMatch = /^(.+?)[-+].+$/.exec(yarnVersion);
+            if (trimmedYarnVersionMatch) {
+                const trimmedYarnVersion = trimmedYarnVersionMatch.pop();
+                hasMinYarnPnp = semver.gte(trimmedYarnVersion, minYarnPnp);
+            }
         }
-        hasMinYarnPnp = semver.gte(trimmedYarnVersion || yarnVersion, '1.12.0');
     } catch (err) {
         // ignore
     }
@@ -687,20 +697,24 @@ function checkAppName(appName) {
     const validationResult = validateProjectName(appName);
     if (!validationResult.validForNewPackages) {
         console.error(
-            `Could not create a project called ${chalk.red(`"${appName}"`)} because of npm naming restrictions:`
+            chalk.red(
+                `Cannot create a project named ${chalk.green(`"${appName}"`)} because of npm naming restrictions:\n`
+            )
         );
-        printValidationResults(validationResult.errors);
-        printValidationResults(validationResult.warnings);
+        [...(validationResult.errors || []), ...(validationResult.warnings || [])].forEach(error => {
+            console.error(chalk.red(`  * ${error}`));
+        });
+        console.error(chalk.red('\nPlease choose a different project name.'));
         process.exit(1);
     }
 
     // TODO: there should be a single place that holds the dependencies
     const dependencies = ['react', 'react-dom', 'react-scripts'].sort();
-    if (dependencies.indexOf(appName) >= 0) {
+    if (dependencies.includes(appName)) {
         console.error(
             chalk.red(
-                `We cannot create a project called ${chalk.green(
-                    appName
+                `Cannot create a project named ${chalk.green(
+                    `"${appName}"`
                 )} because a dependency with the same name exists.\n` +
                     `Due to the way npm works, the following names are not allowed:\n\n`
             ) +
@@ -762,23 +776,28 @@ function setCaretRangeForRuntimeDeps(packageName) {
 function isSafeToCreateProjectIn(root, name) {
     const validFiles = [
         '.DS_Store',
-        'Thumbs.db',
         '.git',
-        '.gitignore',
-        '.idea',
-        'README.md',
-        'LICENSE',
-        '.hg',
-        '.hgignore',
-        '.hgcheck',
-        '.npmignore',
-        'mkdocs.yml',
-        'docs',
-        '.travis.yml',
-        '.gitlab-ci.yml',
         '.gitattributes',
+        '.gitignore',
+        '.gitlab-ci.yml',
+        '.hg',
+        '.hgcheck',
+        '.hgignore',
+        '.idea',
+        '.npmignore',
+        '.travis.yml',
+        'docs',
+        'LICENSE',
+        'README.md',
+        'mkdocs.yml',
+        'Thumbs.db',
     ];
-    console.log();
+    // These files should be allowed to remain on a failed install, but then
+    // silently removed during the next create.
+    const errorLogFilePatterns = ['npm-debug.log', 'yarn-error.log', 'yarn-debug.log'];
+    const isErrorLog = file => {
+        return errorLogFilePatterns.some(pattern => file.startsWith(pattern));
+    };
 
     const conflicts = fs
         .readdirSync(root)
@@ -786,13 +805,22 @@ function isSafeToCreateProjectIn(root, name) {
         // IntelliJ IDEA creates module files before CRA is launched
         .filter(file => !/\.iml$/.test(file))
         // Don't treat log files from previous installation as conflicts
-        .filter(file => !errorLogFilePatterns.some(pattern => file.indexOf(pattern) === 0));
+        .filter(file => !isErrorLog(file));
 
     if (conflicts.length > 0) {
         console.log(`The directory ${chalk.green(name)} contains files that could conflict:`);
         console.log();
         for (const file of conflicts) {
-            console.log(`  ${file}`);
+            try {
+                const stats = fs.lstatSync(path.join(root, file));
+                if (stats.isDirectory()) {
+                    console.log(`  ${chalk.blue(`${file}/`)}`);
+                } else {
+                    console.log(`  ${file}`);
+                }
+            } catch (e) {
+                console.log(`  ${file}`);
+            }
         }
         console.log();
         console.log('Either try using a new directory name, or remove the files listed above.');
@@ -800,15 +828,11 @@ function isSafeToCreateProjectIn(root, name) {
         return false;
     }
 
-    // Remove any remnant files from a previous installation
-    const currentFiles = fs.readdirSync(path.join(root));
-    currentFiles.forEach(file => {
-        errorLogFilePatterns.forEach(errorLogFilePattern => {
-            // This will catch `(npm-debug|yarn-error|yarn-debug).log*` files
-            if (file.indexOf(errorLogFilePattern) === 0) {
-                fs.removeSync(path.join(root, file));
-            }
-        });
+    // Remove any log files from a previous installation.
+    fs.readdirSync(root).forEach(file => {
+        if (isErrorLog(file)) {
+            fs.removeSync(path.join(root, file));
+        }
     });
     return true;
 }
@@ -828,6 +852,8 @@ function getProxy() {
         }
     }
 }
+
+// See https://github.com/facebook/create-react-app/pull/3355
 function checkThatNpmCanReadCwd() {
     const cwd = process.cwd();
     let childOutput = null;
@@ -852,7 +878,7 @@ function checkThatNpmCanReadCwd() {
     // "; cwd = C:\path\to\current\dir" (unquoted)
     // I couldn't find an easier way to get it.
     const prefix = '; cwd = ';
-    const line = lines.find(line => line.indexOf(prefix) === 0);
+    const line = lines.find(line => line.startsWith(prefix));
     if (typeof line !== 'string') {
         // Fail gracefully. They could remove it.
         return true;
