@@ -1,92 +1,97 @@
 {
-  "dependencies": {
-    "@rio-cloud/iframe-resizer": "0.0.5",
-    "@sentry/browser": "^5.12.1",
-    "classlist-polyfill": "^1.2.0",
-    "connected-react-router": "^6.7.0",
-    "history": "^4.10.1",
-    "less": "^3.11.1",
-    "lodash": "^4.17.15",
-    "react-app-polyfill": "^1.0.6",
-    "react-redux": "^7.1.3",
-    "react-router": "^5.1.2",
-    "react-router-dom": "^5.1.2",
-    "redux": "^4.0.5",
-    "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.3.0",
-    "regenerator-runtime": "^0.13.3"
-  },
-  "devDependencies": {
-    "@testing-library/jest-dom": "^5.1.1",
-    "@testing-library/react": "^10.0.0",
-    "@testing-library/user-event": "^10.0.0",
-    "@types/history": "^4.7.5",
-    "@types/jest": "^25.1.2",
-    "@types/lodash": "^4.14.149",
-    "@types/node": "^13.7.1",
-    "@types/react": "^16.9.19",
-    "@types/react-dom": "^16.9.5",
-    "@types/react-redux": "^7.1.7",
-    "@types/react-router": "^5.1.4",
-    "@types/react-router-dom": "^5.1.3",
-    "@types/redux-logger": "^3.0.7",
-    "concurrently": "^5.1.0",
-    "core-js": "^3.6.4",
-    "css-loader": "^3.4.2",
-    "eslint-plugin-compat": "^3.5.1",
-    "html-webpack-externals-plugin": "^3.8.0",
-    "http-proxy-middleware": "^1.0.3",
-    "husky": "^4.2.3",
-    "jest-changed-files": "^25.1.0",
-    "jest-environment-jsdom": "^25.1.0",
-    "less-loader": "^6.0.0",
-    "license-checker": "^25.0.1",
-    "lint-staged": "^10.0.7",
-    "node-env-run": "^3.0.2",
-    "nodemon": "^2.0.2",
-    "oidc-client": "^1.10.1",
-    "prettier": "^2.0.5",
-    "react": "^16.12.0",
-    "react-app-rewired": "^2.1.5",
-    "react-dom": "^16.12.0",
-    "react-intl": "^4.1.1",
-    "redux-devtools-extension": "^2.13.8",
-    "source-map-explorer": "^2.2.2",
-    "style-loader": "^1.1.3",
-    "tslint": "^6.0.0",
-    "tslint-react": "^5.0.0",
-    "typescript": "^3.7.5"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": ["prettier --write", "git add"]
-  },
-  "scripts": {
-    "start": "concurrently --kill-others \"npm run-script dev-mock-server\" \"react-app-rewired start --scripts-version @rio-cloud/react-scripts\"",
-    "build": "react-app-rewired --max_old_space_size=4096 build --scripts-version @rio-cloud/react-scripts",
-    "test": "react-app-rewired test --scripts-version @rio-cloud/react-scripts",
-    "pretest": "tsc && npm run download-externals",
-    "eject": "react-scripts eject",
-    "tslint": "tslint -c tslint.json  -p tsconfig.json --format codeFrame \"src/**/*{.ts,.tsx}\"",
-    "tslint-fix": "tslint --fix -c tslint.json  -p tsconfig.json --format codeFrame \"src/**/*{.ts,.tsx}\"",
-    "check-licenses": "bash ./check_licenses.sh",
-    "audit": "npm audit --registry https://registry.npmjs.org --parseable",
-    "dev-mock-server": "nodenv mocks/rio-starter-devmocks.js --exec nodemon",
-    "download-externals": "nodenv ./loadExternals.js",
-    "analyze": "source-map-explorer \"build/static/js/*.js\"",
-    "format-code": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
-  },
-  "jest": {
-    "moduleNameMapper": {
-      "ReactDOM": "react-dom"
+  "package": {
+    "dependencies": {
+      "@rio-cloud/iframe-resizer": "0.0.8",
+      "@sentry/browser": "^5.19.1",
+      "classlist-polyfill": "^1.2.0",
+      "connected-react-router": "^6.8.0",
+      "history": "^4.10.1",
+      "less": "^3.12.0",
+      "lodash": "^4.17.19",
+      "react-app-polyfill": "^1.0.6",
+      "react-redux": "^7.2.0",
+      "react-router": "^5.2.0",
+      "react-router-dom": "^5.2.0",
+      "redux": "^4.0.5",
+      "redux-logger": "^3.0.6",
+      "redux-thunk": "^2.3.0",
+      "regenerator-runtime": "^0.13.5"
     },
-    "moduleDirectories": [
-      "node_modules",
-      "mocks"
-    ]
+    "devDependencies": {
+      "@testing-library/jest-dom": "^5.11.0",
+      "@testing-library/react": "^10.4.6",
+      "@testing-library/user-event": "^12.0.11",
+      "@types/history": "^4.7.6",
+      "@types/jest": "^26.0.4",
+      "@types/lodash": "^4.14.157",
+      "@types/node": "^14.0.23",
+      "@types/react": "^16.9.43",
+      "@types/react-dom": "^16.9.8",
+      "@types/react-redux": "^7.1.9",
+      "@types/react-router": "^5.1.8",
+      "@types/react-router-dom": "^5.1.5",
+      "@types/redux-logger": "^3.0.8",
+      "concurrently": "^5.2.0",
+      "core-js": "^3.6.5",
+      "css-loader": "^3.6.0",
+      "eslint-plugin-compat": "^3.8.0",
+      "html-webpack-externals-plugin": "^3.8.0",
+      "http-proxy-middleware": "^1.0.5",
+      "husky": "^4.2.5",
+      "jest-changed-files": "^26.1.0",
+      "jest-environment-jsdom": "^26.1.0",
+      "less-loader": "^6.2.0",
+      "license-checker": "^25.0.1",
+      "lint-staged": "^10.2.11",
+      "node-env-run": "^3.0.2",
+      "nodemon": "^2.0.4",
+      "oidc-client": "^1.10.1",
+      "prettier": "^2.0.5",
+      "react": "^16.13.1",
+      "react-app-rewired": "^2.1.6",
+      "react-dom": "^16.13.1",
+      "react-intl": "^4.6.9",
+      "redux-devtools-extension": "^2.13.8",
+      "source-map-explorer": "^2.4.2",
+      "style-loader": "^1.2.1",
+      "tslint": "^6.1.2",
+      "tslint-react": "^5.0.0",
+      "typescript": "^3.9.6"
+    },
+    "husky": {
+      "hooks": {
+        "pre-commit": "lint-staged"
+      }
+    },
+    "lint-staged": {
+      "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+        "prettier --write",
+        "git add"
+      ]
+    },
+    "scripts": {
+      "start": "concurrently --kill-others \"npm run-script dev-mock-server\" \"react-app-rewired start --scripts-version @rio-cloud/react-scripts\"",
+      "build": "react-app-rewired --max_old_space_size=4096 build --scripts-version @rio-cloud/react-scripts",
+      "test": "react-app-rewired test --scripts-version @rio-cloud/react-scripts",
+      "pretest": "tsc && npm run download-externals",
+      "eject": "react-scripts eject",
+      "tslint": "tslint -c tslint.json  -p tsconfig.json --format codeFrame \"src/**/*{.ts,.tsx}\"",
+      "tslint-fix": "tslint --fix -c tslint.json  -p tsconfig.json --format codeFrame \"src/**/*{.ts,.tsx}\"",
+      "check-licenses": "bash ./check_licenses.sh",
+      "audit": "npm audit --registry https://registry.npmjs.org --parseable",
+      "dev-mock-server": "nodenv mocks/rio-starter-devmocks.js --exec nodemon",
+      "download-externals": "nodenv ./loadExternals.js",
+      "analyze": "source-map-explorer \"build/static/js/*.js\"",
+      "format-code": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
+    },
+    "jest": {
+      "moduleNameMapper": {
+        "ReactDOM": "react-dom"
+      },
+      "moduleDirectories": [
+        "node_modules",
+        "mocks"
+      ]
+    }
   }
 }

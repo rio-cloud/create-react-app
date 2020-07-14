@@ -21,7 +21,7 @@ const extractLanguage = flow(
 
 const DEFAULT_LANG = extractLanguage(DEFAULT_LOCALE);
 
-const getSupportedLocale = (preferredLocale) => has(preferredLocale, supportedLocaleMap) ?
-    supportedLocaleMap[preferredLocale] : DEFAULT_LOCALE;
+const getSupportedLocale = preferredLocale =>
+    has(preferredLocale, supportedLocaleMap) ? supportedLocaleMap[preferredLocale] : DEFAULT_LOCALE;
 
 export { DEFAULT_LANG, DEFAULT_LOCALE, extractLanguage, supportedLocaleMap, getSupportedLocale };

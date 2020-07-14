@@ -10,7 +10,7 @@ type IdToken = {
     name: string;
     locale: string;
     email: string;
-}
+};
 
 type AccessToken = string | undefined | null;
 
@@ -19,7 +19,7 @@ type UserProfileType = {
     givenName?: string;
     familyName?: string;
     locale: string;
-}
+};
 
 interface DisplayMessagesInterface {
     [key: string]: string;
@@ -54,18 +54,18 @@ interface GenericActionInterface {
     payload?: any;
 }
 
-declare function configReducer(state: any, action: GenericActionInterface): any
-declare function langReducer(state: any, action: GenericActionInterface): any
-declare function loginReducer(state: any, action: GenericActionInterface): any
-declare function tokenHandlingReducer(state: any, action: GenericActionInterface): any
+declare function configReducer(state: any, action: GenericActionInterface): any;
+declare function langReducer(state: any, action: GenericActionInterface): any;
+declare function loginReducer(state: any, action: GenericActionInterface): any;
+declare function tokenHandlingReducer(state: any, action: GenericActionInterface): any;
 
-declare function handleLoginRedirect(): void
-declare function main(renderFn: () => void): void
-declare function getAccessToken(state: any): AccessToken
-declare function getIdToken(state: any): IdToken
-declare function isUserSessionExpired(state: any): boolean
-declare function getDisplayMessages(state: any): DisplayMessagesInterface
-declare function getLocale(state: any): string
+declare function handleLoginRedirect(): void;
+declare function main(renderFn: () => void): void;
+declare function getAccessToken(state: any): AccessToken;
+declare function getIdToken(state: any): IdToken;
+declare function isUserSessionExpired(state: any): boolean;
+declare function getDisplayMessages(state: any): DisplayMessagesInterface;
+declare function getLocale(state: any): string;
 declare function getUserAccount(state: any): string | null;
 
 declare const store: Store;
@@ -95,5 +95,5 @@ export {
     LoginState,
     MessagesInterface,
     UserProfileType,
-    DEFAULT_LOCALE
-}
+    DEFAULT_LOCALE,
+};

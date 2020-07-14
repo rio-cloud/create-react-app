@@ -1,5 +1,9 @@
-import { AppActions, HIDE_SESSION_EXPIRED_DIALOG } from '../actions/types';
-import { AppState } from './types';
+import {AppActions, HIDE_SESSION_EXPIRED_DIALOG} from "./App.actions";
+
+export interface AppState {
+    sessionExpiredAcknowledged: boolean;
+}
+
 
 const initialState: AppState = {
     sessionExpiredAcknowledged: false,

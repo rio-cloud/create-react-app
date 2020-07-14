@@ -5,3 +5,9 @@ interface HideSessionExpiredAction {
 }
 
 export type AppActions = HideSessionExpiredAction;
+
+export const hideSessionExpiredDialog = () => {
+    return {
+        type: HIDE_SESSION_EXPIRED_DIALOG,
+    };
+};

@@ -1,4 +1,23 @@
-import { ConfigState } from './types';
+export interface ConfigState {
+    backend: {
+        AUTHENTICATION_SERVICE: string | undefined;
+        MENU_SERVICE: string | undefined;
+    };
+    homeRoute: string | undefined;
+    id: string | undefined;
+    login: {
+        authority: string | undefined;
+        clientId: string | undefined;
+        oauthScope: Array<string>;
+        mockAuthorization: boolean;
+        mockLocale: string | undefined;
+        preventRedirect: boolean;
+        redirectUri: string | undefined;
+        silentRedirectUri: string | undefined;
+    };
+    logoutUri: string | undefined;
+    sentryToken: string;
+}
 
 const getBoolEnvValue = (envValue: string): boolean => {
     return typeof process.env[envValue] !== 'undefined' && process.env[envValue] === 'true';

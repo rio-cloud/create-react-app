@@ -3,7 +3,6 @@ import { CHANGE_LOCALE, DISPLAY_MESSAGES_FETCHED } from './actions';
 import { DEFAULT_LOCALE, getSupportedLocale } from './lang';
 
 const applyLocale = (state, preferredLocale) => {
-
     const { allMessages } = state;
     const displayLocale = getSupportedLocale(preferredLocale);
     const displayMessages = allMessages[displayLocale];
@@ -13,7 +12,6 @@ const applyLocale = (state, preferredLocale) => {
         displayLocale,
         displayMessages,
     };
-
 };
 const mergeLanguageData = (allMessages, languageData, locale) => {
     return {
@@ -52,6 +50,6 @@ const langReducer = (state = defaultLanguageState, action = {}) => {
         default:
             return state;
     }
-}
+};
 
 export default langReducer;

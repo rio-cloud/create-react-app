@@ -8,9 +8,9 @@ import { Route, Router, Switch } from 'react-router-dom';
 import { main, handleLoginRedirect, history, store } from './configuration';
 
 import { config } from './config';
-import AppContainer from './features/app/containers/App.container';
-import { NoMatch } from './features/app/components/NoMatch';
-import { ErrorBoundary } from './features/app/components/ErrorBoundary';
+import AppContainer from './features/app/App.container';
+import { NoMatch } from './features/app/NoMatch';
+import { ErrorBoundary } from './features/app/ErrorBoundary';
 
 const renderApplication = () => {
     const root = document.getElementById('root');
@@ -33,7 +33,7 @@ const renderApplication = () => {
         </ErrorBoundary>,
         root
     );
-}
+};
 
 if (window.location.href.startsWith(config.login.redirectUri as string)) {
     handleLoginRedirect();

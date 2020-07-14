@@ -129,7 +129,6 @@ module.exports = function(appPath, appName, verbose, originalDirectory, template
         'man',
         'directories',
         'repository',
-        'devDependencies',
         'peerDependencies',
         'bundledDependencies',
         'optionalDependencies',
@@ -256,9 +255,11 @@ module.exports = function(appPath, appName, verbose, originalDirectory, template
     const templateDependencies = templatePackage.dependencies || templateJson.dependencies;
     if (templateDependencies) {
         args = args.concat(
-            Object.keys(templateDependencies).map(key => {
-                return `${key}@${templateDependencies[key]}`;
-            })
+            Object.keys(templateDependencies)
+                .filter(key => !getRioExternalDependencies().includes(key))
+                .map(key => {
+                    return `${key}@${templateDependencies[key]}`;
+                })
         );
     }
 
@@ -280,7 +281,7 @@ module.exports = function(appPath, appName, verbose, originalDirectory, template
         }
     }
     // Final npm install for all additional dev dependencies
-    const procStatus = installRioDevDependencies(useYarn, verbose, templateJson);
+    const procStatus = installRioDevDependencies(useYarn, verbose, templatePackage);
     if (procStatus !== 0) {
         return;
     }
@@ -358,6 +359,10 @@ function isReactInstalled(appPackage) {
     const dependencies = appPackage.dependencies || {};
 
     return typeof dependencies.react !== 'undefined' && typeof dependencies['react-dom'] !== 'undefined';
+}
+
+function getRioExternalDependencies() {
+    return ['react', 'react-dom'];
 }
 
 function installRioDevDependencies(useYarn, verbose, templateJson) {
