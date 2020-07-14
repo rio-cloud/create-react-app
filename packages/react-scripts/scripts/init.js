@@ -64,22 +64,20 @@ function tryGitCommit(appPath) {
         });
         return true;
     } catch (e) {
-        if (didInit) {
-            // If we successfully initialized but couldn't commit,
-            // maybe the commit author config is not set.
-            // In the future, we might supply our own committer
-            // like Ember CLI does, but for now, let's just
-            // remove the Git files to avoid a half-done state.
-            console.warn('Git commit not created', e);
-            console.warn('Removing .git directory...');
-            try {
-                // unlinkSync() doesn't work on directories.
-                fs.removeSync(path.join(appPath, '.git'));
-            } catch (removeErr) {
-                // Ignore.
-            }
-            return false;
+        // We couldn't commit in already initialized git repo,
+        // maybe the commit author config is not set.
+        // In the future, we might supply our own committer
+        // like Ember CLI does, but for now, let's just
+        // remove the Git files to avoid a half-done state.
+        console.warn('Git commit not created', e);
+        console.warn('Removing .git directory...');
+        try {
+            // unlinkSync() doesn't work on directories.
+            fs.removeSync(path.join(appPath, '.git'));
+        } catch (removeErr) {
+            // Ignore.
         }
+        return false;
     }
 }
 
@@ -126,12 +124,12 @@ module.exports = function(appPath, appName, verbose, originalDirectory, template
         'author',
         'contributors',
         'files',
-        'main',
         'browser',
         'bin',
         'man',
         'directories',
         'repository',
+        'devDependencies',
         'peerDependencies',
         'bundledDependencies',
         'optionalDependencies',
