@@ -3,7 +3,8 @@ import getOr from 'lodash/fp/getOr';
 import { reportErrorToSentry } from '../setup/sentry';
 
 import { changeLocale, displayMessagesFetched } from './actions';
-import { getSupportedLocale as defaultGetSupportedLocale } from './selectors';
+import { DEFAULT_LOCALE, getSupportedLocale as defaultGetSupportedLocale } from './lang';
+
 import { trace } from '../setup/trace';
 
 // TODO: change the module ID
@@ -38,9 +39,7 @@ export const configureFetchDisplayMessages = (
         return Promise.reject();
     }
 
-    store.dispatch(changeLocale(locale));
-    const supportedLocale = getSupportedLocale(store.getState());
-
+    const supportedLocale = getSupportedLocale(locale);
     try {
         const displayMessages = await fetchDisplayMessages(supportedLocale);
         trace(`Display messages fetched for "${supportedLocale}"`);
@@ -48,6 +47,6 @@ export const configureFetchDisplayMessages = (
     } catch (error) {
         console.error(`Display messages for "${supportedLocale}" could not be fetched.`, error);
         sendError(error);
-        return error;
+        store.dispatch(changeLocale(DEFAULT_LOCALE));
     }
 };

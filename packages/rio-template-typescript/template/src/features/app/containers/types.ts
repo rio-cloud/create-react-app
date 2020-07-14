@@ -1,4 +1,4 @@
-import { IdToken, LanguageDataInterface } from '../../../configuration';
+import { IdToken, DisplayMessagesInterface } from '../../../configuration';
 
 export interface AppPropertiesFromDispatch {
     hideSessionDialog: () => void;
@@ -7,7 +7,7 @@ export interface AppPropertiesFromDispatch {
 export interface AppPropertiesFromState {
     idToken: IdToken;
     homeRoute: string;
-    languageData: LanguageDataInterface;
+    displayMessages: DisplayMessagesInterface;
     showSessionExpired: boolean;
     userLocale: string;
 }
