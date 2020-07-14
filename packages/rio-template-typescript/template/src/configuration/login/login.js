@@ -41,6 +41,7 @@ export const createUserManager = () => {
         silent_redirect_uri: `${silentRedirectUri || redirectUri}`,
         includeIdTokenInSilentRenew: false,
         automaticSilentRenew: true,
+        staleStateAge: 600,
     };
 
     return new UserManager(settings);
@@ -90,5 +91,11 @@ export const configureMockUserManager = ({ onSessionRenewed }) => {
         );
         return Promise.resolve();
     };
-    return { signinSilent };
+
+    const clearStaleState = () => {
+        console.info('[feature/login/oidc-session] Stale state cleared');
+        return Promise.resolve();
+    };
+
+    return { signinSilent, clearStaleState };
 };

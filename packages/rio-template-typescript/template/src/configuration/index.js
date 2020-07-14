@@ -17,6 +17,7 @@ import { getAccessToken, getIdToken } from './tokenHandling/selectors';
 import { trace } from './setup/trace';
 import { attemptInitialSignIn } from './setup/oauth';
 import { config } from '../config';
+import { reportErrorToSentry } from './setup/sentry';
 
 function main(renderApp) {
     const fetchDisplayMessages = configureFetchDisplayMessages(store);
@@ -63,6 +64,12 @@ function main(renderApp) {
 
     document.addEventListener(EVENT_USER_LANGUAGE_CHANGED, userManager.signinSilent.bind(userManager));
     document.addEventListener(EVENT_USER_PROFILE_CHANGED, userManager.signinSilent.bind(userManager));
+
+    try {
+        userManager.clearStaleState().catch(error => reportErrorToSentry(error));
+    } catch (error) {
+        reportErrorToSentry(error);
+    }
 
     attemptInitialSignIn(userManager)
         .then(renderApp)
