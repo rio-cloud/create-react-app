@@ -1,0 +1,49 @@
+phrase:
+  file_format: react_simple_json
+
+  defaults:
+    keys/list:
+      sort: 'updated_at'
+      order: 'desc'
+
+  push:
+    sources:
+      # YOUR SERVICE - PLEASE ADD YOUR IDs HERE
+      - file: ./src/features/translations/en-GB.json
+        project_id: a431402baf1af39f463bf974d08a3dde
+        params:
+          autotranslate: true
+          update_translations: false
+          locale_id: en-GB
+
+  pull:
+    targets:
+      # YOUR SERVICE - PLEASE ADD YOUR IDs HERE
+      - file: ./src/features/translations/temp/service.<locale_name>.json
+        project_id: a431402baf1af39f463bf974d08a3dde
+        params:
+          include_empty_translations: true
+          fallback_locale_id: ab32265d8c60b37080d318d6c6ff7f66
+
+      # AssetTree - Add when you use the AssetTree component from the UIKIT
+      # - file: ./src/features/translations/temp/assettree.<locale_name>.json
+      #   project_id: 2bf02b79108cf05f5a1e5448fde1d0b1
+      #   params:
+      #     include_empty_translations: true
+      #     fallback_locale_id: 9af75b8ec4fec0d364d4e6aa35a18ab1
+
+      # Glossary
+      - file: ./src/features/translations/temp/glossary.<locale_name>.json
+        project_id: 8fcba9ea12a24ae52fb8d4b9e7ce575e
+        params:
+          tags: activity
+          include_empty_translations: true
+          fallback_locale_id: 65b385ab52cd56dd7ad371c4321fadf0
+
+      # Common Messages
+      - file: ./src/features/translations/temp/common-messages.<locale_name>.json
+        project_id: 8c1220d39fc588e9ff9346adedef1b43
+        params:
+          tags: error,rating
+          include_empty_translations: true
+          fallback_locale_id: 629b468384c35d3dd63d8ba915d2ca3f
