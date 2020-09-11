@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { UserManager } from 'oidc-client';
+import { InMemoryWebStorage, UserManager, WebStorageStateStore } from 'oidc-client';
 import join from 'lodash/fp/join';
 import getOr from 'lodash/fp/getOr';
 import { mapUserProfile } from './userProfile';
@@ -42,6 +42,7 @@ export const createUserManager = () => {
         includeIdTokenInSilentRenew: false,
         automaticSilentRenew: true,
         staleStateAge: 600,
+        userStore: new WebStorageStateStore({ store: new InMemoryWebStorage() }),
     };
 
     return new UserManager(settings);
