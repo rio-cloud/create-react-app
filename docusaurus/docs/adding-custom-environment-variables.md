@@ -60,7 +60,7 @@ Having access to the `NODE_ENV` is also useful for performing actions conditiona
 
 ```js
 if (process.env.NODE_ENV !== 'production') {
-    analytics.disable();
+  analytics.disable();
 }
 ```
 
@@ -78,8 +78,8 @@ You can also access the environment variables starting with `REACT_APP_` in the 
 
 Note that the caveats from the above section apply:
 
--   Apart from a few built-in variables (`NODE_ENV` and `PUBLIC_URL`), variable names must start with `REACT_APP_` to work.
--   The environment variables are injected at build time. If you need to inject them at runtime, [follow this approach instead](title-and-meta-tags.md#generating-dynamic-meta-tags-on-the-server).
+- Apart from a few built-in variables (`NODE_ENV` and `PUBLIC_URL`), variable names must start with `REACT_APP_` to work.
+- The environment variables are injected at build time. If you need to inject them at runtime, [follow this approach instead](title-and-meta-tags.md#generating-dynamic-meta-tags-on-the-server).
 
 ## Adding Temporary Environment Variables In Your Shell
 
@@ -125,16 +125,16 @@ REACT_APP_NOT_SECRET_CODE=abcdef
 
 > Note: this feature is **available with `react-scripts@1.0.0` and higher**.
 
--   `.env`: Default.
--   `.env.local`: Local overrides. **This file is loaded for all environments except test.**
--   `.env.development`, `.env.test`, `.env.production`: Environment-specific settings.
--   `.env.development.local`, `.env.test.local`, `.env.production.local`: Local overrides of environment-specific settings.
+- `.env`: Default.
+- `.env.local`: Local overrides. **This file is loaded for all environments except test.**
+- `.env.development`, `.env.test`, `.env.production`: Environment-specific settings.
+- `.env.development.local`, `.env.test.local`, `.env.production.local`: Local overrides of environment-specific settings.
 
 Files on the left have more priority than files on the right:
 
--   `npm start`: `.env.development.local`, `.env.development`, `.env.local`, `.env`
--   `npm run build`: `.env.production.local`, `.env.production`, `.env.local`, `.env`
--   `npm test`: `.env.test.local`, `.env.test`, `.env` (note `.env.local` is missing)
+- `npm start`: `.env.development.local`, `.env.local`, `.env.development`, `.env`
+- `npm run build`: `.env.production.local`, `.env.local`, `.env.production`, `.env`
+- `npm test`: `.env.test.local`, `.env.test`, `.env` (note `.env.local` is missing)
 
 These variables will act as the defaults if the machine does not explicitly set them.
 
