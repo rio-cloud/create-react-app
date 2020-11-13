@@ -19,8 +19,8 @@ npx create-react-app my-app --template [template-name]
 
 We ship two templates by default:
 
--   [`cra-template`](https://github.com/facebook/create-react-app/tree/master/packages/cra-template)
--   [`cra-template-typescript`](https://github.com/facebook/create-react-app/tree/master/packages/cra-template-typescript)
+- [`cra-template`](https://github.com/facebook/create-react-app/tree/master/packages/cra-template)
+- [`cra-template-typescript`](https://github.com/facebook/create-react-app/tree/master/packages/cra-template-typescript)
 
 However, you can find many great community templates by searching for ["cra-template-\*"](https://www.npmjs.com/search?q=cra-template-*) on npm.
 
@@ -68,20 +68,20 @@ Below is an example `template.json` file:
 
 ```json
 {
-    "package": {
-        "dependencies": {
-            "eslint-plugin-jsx-a11y": "^6.2.3",
-            "serve": "^11.2.0"
-        },
-        "scripts": {
-            "serve": "serve -s build",
-            "build-and-serve": "npm run build && npm run serve"
-        },
-        "eslintConfig": {
-            "extends": ["react-app", "plugin:jsx-a11y/recommended"],
-            "plugins": ["jsx-a11y"]
-        }
+  "package": {
+    "dependencies": {
+      "eslint-plugin-jsx-a11y": "^6.2.3",
+      "serve": "^11.2.0"
+    },
+    "scripts": {
+      "serve": "serve -s build",
+      "build-and-serve": "npm run build && npm run serve"
+    },
+    "eslintConfig": {
+      "extends": ["react-app", "plugin:jsx-a11y/recommended"],
+      "plugins": ["jsx-a11y"]
     }
+  }
 }
 ```
 

@@ -38,26 +38,26 @@ There are a few things to remember:
 
 In the below example:
 
--   the base config has been extended by a shared ESLint config,
--   a new rule has been set that applies to all JavaScript and TypeScript files, and
--   a new rule has been set that only targets TypeScript files.
+- the base config has been extended by a shared ESLint config,
+- a new rule has been set that applies to all JavaScript and TypeScript files, and
+- a new rule has been set that only targets TypeScript files.
 
 ```json
 {
-    "eslintConfig": {
-        "extends": ["react-app", "shared-config"],
+  "eslintConfig": {
+    "extends": ["react-app", "shared-config"],
+    "rules": {
+      "additional-rule": "warn"
+    },
+    "overrides": [
+      {
+        "files": ["**/*.ts?(x)"],
         "rules": {
-            "additional-rule": "warn"
-        },
-        "overrides": [
-            {
-                "files": ["**/*.ts?(x)"],
-                "rules": {
-                    "additional-typescript-only-rule": "warn"
-                }
-            }
-        ]
-    }
+          "additional-typescript-only-rule": "warn"
+        }
+      }
+    ]
+  }
 }
 ```
 
@@ -75,19 +75,19 @@ Then add the block below to your `launch.json` file and put it inside the `.vsco
 
 ```json
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Chrome",
-            "type": "chrome",
-            "request": "launch",
-            "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}/src",
-            "sourceMapPathOverrides": {
-                "webpack:///src/*": "${webRoot}/*"
-            }
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Chrome",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/src",
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/*"
+      }
+    }
+  ]
 }
 ```
 
@@ -125,9 +125,9 @@ Alternatively you may use `yarn`:
 yarn add husky lint-staged prettier
 ```
 
--   `husky` makes it possible to use githooks as if they are npm scripts.
--   `lint-staged` allows us to run scripts on staged files in git. See this [blog post about lint-staged to learn more about it](https://medium.com/@okonetchnikov/make-linting-great-again-f3890e1ad6b8).
--   `prettier` is the JavaScript formatter we will run before commits.
+- `husky` makes it possible to use githooks as if they are npm scripts.
+- `lint-staged` allows us to run scripts on staged files in git. See this [blog post about lint-staged to learn more about it](https://medium.com/@okonetchnikov/make-linting-great-again-f3890e1ad6b8).
+- `prettier` is the JavaScript formatter we will run before commits.
 
 Now we can make sure every file is formatted correctly by adding a few lines to the `package.json` in the project root.
 

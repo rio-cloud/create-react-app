@@ -3,8 +3,8 @@
 This package includes some utilities used by [Create React App](https://github.com/facebook/create-react-app).<br>
 Please refer to its documentation:
 
--   [Getting Started](https://facebook.github.io/create-react-app/docs/getting-started) – How to create a new app.
--   [User Guide](https://facebook.github.io/create-react-app/) – How to develop apps bootstrapped with Create React App.
+- [Getting Started](https://facebook.github.io/create-react-app/docs/getting-started) – How to create a new app.
+- [User Guide](https://facebook.github.io/create-react-app/) – How to develop apps bootstrapped with Create React App.
 
 ## Usage in Create React App Projects
 
@@ -32,27 +32,27 @@ var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 var publicUrl = '/my-custom-url';
 
 module.exports = {
-    output: {
-        // ...
-        publicPath: publicUrl + '/',
-    },
+  output: {
     // ...
-    plugins: [
-        // Generates an `index.html` file with the <script> injected.
-        new HtmlWebpackPlugin({
-            inject: true,
-            template: path.resolve('public/index.html'),
-        }),
-        // Makes the public URL available as %PUBLIC_URL% in index.html, e.g.:
-        // <link rel="icon" href="%PUBLIC_URL%/favicon.ico">
-        new InterpolateHtmlPlugin(HtmlWebpackPlugin, {
-            PUBLIC_URL: publicUrl,
-            // You can pass any key-value pairs, this was just an example.
-            // WHATEVER: 42 will replace %WHATEVER% with 42 in index.html.
-        }),
-        // ...
-    ],
+    publicPath: publicUrl + '/',
+  },
+  // ...
+  plugins: [
+    // Generates an `index.html` file with the <script> injected.
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: path.resolve('public/index.html'),
+    }),
+    // Makes the public URL available as %PUBLIC_URL% in index.html, e.g.:
+    // <link rel="icon" href="%PUBLIC_URL%/favicon.ico">
+    new InterpolateHtmlPlugin(HtmlWebpackPlugin, {
+      PUBLIC_URL: publicUrl,
+      // You can pass any key-value pairs, this was just an example.
+      // WHATEVER: 42 will replace %WHATEVER% with 42 in index.html.
+    }),
     // ...
+  ],
+  // ...
 };
 ```
 
@@ -70,22 +70,22 @@ var InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
 var publicUrl = '/my-custom-url';
 
 module.exports = {
-    output: {
-        // ...
-        publicPath: publicUrl + '/',
-    },
+  output: {
     // ...
-    plugins: [
-        // Generates an `index.html` file with the <script> injected.
-        new HtmlWebpackPlugin({
-            inject: true,
-            template: path.resolve('public/index.html'),
-        }),
-        // Inlines chunks with `runtime` in the name
-        new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime/]),
-        // ...
-    ],
+    publicPath: publicUrl + '/',
+  },
+  // ...
+  plugins: [
+    // Generates an `index.html` file with the <script> injected.
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: path.resolve('public/index.html'),
+    }),
+    // Inlines chunks with `runtime` in the name
+    new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime/]),
     // ...
+  ],
+  // ...
 };
 ```
 
@@ -98,16 +98,16 @@ var path = require('path');
 var ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 
 module.exports = {
+  // ...
+  resolve: {
     // ...
-    resolve: {
-        // ...
-        plugins: [
-            new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
-            // ...
-        ],
-        // ...
-    },
+    plugins: [
+      new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
+      // ...
+    ],
     // ...
+  },
+  // ...
 };
 ```
 
@@ -123,16 +123,16 @@ var WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeMod
 
 // webpack config
 module.exports = {
+  // ...
+  plugins: [
     // ...
-    plugins: [
-        // ...
-        // If you require a missing module and then `npm install` it, you still have
-        // to restart the development server for webpack to discover it. This plugin
-        // makes the discovery automatic so you don't have to restart.
-        // See https://github.com/facebook/create-react-app/issues/186
-        new WatchMissingNodeModulesPlugin(path.resolve('node_modules')),
-    ],
-    // ...
+    // If you require a missing module and then `npm install` it, you still have
+    // to restart the development server for webpack to discover it. This plugin
+    // makes the discovery automatic so you don't have to restart.
+    // See https://github.com/facebook/create-react-app/issues/186
+    new WatchMissingNodeModulesPlugin(path.resolve('node_modules')),
+  ],
+  // ...
 };
 ```
 
@@ -146,8 +146,13 @@ If a file is not found, prints a warning message and returns `false`.
 var path = require('path');
 var checkRequiredFiles = require('react-dev-utils/checkRequiredFiles');
 
-if (!checkRequiredFiles([path.resolve('public/index.html'), path.resolve('src/index.js')])) {
-    process.exit(1);
+if (
+  !checkRequiredFiles([
+    path.resolve('public/index.html'),
+    path.resolve('src/index.js'),
+  ])
+) {
+  process.exit(1);
 }
 ```
 
@@ -173,22 +178,22 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 // In your webpack config:
 // ...
 module: {
-    rules: [
+  rules: [
+    {
+      test: /\.(js|jsx)$/,
+      include: paths.appSrc,
+      enforce: 'pre',
+      use: [
         {
-            test: /\.(js|jsx)$/,
-            include: paths.appSrc,
-            enforce: 'pre',
-            use: [
-                {
-                    loader: 'eslint-loader',
-                    options: {
-                        // Pass the formatter:
-                        formatter: eslintFormatter,
-                    },
-                },
-            ],
+          loader: 'eslint-loader',
+          options: {
+            // Pass the formatter:
+            formatter: eslintFormatter,
+          },
         },
-    ];
+      ],
+    },
+  ];
 }
 ```
 
@@ -203,12 +208,15 @@ Captures JS and CSS asset sizes inside the passed `buildFolder`. Save the result
 Prints the JS and CSS asset sizes after the build, and includes a size comparison with `previousFileSizes` that were captured earlier using `measureFileSizesBeforeBuild()`. `maxBundleGzipSize` and `maxChunkGzipSizemay` may optionally be specified to display a warning when the main bundle or a chunk exceeds the specified size (in bytes).
 
 ```js
-var { measureFileSizesBeforeBuild, printFileSizesAfterBuild } = require('react-dev-utils/FileSizeReporter');
+var {
+  measureFileSizesBeforeBuild,
+  printFileSizesAfterBuild,
+} = require('react-dev-utils/FileSizeReporter');
 
 measureFileSizesBeforeBuild(buildFolder).then(previousFileSizes => {
-    return cleanAndRebuild().then(webpackStats => {
-        printFileSizesAfterBuild(webpackStats, previousFileSizes, buildFolder);
-    });
+  return cleanAndRebuild().then(webpackStats => {
+    printFileSizesAfterBuild(webpackStats, previousFileSizes, buildFolder);
+  });
 });
 ```
 
@@ -224,24 +232,24 @@ var formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
 var compiler = webpack(config);
 
 compiler.hooks.invalid.tap('invalid', function() {
-    console.log('Compiling...');
+  console.log('Compiling...');
 });
 
 compiler.hooks.done.tap('done', function(stats) {
-    var rawMessages = stats.toJson({}, true);
-    var messages = formatWebpackMessages(rawMessages);
-    if (!messages.errors.length && !messages.warnings.length) {
-        console.log('Compiled successfully!');
-    }
-    if (messages.errors.length) {
-        console.log('Failed to compile.');
-        messages.errors.forEach(e => console.log(e));
-        return;
-    }
-    if (messages.warnings.length) {
-        console.log('Compiled with warnings.');
-        messages.warnings.forEach(w => console.log(w));
-    }
+  var rawMessages = stats.toJson({}, true);
+  var messages = formatWebpackMessages(rawMessages);
+  if (!messages.errors.length && !messages.warnings.length) {
+    console.log('Compiled successfully!');
+  }
+  if (messages.errors.length) {
+    console.log('Failed to compile.');
+    messages.errors.forEach(e => console.log(e));
+    return;
+  }
+  if (messages.warnings.length) {
+    console.log('Compiled with warnings.');
+    messages.warnings.forEach(w => console.log(w));
+  }
 });
 ```
 
@@ -299,7 +307,7 @@ var path = require('path');
 var openBrowser = require('react-dev-utils/openBrowser');
 
 if (openBrowser('http://localhost:3000')) {
-    console.log('The browser tab has been opened!');
+  console.log('The browser tab has been opened!');
 }
 ```
 
@@ -328,14 +336,14 @@ Creates a webpack compiler instance for WebpackDevServer with built-in helpful m
 
 The `args` object accepts a number of properties:
 
--   **appName** `string`: The name that will be printed to the terminal.
--   **config** `Object`: The webpack configuration options to be provided to the webpack constructor.
--   **devSocket** `Object`: Required if `useTypeScript` is `true`. This object should include `errors` and `warnings` which are functions accepting an array of errors or warnings emitted by the type checking. This is useful when running `fork-ts-checker-webpack-plugin` with `async: true` to report errors that are emitted after the webpack build is complete.
--   **urls** `Object`: To provide the `urls` argument, use `prepareUrls()` described below.
--   **useYarn** `boolean`: If `true`, yarn instructions will be emitted in the terminal instead of npm.
--   **useTypeScript** `boolean`: If `true`, TypeScript type checking will be enabled. Be sure to provide the `devSocket` argument above if this is set to `true`.
--   **tscCompileOnError** `boolean`: If `true`, errors in TypeScript type checking will not prevent start script from running app, and will not cause build script to exit unsuccessfully. Also downgrades all TypeScript type checking error messages to warning messages.
--   **webpack** `function`: A reference to the webpack constructor.
+- **appName** `string`: The name that will be printed to the terminal.
+- **config** `Object`: The webpack configuration options to be provided to the webpack constructor.
+- **devSocket** `Object`: Required if `useTypeScript` is `true`. This object should include `errors` and `warnings` which are functions accepting an array of errors or warnings emitted by the type checking. This is useful when running `fork-ts-checker-webpack-plugin` with `async: true` to report errors that are emitted after the webpack build is complete.
+- **urls** `Object`: To provide the `urls` argument, use `prepareUrls()` described below.
+- **useYarn** `boolean`: If `true`, yarn instructions will be emitted in the terminal instead of npm.
+- **useTypeScript** `boolean`: If `true`, TypeScript type checking will be enabled. Be sure to provide the `devSocket` argument above if this is set to `true`.
+- **tscCompileOnError** `boolean`: If `true`, errors in TypeScript type checking will not prevent start script from running app, and will not cause build script to exit unsuccessfully. Also downgrades all TypeScript type checking error messages to warning messages.
+- **webpack** `function`: A reference to the webpack constructor.
 
 ##### `prepareProxy(proxySetting: string, appPublicFolder: string, servedPathname: string): Object`
 
@@ -354,16 +362,16 @@ It currently supports only webpack 3.x.
 ```js
 // webpack development config
 module.exports = {
-    // ...
-    entry: [
-        // You can replace the line below with these two lines if you prefer the
-        // stock client:
-        // require.resolve('webpack-dev-server/client') + '?/',
-        // require.resolve('webpack/hot/dev-server'),
-        'react-dev-utils/webpackHotDevClient',
-        'src/index',
-    ],
-    // ...
+  // ...
+  entry: [
+    // You can replace the line below with these two lines if you prefer the
+    // stock client:
+    // require.resolve('webpack-dev-server/client') + '?/',
+    // require.resolve('webpack/hot/dev-server'),
+    'react-dev-utils/webpackHotDevClient',
+    'src/index',
+  ],
+  // ...
 };
 ```
 
@@ -380,27 +388,27 @@ const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent')
 // In your webpack config:
 // ...
 module: {
-    rules: [
+  rules: [
+    {
+      test: /\.module\.css$/,
+      use: [
+        require.resolve('style-loader'),
         {
-            test: /\.module\.css$/,
-            use: [
-                require.resolve('style-loader'),
-                {
-                    loader: require.resolve('css-loader'),
-                    options: {
-                        importLoaders: 1,
-                        modules: {
-                            getLocalIdent: getCSSModuleLocalIdent,
-                        },
-                    },
-                },
-                {
-                    loader: require.resolve('postcss-loader'),
-                    options: postCSSLoaderOptions,
-                },
-            ],
+          loader: require.resolve('css-loader'),
+          options: {
+            importLoaders: 1,
+            modules: {
+              getLocalIdent: getCSSModuleLocalIdent,
+            },
+          },
         },
-    ];
+        {
+          loader: require.resolve('postcss-loader'),
+          options: postCSSLoaderOptions,
+        },
+      ],
+    },
+  ];
 }
 ```
 

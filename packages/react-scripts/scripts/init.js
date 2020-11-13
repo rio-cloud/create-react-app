@@ -216,7 +216,7 @@ module.exports = function(
   };
 
   // Setup the browsers list
-    appPackage.browserslist = getRioBrowserList();
+  appPackage.browserslist = getRioBrowserList();
 
   // Add templatePackage keys/values to appPackage, replacing existing entries
   templatePackageToReplace.forEach(key => {
@@ -308,10 +308,13 @@ module.exports = function(
   if (dependenciesToInstall.length) {
     args = args.concat(
       dependenciesToInstall
-        .filter(([dependency, version]) => !getRioExternalDependencies().includes(dependency))
+        .filter(
+          ([dependency, version]) =>
+            !getRioExternalDependencies().includes(dependency)
+        )
         .map(([dependency, version]) => {
           return `${dependency}@${version}`;
-      })
+        })
     );
   }
 
@@ -373,7 +376,9 @@ module.exports = function(
   console.log(`Success! Created ${appName} at ${appPath}`);
   console.log();
   console.log(chalk.red('RIO starter template'));
-  console.log('You are using the RIO starter template which is a fork of the original create-react-app templates');
+  console.log(
+    'You are using the RIO starter template which is a fork of the original create-react-app templates'
+  );
   console.log();
   console.log('Inside that directory, you can run several commands:');
   console.log();
@@ -428,5 +433,12 @@ function getRioExternalDependencies() {
 }
 
 function getRioBrowserList() {
-  return ['last 2 versions', 'last 5 Chrome versions', 'Firefox >= 60', 'Edge >= 15', 'Safari >= 10', 'IE >= 11'];
+  return [
+    'last 2 versions',
+    'last 5 Chrome versions',
+    'Firefox >= 60',
+    'Edge >= 15',
+    'Safari >= 10',
+    'IE >= 11',
+  ];
 }
