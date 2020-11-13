@@ -1,15 +1,6 @@
 {
-    "trailingComma": "es5",
-    "tabWidth": 4,
-    "semi": true,
-    "singleQuote": true,
-    "printWidth": 120,
-    "overrides": [
-        {
-            "files": ["*.less", "*.css", "*.yaml"],
-            "options": {
-                "tabWidth": 2
-            }
-        }
-    ]
+  "arrowParens": "avoid",
+  "trailingComma": "es5",
+  "singleQuote": true,
+  "semi": true
 }
