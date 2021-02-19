@@ -13,7 +13,7 @@ module.exports = {
         config.plugins = [
             ...plugins,
             new HtmlWebpackExternalsPlugin({
-                externals,
+                externals: webpackMode === 'production' ? externals : externals.map(external => ({...external, entry: external.entryDev || external.entry})),
                 //enabled: env === 'production',
                 enabled: true,
             }),
