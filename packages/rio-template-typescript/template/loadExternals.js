@@ -5,7 +5,11 @@ const fs = require('fs');
 const skippedModules = ['react-dom'];
 
 externals.scripts.forEach(external => {
-    if (!external.hasOwnProperty('external') || !external.external.hasOwnProperty('packageName') || !external.hasOwnProperty('path')) {
+    if (
+        !external.hasOwnProperty('external') ||
+        !external.external.hasOwnProperty('packageName') ||
+        !external.hasOwnProperty('path')
+    ) {
         console.log('Cannot download file for ' + JSON.stringify(external));
     }
 
@@ -21,17 +25,17 @@ externals.scripts.forEach(external => {
 
     const file = fs.createWriteStream(path);
     const source =
-      typeof external.path === 'string' ? external.path : external.path.filter(src => src.endsWith('.js'))[0];
+        typeof external.path === 'string' ? external.path : external.path.filter(src => src.endsWith('.js'))[0];
     const request = https
-      .get(source, function(response) {
-          response.pipe(file);
-          file.on('finish', function() {
-              file.close(); // close() is async
-          });
-      })
-      .on('error', function(err) {
-          // Handle errors
-          fs.unlink(path); // Delete the file async. (But we don't check the result)
-          console.log(err.message);
-      });
+        .get(source, function(response) {
+            response.pipe(file);
+            file.on('finish', function() {
+                file.close(); // close() is async
+            });
+        })
+        .on('error', function(err) {
+            // Handle errors
+            fs.unlink(path); // Delete the file async. (But we don't check the result)
+            console.log(err.message);
+        });
 });

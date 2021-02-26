@@ -16,7 +16,7 @@ module.exports = {
                 publicPath: false,
                 tags: [],
                 links: externals.links,
-                scripts: externals.scripts
+                scripts: externals.scripts,
             }),
             new webpack.DefinePlugin({
                 SERVICE_VERSION: JSON.stringify(packageJson.version),
