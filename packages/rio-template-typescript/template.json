@@ -91,10 +91,7 @@
       "moduleNameMapper": {
         "ReactDOM": "react-dom"
       },
-      "moduleDirectories": [
-        "node_modules",
-        "mocks"
-      ]
+      "moduleDirectories": ["node_modules", "mocks"]
     }
   }
 }

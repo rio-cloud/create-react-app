@@ -12,8 +12,8 @@ import Intro from './Intro';
 import More from './More';
 
 import './App.css';
-import {config} from "../../config";
-import {AppPropertiesFromDispatch, AppPropertiesFromState} from "./App.container";
+import { config } from '../../config';
+import { AppPropertiesFromDispatch, AppPropertiesFromState } from './App.container';
 
 type AppProperties = AppPropertiesFromDispatch & AppPropertiesFromState;
 
@@ -89,12 +89,7 @@ const App = (props: AppProperties) => {
     const homeLink = <a href={homeRoute} />;
 
     return (
-        <IntlProvider
-            defaultLocale={DEFAULT_LOCALE}
-            key={userLocale}
-            locale={userLocale}
-            messages={displayMessages}
-        >
+        <IntlProvider defaultLocale={DEFAULT_LOCALE} key={userLocale} locale={userLocale} messages={displayMessages}>
             <ApplicationLayout className={'StarterTemplate'}>
                 <ApplicationLayout.Header>
                     <ApplicationHeader
@@ -107,11 +102,7 @@ const App = (props: AppProperties) => {
                 </ApplicationLayout.Header>
                 <ApplicationLayout.Body>
                     <NotificationsContainer />
-                    <SessionExpiredDialog
-                        locale={userLocale}
-                        onClose={hideSessionDialog}
-                        show={showSessionExpired}
-                    />
+                    <SessionExpiredDialog locale={userLocale} onClose={hideSessionDialog} show={showSessionExpired} />
                     <Switch>
                         <Route path={'/intro'} component={Intro} />
                         <Route path={'/more'} component={More} />
