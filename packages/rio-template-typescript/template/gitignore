@@ -330,3 +330,6 @@ build
 mocks/React.js
 mocks/rio-session-expired-info.js
 mocks/rio-uikit.js
+mocks/core-js.js
+mocks/oidc-client.js
+mocks/rio-user-menu.js

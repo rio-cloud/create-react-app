@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const externals = require('./config-externals');
 const packageJson = require('./package.json');
 
-const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin');
+const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 
 module.exports = {
     // The Webpack config to use when compiling your react app for development or production.
@@ -12,10 +12,11 @@ module.exports = {
 
         config.plugins = [
             ...plugins,
-            new HtmlWebpackExternalsPlugin({
-                externals: webpackMode === 'production' ? externals : externals.map(external => ({...external, entry: external.entryDev || external.entry})),
-                //enabled: env === 'production',
-                enabled: true,
+            new HtmlWebpackTagsPlugin({
+                publicPath: false,
+                tags: [],
+                links: externals.links,
+                scripts: externals.scripts
             }),
             new webpack.DefinePlugin({
                 SERVICE_VERSION: JSON.stringify(packageJson.version),
