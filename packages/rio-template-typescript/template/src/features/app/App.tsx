@@ -83,7 +83,7 @@ const App = (props: AppProperties) => {
     const environment = process.env.NODE_ENV === 'production' ? 'production' : 'local';
     const userMenu = <DefaultUserMenu environment={environment} />;
     const menuUrl = config.backend.MENU_SERVICE as string;
-    const appNavigator = <IframeResizer style={{ width: '1px', minWidth: '100%', border: '0' }} src={menuUrl} />;
+    const appNavigator = <IframeResizer className={'iFrameResizer'} src={menuUrl} />;
 
     // eslint-disable-next-line jsx-a11y/anchor-has-content
     const homeLink = <a href={homeRoute} />;
