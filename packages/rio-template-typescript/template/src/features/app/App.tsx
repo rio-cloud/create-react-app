@@ -5,7 +5,7 @@ import { Link, NavLink, Redirect, Route, Switch } from 'react-router-dom';
 import { DefaultUserMenu } from 'rio-user-menu';
 import { SessionExpiredDialog } from 'rio-session-expired-info';
 import { ApplicationHeader, NotificationsContainer, ApplicationLayout, ActionBarItem } from 'rio-uikit';
-import IframeResizer from '@rio-cloud/iframe-resizer';
+import IframeResizer from 'iframe-resizer-react';
 
 import { DEFAULT_LOCALE } from '../../configuration';
 import Intro from './Intro';
@@ -83,7 +83,7 @@ const App = (props: AppProperties) => {
     const environment = process.env.NODE_ENV === 'production' ? 'production' : 'local';
     const userMenu = <DefaultUserMenu environment={environment} />;
     const menuUrl = config.backend.MENU_SERVICE as string;
-    const appNavigator = <IframeResizer url={menuUrl} />;
+    const appNavigator = <IframeResizer style={{ width: '1px', minWidth: '100%', border: '0' }} src={menuUrl} />;
 
     // eslint-disable-next-line jsx-a11y/anchor-has-content
     const homeLink = <a href={homeRoute} />;

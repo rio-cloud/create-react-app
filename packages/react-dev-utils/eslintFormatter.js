@@ -62,7 +62,7 @@ function formatter(results) {
         position,
         messageType,
         message.message.replace(/\.$/, ''),
-        chalk.underline(message.ruleId || ''),
+        chalk.underline(message.ruleId || '')
       ];
     });
 
@@ -81,7 +81,7 @@ function formatter(results) {
       align: ['l', 'l', 'l'],
       stringLength(str) {
         return stripAnsi(str).length;
-      },
+      }
     });
 
     // print the filename and relative path

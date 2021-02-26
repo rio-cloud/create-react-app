@@ -23,7 +23,7 @@ test('finds an external source map', async () => {
   expect(sm.getOriginalPosition(26122, 21)).toEqual({
     line: 7,
     column: 0,
-    source: 'webpack:///packages/react-scripts/template/src/App.js',
+    source: 'webpack:///packages/react-scripts/template/src/App.js'
   });
 });
 
@@ -42,7 +42,7 @@ test('find an inline source map', async () => {
   expect(sm.getSource(sourceName)).toBe(fileO);
   expect(sm.getGeneratedPosition(sourceName, 5, 10)).toEqual({
     line: 10,
-    column: 8,
+    column: 8
   });
 });
 

@@ -78,7 +78,7 @@ function verifyTypeScriptSetup() {
     const globalThisWasDefined = !!global.globalThis;
 
     ts = require(resolve.sync('typescript', {
-      basedir: paths.appNodeModules,
+      basedir: paths.appNodeModules
     }));
 
     if (!globalThisWasDefined && !!global.globalThis) {
@@ -119,7 +119,7 @@ function verifyTypeScriptSetup() {
     // 'parsedValue' matches the output value from ts.parseJsonConfigFileContent()
     target: {
       parsedValue: ts.ScriptTarget.ES5,
-      suggested: 'es5',
+      suggested: 'es5'
     },
     lib: { suggested: ['dom', 'dom.iterable', 'esnext'] },
     allowJs: { suggested: true },
@@ -135,12 +135,12 @@ function verifyTypeScriptSetup() {
     module: {
       parsedValue: ts.ModuleKind.ESNext,
       value: 'esnext',
-      reason: 'for import() and import/export',
+      reason: 'for import() and import/export'
     },
     moduleResolution: {
       parsedValue: ts.ModuleResolutionKind.NodeJs,
       value: 'node',
-      reason: 'to match webpack resolution',
+      reason: 'to match webpack resolution'
     },
     resolveJsonModule: { value: true, reason: 'to match webpack loader' },
     isolatedModules: { value: true, reason: 'implementation limitation' },
@@ -154,15 +154,15 @@ function verifyTypeScriptSetup() {
         hasJsxRuntime && semver.gte(ts.version, '4.1.0-beta')
           ? 'react-jsx'
           : 'react',
-      reason: 'to support the new JSX transform in React 17',
+      reason: 'to support the new JSX transform in React 17'
     },
-    paths: { value: undefined, reason: 'aliased imports are not supported' },
+    paths: { value: undefined, reason: 'aliased imports are not supported' }
   };
 
   const formatDiagnosticHost = {
     getCanonicalFileName: fileName => fileName,
     getCurrentDirectory: ts.sys.getCurrentDirectory,
-    getNewLine: () => os.EOL,
+    getNewLine: () => os.EOL
   };
 
   const messages = [];
@@ -218,7 +218,7 @@ function verifyTypeScriptSetup() {
   if (appTsConfig.compilerOptions == null) {
     appTsConfig.compilerOptions = {};
     firstTimeSetup = true;
-  } 
+  }
 
   for (const option of Object.keys(compilerOptions)) {
     const { parsedValue, value, suggested, reason } = compilerOptions[option];

@@ -68,7 +68,7 @@ function formatMessage(message) {
       lines[0],
       lines[1]
         .replace('Error: ', '')
-        .replace('Module not found: Cannot find file:', 'Cannot find file:'),
+        .replace('Module not found: Cannot find file:', 'Cannot find file:')
     ];
   }
 
