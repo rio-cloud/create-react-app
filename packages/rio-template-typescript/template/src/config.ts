@@ -16,7 +16,7 @@ export interface ConfigState {
         silentRedirectUri: string | undefined;
     };
     logoutUri: string | undefined;
-    sentryToken: string;
+    sentryToken: string | undefined;
 }
 
 const getBoolEnvValue = (envValue: string): boolean => {
@@ -43,6 +43,5 @@ export const config: ConfigState = {
         silentRedirectUri: process.env.REACT_APP_LOGIN_SILENT_REDIRECT_URI,
     },
     logoutUri: process.env.REACT_APP_LOGOUT_URI,
-    // TODO: Create a project in Sentry and use the token here
-    sentryToken: '<you-need-to-obtain-your-own-sentry-token>',
+    sentryToken: process.env.REACT_APP_SENTRY_DSN,
 };

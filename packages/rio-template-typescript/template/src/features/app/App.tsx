@@ -1,4 +1,3 @@
-import React from 'react';
 import { FormattedMessage, IntlProvider } from 'react-intl';
 import { Link, NavLink, Redirect, Route, Switch } from 'react-router-dom';
 

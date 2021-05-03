@@ -8,11 +8,13 @@ const environment = SERVICE_ENVIRONMENT;
 
 // should have been called before using it here
 // ideally before even rendering your react app
-Sentry.init({
-    dsn: config.sentryToken,
-    environment,
-    release,
-});
+if (config.sentryToken) {
+    Sentry.init({
+        dsn: config.sentryToken,
+        environment,
+        release,
+    });
+}
 
 export const reportErrorToSentry = (...args) => {
     Sentry.captureException(...args);
