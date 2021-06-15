@@ -575,6 +575,14 @@ module.exports = function(webpackEnv) {
                 'sass-loader'
               )
             },
+            // SVG loader added due to loading possible svg images from within the same application
+            // or from another library such as the UIKIT map components.
+            // The "@svgr/webpack" library is a replacement for the "svg-react-loader" lib or alike.
+            // See https://create-react-app.dev/docs/adding-images-fonts-and-files/#adding-svgs
+            {
+              test: /\.svg$/,
+              use: ['@svgr/webpack'],
+            },
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.
             // In production, they would get copied to the `build` folder.
